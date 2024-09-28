@@ -1,12 +1,20 @@
 import React from "react";
+import IntroSection from "../../components/IntroSection/IntroSection";
+import GrayListingSection from "../../components/GrayListingSection/GrayListingSection";
 import ExploreVehicles from "../../components/exploreVehicles/exploreVehicles";
+
+
+
 
 const Home = () => {
   return (
     <div>
-      <h1>Home Page</h1>
+      <IntroSection />
+      <GrayListingSection />
       <ExploreVehicles />
+      
     </div>
+    
   );
 };
 
