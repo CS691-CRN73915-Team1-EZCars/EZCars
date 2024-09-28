@@ -1,6 +1,7 @@
 const styles = {
   exploreVehicles: {
     padding: "20px 60px",
+    backgroundColor: "#f5f5f5", // Light grey background for the entire page
   },
   vehicleGrid: {
     display: "grid",
@@ -8,29 +9,35 @@ const styles = {
     gap: "20px",
   },
   vehicleCard: {
-    border: "1px solid #ddd",
     borderRadius: "8px",
-    padding: "12px",
-    textAlign: "center",
+    padding: "0", // Removed padding from the entire card
+    textAlign: "left",
     maxWidth: "450px",
     width: "100%",
     margin: "0 auto",
+    backgroundColor: "white",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    overflow: "hidden", // This ensures the image fits within the rounded corners
   },
   vehicleCardImg: {
     width: "100%",
     height: "220px",
     objectFit: "cover",
-    borderRadius: "8px",
+    borderRadius: "8px 8px 0 0", // Rounded corners only on top
+  },
+  vehicleCardContent: {
+    padding: "0px 0px 12px 25px", // Added padding to the content area
+  },
+  vehiclePrice: {
+    fontWeight: "bold",
+    fontSize: "1.2em",
+    color: "#333",
   },
   viewDetailsLink: {
     color: "orange",
     cursor: "pointer",
-    marginTop: "10px",
     display: "inline-block",
     textDecoration: "none",
-  },
-  viewDetailsLinkHover: {
-    color: "darkorange",
   },
   tiltedArrow: {
     display: "inline-block",
@@ -76,16 +83,14 @@ const styles = {
     borderRadius: "8px",
   },
   carDetailsInfoH2: {
-    marginTop: 0,
     color: "#333",
   },
   carDetailsInfoP: {
-    margin: "10px 0",
+    margin: "5px 0",
     color: "#666",
   },
 };
 
-// Media queries need to be handled differently in JS
 const mediaQueries = {
   "@media (max-width: 1400px)": {
     vehicleGrid: {

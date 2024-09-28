@@ -36,27 +36,29 @@ const ExploreVehicles = () => {
     <div style={styles.exploreVehicles}>
       <h2>Explore Our Vehicles</h2>
       <div style={styles.vehicleGrid}>
-        {carData.map((car) => (
-          <div key={car.id} style={styles.vehicleCard}>
-            {loadedImages[car.id] ? (
-              <img src={loadedImages[car.id]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
-            ) : (
-              <div>Loading image...</div>
-            )}
-            <h3>{car.make} {car.model}</h3>
-            <p>{car.model} | {car.year}</p>
-            <p>
-              <strong>${car.price}</strong> • {car.transmission} • {car.fuelType}
-            </p>
-            <span 
-              style={styles.viewDetailsLink}
-              onClick={() => handleViewDetails(car)}
-            >
-              View Details <span style={styles.tiltedArrow}>➔</span>
-            </span>
-          </div>
-        ))}
+  {carData.map((car) => (
+    <div key={car.id} style={styles.vehicleCard}>
+      {loadedImages[car.id] ? (
+        <img src={loadedImages[car.id]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
+      ) : (
+        <div>Loading image...</div>
+      )}
+      <div style={styles.vehicleCardContent}>
+        <h3>{car.make} {car.model} - {car.year}</h3>
+        <p>
+          {car.mileage} miles • {car.transmission} • {car.fuelType}
+        </p>
+        <p style={styles.vehiclePrice}>${car.price}</p>
+        <span 
+          style={styles.viewDetailsLink}
+          onClick={() => handleViewDetails(car)}
+        >
+          View Details <span style={styles.tiltedArrow}>➔</span>
+        </span>
       </div>
+    </div>
+  ))}
+</div>
 
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
@@ -70,6 +72,7 @@ const ExploreVehicles = () => {
                 <h2 style={styles.carDetailsInfoH2}>{selectedCar.make} {selectedCar.model}</h2>
                 <p style={styles.carDetailsInfoP}><strong>Year:</strong> {selectedCar.year}</p>
                 <p style={styles.carDetailsInfoP}><strong>Price:</strong> ${selectedCar.price}</p>
+                <p style={styles.carDetailsInfoP}><strong>Mileage:</strong> {selectedCar.mileage} Miles</p>
                 <p style={styles.carDetailsInfoP}><strong>Transmission:</strong> {selectedCar.transmission}</p>
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
