@@ -1,0 +1,10 @@
+[
+    { "name": "Audi", "logo": "../../assets/images/Audi.jpg" },
+    { "name": "Ford", "logo": "../../assets/images/Ford.jpg" },
+    { "name": "Peugeot", "logo": "../../assets/images/Peugeot.jpg" },
+    { "name": "Volkswagen", "logo": "/assets/images/Volkswagen.jpg" },
+    { "name": "Bentley", "logo": "../../assets/images/Bentley.jpg" },
+    { "name": "Nissan", "logo": "../../assets/images/Nissan.jpg" },
+    { "name": "Jeep", "logo": "../../assets/images/Jeep.jpg" },
+    { "name": "BMW", "logo": "../../assets/images/BMW.jpg" }
+]
