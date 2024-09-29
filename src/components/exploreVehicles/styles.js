@@ -6,13 +6,14 @@ const styles = {
   vehicleGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "20px",
+    paddingLeft: "55px",
+    paddingRight: "55px",
+    rowGap: "20px",
   },
   vehicleCard: {
     borderRadius: "8px",
-    padding: "0", // Removed padding from the entire card
     textAlign: "left",
-    maxWidth: "450px",
+    maxWidth: "460px",
     width: "100%",
     margin: "0 auto",
     backgroundColor: "white",
@@ -21,7 +22,7 @@ const styles = {
   },
   vehicleCardImg: {
     width: "100%",
-    height: "220px",
+    height: "250px",
     objectFit: "cover",
     borderRadius: "8px 8px 0 0", // Rounded corners only on top
   },

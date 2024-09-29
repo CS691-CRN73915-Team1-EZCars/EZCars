@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "make": "Toyota",
-    "model": "Camry",
+    "make": "Maserati",
+    "model": "MC20",
     "year": 2022,
     "transmission": "Manual",
     "fuelType": "Gasoline",
@@ -15,7 +15,7 @@
     "id": 2,
     "make": "Tesla",
     "model": "Model-S",
-    "year": 2021,
+    "year": 2022,
     "transmission": "Automatic",
     "fuelType": "Electric",
     "price": 2250,
