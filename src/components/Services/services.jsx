@@ -28,9 +28,8 @@ const Services = () => {
   // Basic inline styles as a fallback
   const fallbackStyles = {
     servicesSection: {
-      padding: '20px',
+      padding: '20px 60px',
       backgroundColor: '#f0f0f0',
-      textAlign: 'center',
     },
     servicesContainer: {
       display: 'flex',

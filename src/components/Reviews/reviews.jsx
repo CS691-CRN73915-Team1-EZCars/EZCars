@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const Reviews = () => {
   const reviews = [
     {
@@ -24,7 +23,7 @@ const Reviews = () => {
   ];
 
   return (
-    <div style={{padding: '20px'}}>
+    <div style={{padding: '20px 60px'}}>
       <h2 style={{ color: '#333', marginBottom: '20px' }}>Ratings and Reviews</h2>
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {reviews.map(review => (

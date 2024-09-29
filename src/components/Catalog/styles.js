@@ -1,8 +1,7 @@
-// styles.js
 const styles = {
     catalog: {
       textAlign: 'left', // Align text to the left for the catalog section
-      padding: '20px',
+      padding: '20px 60px'
     },
     heading: {
       fontSize: '24px',

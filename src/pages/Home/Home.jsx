@@ -1,14 +1,11 @@
 import React from "react";
 import IntroSection from "../../components/IntroSection/IntroSection";
 import GrayListingSection from "../../components/GrayListingSection/GrayListingSection";
-import ExploreVehicles from "../../components/exploreVehicles/exploreVehicles";
-import Catalog from "../../components/Catalog/catalog";
+import ExploreVehicles from "../../components/ExploreVehicles/ExploreVehicles";
+import Catalog from "../../components/Catalog/Catalog";
 import GetStarted from "../../components/GetStarted/GetStarted";
 import Reviews from "../../components/Reviews/reviews";
 import Services from "../../components/Services/services";
-
-
-
 
 const Home = () => {
     return (
@@ -18,11 +15,9 @@ const Home = () => {
             <Catalog/>
             <ExploreVehicles/>
             <GetStarted/>
-            <Reviews />
             <Services />
-
+            <Reviews />
         </div>
-
     );
 };
 

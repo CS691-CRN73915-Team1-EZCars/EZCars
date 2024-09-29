@@ -1,6 +1,6 @@
 const styles = {
     servicesSection: {
-      padding: '40px 20px',
+      padding: '20px 60px',
     },
     servicesContainer: {
       display: 'flex',

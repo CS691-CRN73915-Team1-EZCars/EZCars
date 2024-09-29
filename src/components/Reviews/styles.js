@@ -1,6 +1,6 @@
 const styles = {
     reviewsSection: {
-      padding: '20px',
+      padding: '20px 60px',
       textAlign: 'center',
     },
     reviewsContainer: {
