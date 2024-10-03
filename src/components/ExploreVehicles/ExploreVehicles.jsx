@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import carData from '../../data/carData.json';
 import { styles } from "./styles";
-import ViewAll from '../../components/ViewAll/ViewAll'; // Import the ViewAll component
+import ViewAll from '../../components/ViewAll'; // Import the ViewAll component
 
 const ExploreVehicles = () => {
   const [loadedImages, setLoadedImages] = useState({});
