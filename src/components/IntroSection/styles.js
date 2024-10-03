@@ -3,10 +3,10 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '30px 0 50px 40px',
+        padding: '30px 0 50px 80px',
         maxWidth: '1200px',
         marginBottom: '40px',
-        marginLeft: '75px',
+        marginLeft: '30px',
         position: 'relative', // Add this to allow absolute positioning of the image
         overflow: 'hidden', // Ensure the image doesn't cause horizontal scrolling
     },

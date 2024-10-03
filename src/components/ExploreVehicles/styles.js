@@ -1,10 +1,10 @@
 const styles = {
   exploreVehicles: {
-    padding: "30px 60px",
+    padding: "60px 80px",
     backgroundColor: "#f5f5f5",
   },
   exploreVehiclesHeading: {
-    marginLeft: "50px", 
+    marginLeft: "20px", 
     marginTop: "20px", 
   },
   vehicleGrid: {

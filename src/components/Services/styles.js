@@ -1,9 +1,9 @@
 const styles = {
   servicesSection: {
-    padding: '20px 0',
+    padding: '80px',
     backgroundColor: 'white',
     maxWidth: '1400px',
-    margin: '35px auto',
+    margin: '25px',
   },
   headingContainer: {
     textAlign: 'left',

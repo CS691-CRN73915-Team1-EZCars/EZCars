@@ -1,28 +1,29 @@
 const styles = {
   reviewsSection: {
-    padding: '20px 50px',
+    padding: '30px 80px',
     textAlign: 'left',
     backgroundColor: "#f0f0f0", // Light grey background
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'center', 
   },
   heading: {
     color: '#333',
     marginTop: '40px',
-    marginLeft: '100px',
+    margin: '25px',
     fontSize: '28px',
     fontWeight: 'bold',
   },
   reviewsContainer: {
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: "repeat(3, 1fr)",
+    margin: '25px',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    gap: '80px', // Consistent spacing between cards
-    margin: '45px auto', // Center the container
+    gap: '20px', 
   },
   reviewCard: {
-    width: '380px',
+    
     background: '#ffffff',
     borderRadius: '12px',
     padding: '20px',
