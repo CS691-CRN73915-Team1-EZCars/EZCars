@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import carData from '../../data/carData.json';
 import { styles } from "./styles";
-import ViewAll from '../../components/ViewAll'; // Import the ViewAll component
 
 const ExploreVehicles = () => {
   const [loadedImages, setLoadedImages] = useState({});
@@ -14,7 +13,7 @@ const ExploreVehicles = () => {
       return images;
     };
     
-    const images = importAll(require.context('../../assets/images', false, /\.(png|jpe?g|svg|webp|avif)$/));
+    const images = importAll(require.context('../../assets/images/exploreVehiclesSection', false, /\.(png|jpe?g|svg|webp|avif)$/));
     
     const loadedImgs = {};
     carData.forEach(car => {
@@ -35,9 +34,11 @@ const ExploreVehicles = () => {
 
   return (
     <div style={styles.exploreVehicles}>
-      <h2>Explore Our Vehicles</h2>
-      {/* Adding the ViewAll button here */}
-      <ViewAll />
+      <h1 style={styles.exploreVehiclesHeading}>Explore Our Vehicles</h1>
+      <div style={styles.viewAllContainer}>
+      
+       <a href="/vehicles" style={styles.viewAllLink}>View All ↗</a>
+     </div>
 
       <div style={styles.vehicleGrid}>
         {carData.map((car) => (

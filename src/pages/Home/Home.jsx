@@ -4,8 +4,8 @@ import GrayListingSection from "../../components/GrayListingSection/GrayListingS
 import ExploreVehicles from "../../components/ExploreVehicles/ExploreVehicles";
 import Catalog from "../../components/Catalog/Catalog";
 import GetStarted from "../../components/GetStarted/GetStarted";
-import Reviews from "../../components/Reviews/reviews";
-import Services from "../../components/Services/services";
+import Reviews from "../../components/Reviews/Reviews"
+import Services from "../../components/Services/Services";
 
 const Home = () => {
     return (
@@ -14,9 +14,9 @@ const Home = () => {
             <GrayListingSection/>
             <Catalog/>
             <ExploreVehicles/>
-            <GetStarted/>
             <Services />
             <Reviews />
+            <GetStarted/>
         </div>
     );
 };

@@ -8,7 +8,7 @@
     "fuelType": "Gasoline",
     "price": 2599,
     "mileage": 15,
-    "imageUrl": "../../assets/images/car1.jpg",
+    "imageUrl": "car1.jpg",
     "details": "Well-maintained Toyota Camry with low mileage. Features include a backup camera, Bluetooth connectivity, and advanced safety systems."
   },
   {
@@ -20,7 +20,7 @@
     "fuelType": "Electric",
     "price": 2250,
     "mileage": 20,
-    "imageUrl": "src/assets/images/car2.webp",
+    "imageUrl": "car2.webp",
     "details": "Sporty car with excellent fuel efficiency. Includes Apple CarPlay, Android Auto, and a turbocharged engine."
   },
   {
@@ -32,7 +32,7 @@
     "fuelType": "Diesel",
     "price": 3875,
     "mileage": 35,
-    "imageUrl": "src/assets/images/car3.avif",
+    "imageUrl": "car3.avif",
     "details": "Powerful Mercedes F-150 with diesel engine. Features include a large touchscreen, 4WD, and towing package."
   },
   {
@@ -44,7 +44,7 @@
     "fuelType": "Electric",
     "price": 4999,
     "mileage": 50,
-    "imageUrl": "src/assets/images/car4.webp",
+    "imageUrl": "car4.webp",
     "details": "Includes premium sound system and all-glass roof."
   },
   {
@@ -56,7 +56,7 @@
     "fuelType": "Gasoline",
     "price": 4200,
     "mileage": 45,
-    "imageUrl": "src/assets/images/car5.webp",
+    "imageUrl": "car5.webp",
     "details": "Luxury BMW X5 SUV with panoramic sunroof. Features include leather seats, navigation system, and premium audio."
   },
   {
@@ -68,7 +68,7 @@
     "fuelType": "Electric",
     "price": 2850,
     "mileage": 18,
-    "imageUrl": "src/assets/images/car6.jpg",
+    "imageUrl": "car6.jpg",
     "details": "Efficient Range Rover EV with long range. Includes fast charging capability and advanced driver assistance features."
   }
 ]

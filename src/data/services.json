@@ -1,0 +1,26 @@
+[
+    {
+      "id": 1,
+      "title": "Wide Selection",
+      "description": "Our stress-free finance department can find financial solutions to save you money.",
+      "icon": "wide-selection.jpeg"
+    },
+    {
+      "id": 2,
+      "title": "Transparent Pricing",
+      "description": "We offer clear and competitive pricing with no hidden fees.",
+      "icon": "support.jpeg"
+    },
+    {
+      "id": 3,
+      "title": "24/7 Support",
+      "description": "Our customer support team is available around the clock to assist you.",
+      "icon": "transparent-pricing.jpeg"
+    },
+    {
+      "id": 4,
+      "title": "Easy and Fast",
+      "description": "Our streamlined process ensures a quick and hassle-free experience.",
+      "icon": "easyFast.jpeg"
+    }
+  ]

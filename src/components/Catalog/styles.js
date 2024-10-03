@@ -1,11 +1,13 @@
 const styles = {
     catalog: {
       textAlign: 'left', // Align text to the left for the catalog section
-      padding: '20px 60px'
+      padding: '20px 60px',
+      marginBottom: '35px'
     },
     heading: {
       fontSize: '24px',
-      marginBottom: '20px',
+      margin: '35px',
+      marginLeft: '100px',
       textAlign: 'left', // Left-align the heading
     },
     brandContainer: {
@@ -17,11 +19,11 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      margin: '10px',
+      margin: '15px',
     },
     brandImage: {
-        width: '60px',
-        height: '60px', 
+        width: '70px',
+        height: '70px', 
         marginBottom: '10px',
     },
     brandName: {
