@@ -17,9 +17,10 @@ const styles = {
   reviewsContainer: {
     display: 'grid',
     gridTemplateColumns: "repeat(3, 1fr)",
-    margin: '25px',
+    margin: '25px 0', // Changed from '25px' to '25px 0'
     justifyContent: 'center',
     flexWrap: 'wrap',
+    marginBottom: '10px',
     gap: '20px', 
   },
   reviewCard: {
@@ -57,6 +58,18 @@ const styles = {
     margin: '0',
     fontSize: '14px',
     color: '#666',
+  },
+  leaveReviewButton: {
+    width: '100%',
+    padding: '15px',
+    margin: '25px 0',
+    backgroundColor: '#f97316', 
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    fontSize: '18px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
   },
 };
 

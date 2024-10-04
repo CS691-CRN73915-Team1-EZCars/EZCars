@@ -67,6 +67,7 @@ const Reviews = () => {
           </div>
         ))}
       </div>
+      <button style={styles.leaveReviewButton}>Leave a Review</button>
     </div>
   );
 };

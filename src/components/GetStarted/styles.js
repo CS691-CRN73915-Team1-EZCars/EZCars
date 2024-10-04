@@ -25,22 +25,22 @@ const gs_styles = {
         backgroundColor: "#f97316",
         color: "#ffffff",
         border: "none",
-        borderRadius: "5px",
+        borderRadius: '6px',
         cursor: "pointer",
         fontWeight: 'bold',
         fontSize: '16px',
     },
     h1: {
-        margin: '0',
+        marginBottom: '20px',
         marginLeft: '50px', // Optional: Add some margin for aesthetics
-        fontSize: '50px',
+        fontSize: '45px',
         fontWeight: 'Bold',
 
     },
     p: {
         margin: '0',
         marginLeft: '50px', // Optional: Add some margin for aesthetics
-        fontSize: '30px',
+        fontSize: '22px',
         fontWeight: '15px',
     },
 };
