@@ -5,13 +5,14 @@ const styles = {
       backgroundColor: "#4D4D4D",
       display: "flex",
       justifyContent: "space-around",
-      padding: "80px",
+      padding: "60px 80px 60px 0",
       color: "#fff",
+      position: 'relative',
     },
     statBox: {
       textAlign: "center",
       fontWeight: "bold", 
-      fontSize: "24px",   
+      fontSize: "24px",  
     },
     statNumber: {
       display: "block",   

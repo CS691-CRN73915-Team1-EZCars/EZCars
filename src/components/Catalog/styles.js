@@ -1,27 +1,34 @@
 const styles = {
     catalog: {
       textAlign: 'left', // Align text to the left for the catalog section
-      padding: '20px 60px'
+      paddingTop: '20px',
+      paddingBottom: '20px',
+      marginBottom: '35px',
+      marginTop: '30px',
+      marginLeft: '15px',
+      paddingLeft: '80px',
+      paddingRight: '80px',
+      
     },
     heading: {
       fontSize: '24px',
-      marginBottom: '20px',
-      textAlign: 'left', // Left-align the heading
+      textAlign: 'left',
     },
     brandContainer: {
       display: 'flex',
-      justifyContent: 'space-evenly',
+      justifyContent: 'space-between', // Start from the left
       flexWrap: 'wrap',
+      gap: '20px', // Add consistent spacing between items
     },
     brand: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      margin: '10px',
+     // margin: '15px',
     },
     brandImage: {
-        width: '60px',
-        height: '60px', 
+        width: '70px',
+        height: '70px', 
         marginBottom: '10px',
     },
     brandName: {

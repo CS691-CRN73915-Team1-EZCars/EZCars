@@ -13,7 +13,7 @@ const Catalog = () => {
             return images;
         }
 
-        const images = importAll(require.context('../../assets/images', false, /\.(png|jpe?g|svg|webp|avif)$/));
+        const images = importAll(require.context('../../assets/images/catalogSection', false, /\.(png|jpe?g|svg|webp|avif)$/));
 
         const loadedImgs = {};
         carBrands.forEach(car => {
@@ -40,3 +40,5 @@ const Catalog = () => {
 };
 
 export default Catalog;
+
+

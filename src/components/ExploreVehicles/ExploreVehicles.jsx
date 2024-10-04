@@ -11,9 +11,9 @@ const ExploreVehicles = () => {
       let images = {};
       r.keys().forEach((item) => { images[item.replace('./', '')] = r(item); });
       return images;
-    }
+    };
     
-    const images = importAll(require.context('../../assets/images', false, /\.(png|jpe?g|svg|webp|avif)$/));
+    const images = importAll(require.context('../../assets/images/exploreVehiclesSection', false, /\.(png|jpe?g|svg|webp|avif)$/));
     
     const loadedImgs = {};
     carData.forEach(car => {
@@ -34,31 +34,36 @@ const ExploreVehicles = () => {
 
   return (
     <div style={styles.exploreVehicles}>
-      <h2>Explore Our Vehicles</h2>
+      <h1 style={styles.exploreVehiclesHeading}>Explore Our Vehicles</h1>
+      <div style={styles.viewAllContainer}>
+      
+       <a href="/vehicles" style={styles.viewAllLink}>View All ↗</a>
+     </div>
+
       <div style={styles.vehicleGrid}>
-  {carData.map((car) => (
-    <div key={car.id} style={styles.vehicleCard}>
-      {loadedImages[car.id] ? (
-        <img src={loadedImages[car.id]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
-      ) : (
-        <div>Loading image...</div>
-      )}
-      <div style={styles.vehicleCardContent}>
-        <h3>{car.make} {car.model} - {car.year}</h3>
-        <p>
-          {car.mileage} miles • {car.transmission} • {car.fuelType}
-        </p>
-        <p style={styles.vehiclePrice}>${car.price}</p>
-        <span 
-          style={styles.viewDetailsLink}
-          onClick={() => handleViewDetails(car)}
-        >
-          View Details <span style={styles.tiltedArrow}>➔</span>
-        </span>
+        {carData.map((car) => (
+          <div key={car.id} style={styles.vehicleCard}>
+            {loadedImages[car.id] ? (
+              <img src={loadedImages[car.id]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
+            ) : (
+              <div>Loading image...</div>
+            )}
+            <div style={styles.vehicleCardContent}>
+              <h3>{car.make} {car.model} - {car.year}</h3>
+              <p>
+                {car.mileage} miles • {car.transmission} • {car.fuelType}
+              </p>
+              <p style={styles.vehiclePrice}>${car.price}</p>
+              <span 
+                style={styles.viewDetailsLink}
+                onClick={() => handleViewDetails(car)}
+              >
+                View Details <span style={styles.tiltedArrow}>➔</span>
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
 
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>

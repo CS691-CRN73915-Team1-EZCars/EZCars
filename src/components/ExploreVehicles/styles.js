@@ -1,33 +1,34 @@
 const styles = {
   exploreVehicles: {
-    padding: "20px 60px",
-    backgroundColor: "#f5f5f5", // Light grey background for the entire page
+    padding: "60px 80px",
+    backgroundColor: "#f5f5f5",
+  },
+  exploreVehiclesHeading: {
+    marginLeft: "20px", 
+    marginTop: "20px", 
   },
   vehicleGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    paddingLeft: "55px",
-    paddingRight: "55px",
-    rowGap: "20px",
+    gridTemplateColumns: "repeat(3, 1fr)", // Ensures 3 cards in a row
+    gap: "20px", // Consistent gap between cards
+    padding: "20px 25px",
   },
   vehicleCard: {
     borderRadius: "8px",
     textAlign: "left",
-    maxWidth: "460px",
     width: "100%",
-    margin: "0 auto",
     backgroundColor: "white",
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    overflow: "hidden", // This ensures the image fits within the rounded corners
+    overflow: "hidden",
   },
   vehicleCardImg: {
     width: "100%",
     height: "250px",
     objectFit: "cover",
-    borderRadius: "8px 8px 0 0", // Rounded corners only on top
+    borderRadius: "8px 8px 0 0",
   },
   vehicleCardContent: {
-    padding: "0px 0px 12px 25px", // Added padding to the content area
+    padding: "12px 25px",
   },
   vehiclePrice: {
     fontWeight: "bold",
@@ -60,7 +61,7 @@ const styles = {
   carDetailsContent: {
     backgroundColor: "white",
     padding: "30px",
-    borderRadius: "8px",
+    borderRadius: "10px",
     maxWidth: "800px",
     width: "90%",
     position: "relative",
@@ -75,8 +76,8 @@ const styles = {
   },
   carDetailsGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
+    gridTemplateColumns: "1fr 1fr", // Two columns for car details
+    gap: "20px", // Gap between details
   },
   carDetailsImageImg: {
     width: "100%",
@@ -90,38 +91,26 @@ const styles = {
     margin: "5px 0",
     color: "#666",
   },
+  
+// View All Styles
+viewAllContainer:{
+   display:'flex',
+   flexDirection:'column',
+   alignItems:'center',
+   justifyContent:'center',
+   padding:'0 60px',
+   margin:'40px',
+},
+viewAllTitle:{
+   fontSize:'1.8em',
+   color:'#333',
+},
+viewAllLink:{
+   fontSize:'1.4em',
+   color:'black',
+   textDecoration:'none',
+   cursor:'pointer',
+}
 };
 
-const mediaQueries = {
-  "@media (max-width: 1400px)": {
-    vehicleGrid: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-  },
-  "@media (max-width: 1200px)": {
-    exploreVehicles: {
-      padding: "20px 40px",
-    },
-  },
-  "@media (max-width: 1024px)": {
-    exploreVehicles: {
-      padding: "20px 30px",
-    },
-  },
-  "@media (max-width: 768px)": {
-    vehicleGrid: {
-      gridTemplateColumns: "1fr",
-    },
-    exploreVehicles: {
-      padding: "20px",
-    },
-    vehicleCard: {
-      maxWidth: "none",
-    },
-    carDetailsGrid: {
-      gridTemplateColumns: "1fr",
-    },
-  },
-};
-
-export { styles, mediaQueries };
+export { styles };

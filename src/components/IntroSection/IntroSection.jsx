@@ -1,5 +1,5 @@
 import React from 'react';
-import carImage from '../../assets/images/IntroSection.png';
+import carImage from '../../assets/images/introSection/IntroSection.png';
 import styles from './styles';
 
 function IntroSection() {
