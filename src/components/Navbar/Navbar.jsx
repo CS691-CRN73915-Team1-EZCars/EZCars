@@ -6,7 +6,7 @@ import styles from './styles'; // Import the styles from the styles.js file
 const Navbar = () => {
   return (
     <nav style={styles.navbar}>
-      <div style={styles.logo}>TESTING Jenkins Auto Deploy EzCars Test3</div>
+      <div style={styles.logo}>TESTING Jenkins Auto Deploy EzCars Test4</div>
       <div style={styles.navContainer}>
         <ul style={styles.navLinks}>
           <li>
