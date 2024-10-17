@@ -32,8 +32,12 @@ const Navbar = () => {
         </ul>
       </div>
       <div style={styles.buttonContainer}>
-        <button style={styles.buttonLink}>Login</button>
-        <button style={styles.button}>Sign Up</button>
+        <Link to="/login" style={{ textDecoration: 'none' }}>
+          <button style={styles.button}>Login</button>
+        </Link>
+        <Link to="/signup" style={{ textDecoration: 'none' }}>
+          <button style={styles.button}>Sign Up</button>
+        </Link>
       </div>
     </nav>
   );
