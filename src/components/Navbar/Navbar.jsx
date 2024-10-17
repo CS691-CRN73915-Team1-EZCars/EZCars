@@ -6,7 +6,7 @@ import styles from './styles'; // Import the styles from the styles.js file
 const Navbar = () => {
   return (
     <nav style={styles.navbar}>
-      <div style={styles.logo}>EzCars</div>
+      <div style={styles.logo}>EzCars Slack Notification</div>
       <div style={styles.navContainer}>
         <ul style={styles.navLinks}>
           <li>
