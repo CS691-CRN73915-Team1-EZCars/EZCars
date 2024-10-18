@@ -11,6 +11,7 @@ import VehicleHistory from "./pages/VehicleHistory/VehicleHistory";
 import Footer from "./components/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import ModifyAccount from "./pages/ModifyAccount/ModifyAccount";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} /> 
           <Route path="/AccountSummary" element={<AccountSummary />} /> 
           <Route path="/VehicleHistory" element={<VehicleHistory />} /> 
+          <Route path="/modify_account" element={<ModifyAccount />} />
         </Routes>
         <Footer />
       </div>
