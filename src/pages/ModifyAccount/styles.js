@@ -71,7 +71,6 @@ const styles = {
     textAlign: 'center',
     padding: '10px 0',
     borderTop: '1px solid #ccc',
-    marginTop: '20px',
   },
   footerText: {
     color: '#777',

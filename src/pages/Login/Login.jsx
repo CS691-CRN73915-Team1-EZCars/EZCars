@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/auth';
 import styles from './styles';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Login successful');
+        try {
+            const response = await login(username, password);
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                navigate('/'); // Redirect to home page
             } else {
                 setErrorMessage('Invalid username or password');
             }
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error('Error:', error);
             setErrorMessage('An error occurred. Please try again later.');
-        });
+        }
     };
 
     return (
