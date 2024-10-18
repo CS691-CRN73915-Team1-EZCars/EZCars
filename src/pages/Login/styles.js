@@ -3,7 +3,7 @@ const styles = {
         backgroundImage: "url('image.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: '100vh',
+        height: '70vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'

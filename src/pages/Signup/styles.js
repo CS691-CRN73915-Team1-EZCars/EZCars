@@ -3,7 +3,7 @@ const styles = {
         backgroundImage: "url('C:\\Users\\avinash\\Desktop\\ezcars\\ezcars-app\\src\\image.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: '100vh',
+        height: '80vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
