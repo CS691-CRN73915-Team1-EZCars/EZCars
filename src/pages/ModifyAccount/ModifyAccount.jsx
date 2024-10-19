@@ -2,32 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { getUserById, updateUser } from '../../api/users';
 import styles from './styles'; // Adjust the import as necessary
 
-const ModifyAccount = ({ userId }) => {
+const ModifyAccount = () => {
+  // Get userId from localStorage
+  const userId = localStorage.getItem('userId');
+
   const [accountDetails, setAccountDetails] = useState({
     username: '',
-    password: '',
-    fullName: '',
-    email: ''
+    email: '',
+    phoneNumber: ''
   });
 
-  const [editableFields, setEditableFields] = useState({
-    username: false,
-    password: false,
-    fullName: false,
-    email: false
-  });
+  const [isEditable, setIsEditable] = useState(false); // Single state for editing
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const userData = await getUserById(userId);
-        setAccountDetails(userData);
+        console.log('Fetched user data:', userData); // Debugging line
+
+        // Assuming userData is in the format: { username, email, phoneNumber }
+        setAccountDetails({
+          username: userData.username || '',
+          email: userData.email || '',
+          phoneNumber: userData.phoneNumber || ''
+        });
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
-    fetchUserDetails();
-  }, [userId]);
+
+    // Check if userId exists before fetching
+    if (userId) {
+      fetchUserDetails();
+    } else {
+      console.error('User ID not found in localStorage');
+    }
+  }, [userId]); // Add userId as a dependency
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,18 +47,22 @@ const ModifyAccount = ({ userId }) => {
     });
   };
 
-  const toggleEditField = (fieldName) => {
-    setEditableFields({
-      ...editableFields,
-      [fieldName]: !editableFields[fieldName]
-    });
+  const validateFields = () => {
+    return Object.values(accountDetails).every((value) => value.trim() !== '');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateFields()) {
+      alert('All fields must be filled out.');
+      return;
+    }
+
     try {
       await updateUser(userId, accountDetails);
       alert('Account details updated successfully!');
+      setIsEditable(false); // Disable editing after successful update
     } catch (error) {
       console.error('Error updating account:', error);
       alert('Failed to update account. Please try again.');
@@ -69,55 +83,10 @@ const ModifyAccount = ({ userId }) => {
             name="username"
             value={accountDetails.username}
             onChange={handleInputChange}
-            readOnly={!editableFields.username}
+            readOnly={!isEditable}
             placeholder="Enter your username"
             style={styles.input}
           />
-          <div style={styles.buttonContainer}>
-            <button type="button" style={styles.editButton} onClick={() => toggleEditField('username')}>
-              {editableFields.username ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
-        </div>
-
-        {/* Password Field */}
-        <div style={styles.formGroup}>
-          <label htmlFor="password" style={styles.label}>Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={accountDetails.password}
-            onChange={handleInputChange}
-            readOnly={!editableFields.password}
-            placeholder="Enter your password"
-            style={styles.input}
-          />
-          <div style={styles.buttonContainer}>
-            <button type="button" style={styles.editButton} onClick={() => toggleEditField('password')}>
-              {editableFields.password ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
-        </div>
-
-        {/* Full Name Field */}
-        <div style={styles.formGroup}>
-          <label htmlFor="fullName" style={styles.label}>Full Name:</label>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            value={accountDetails.fullName}
-            onChange={handleInputChange}
-            readOnly={!editableFields.fullName}
-            placeholder="Enter your full name"
-            style={styles.input}
-          />
-          <div style={styles.buttonContainer}>
-            <button type="button" style={styles.editButton} onClick={() => toggleEditField('fullName')}>
-              {editableFields.fullName ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
         </div>
 
         {/* Email Field */}
@@ -129,18 +98,39 @@ const ModifyAccount = ({ userId }) => {
             name="email"
             value={accountDetails.email}
             onChange={handleInputChange}
-            readOnly={!editableFields.email}
+            readOnly={!isEditable}
             placeholder="Enter your email"
             style={styles.input}
           />
-          <div style={styles.buttonContainer}>
-            <button type="button" style={styles.editButton} onClick={() => toggleEditField('email')}>
-              {editableFields.email ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
         </div>
 
-        <button type="submit" style={styles.button}>Update Account</button>
+        {/* Phone Number Field */}
+        <div style={styles.formGroup}>
+          <label htmlFor="phoneNumber" style={styles.label}>Phone Number:</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={accountDetails.phoneNumber}
+            onChange={handleInputChange}
+            readOnly={!isEditable}
+            placeholder="Enter your phone number"
+            style={styles.input}
+          />
+        </div>
+
+        {/* Single Edit Button */}
+        <div style={styles.buttonContainer}>
+          <button 
+            type="button" 
+            style={styles.editButton} 
+            onClick={() => setIsEditable((prev) => !prev)} // Toggle edit mode
+          >
+            {isEditable ? 'Cancel' : 'Edit'}
+          </button>
+        </div>
+
+        <button type="submit" style={styles.button} disabled={!isEditable}>Update Account</button>
       </form>
     </div>
   );
