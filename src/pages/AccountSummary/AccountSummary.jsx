@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './styles';
 import data from '../../data/userData.json';
 import { Link } from 'react-router-dom';
+import { getUserById } from '../../api/users'; 
 
 const AccountSummary = () => {
-  const user = data;
+  const [user, setUser] = useState(data);
   const [notificationPreference, setNotificationPreference] = useState(
-    user.preferences.notifications.sms ? 'sms' : 'email'
+    data.preferences.notifications.sms ? 'sms' : 'email'
   );
+
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userData = await getUserById(userId);
+        setUser(prevUser => ({ ...prevUser, ...userData }));
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+    if (userId) {
+      fetchUserDetails();
+    }
+  }, [userId]);
 
   const handleNotificationChange = (type) => {
     setNotificationPreference(type);
+  };
+
+  const safelyGetNestedProp = (obj, path) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
 
   return (
@@ -52,15 +73,15 @@ const AccountSummary = () => {
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Plan:</span>
-            <span style={styles.value}>{user.subscriptionDetails.plan}</span>
+            <span style={styles.value}>{safelyGetNestedProp(user, 'subscriptionDetails.plan')}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Start Date:</span>
-            <span style={styles.value}>{user.subscriptionDetails.startDate}</span>
+            <span style={styles.value}>{safelyGetNestedProp(user, 'subscriptionDetails.startDate')}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Renewal Date:</span>
-            <span style={styles.value}>{user.subscriptionDetails.renewalDate}</span>
+            <span style={styles.value}>{safelyGetNestedProp(user, 'subscriptionDetails.renewalDate')}</span>
           </div>
         </div>
 
@@ -85,7 +106,11 @@ const AccountSummary = () => {
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Last Ride:</span>
-            <span style={styles.value}>{`${user.lastRide.date} - ${user.lastRide.vehicle} (Driver: ${user.lastRide.driverName})`}</span>
+            <span style={styles.value}>
+              {safelyGetNestedProp(user, 'lastRide.date')} - 
+              {safelyGetNestedProp(user, 'lastRide.vehicle')} 
+              (Driver: {safelyGetNestedProp(user, 'lastRide.driverName')})
+            </span>
           </div>
         </div>
 
@@ -94,7 +119,7 @@ const AccountSummary = () => {
           <h3 style={styles.sectionHeading}>Preferences</h3>
           <div style={styles.infoItem}>
             <span style={styles.label}>Language:</span>
-            <span style={styles.value}>{user.preferences.language}</span>
+            <span style={styles.value}>{safelyGetNestedProp(user, 'preferences.language')}</span>
           </div>
           <div style={styles.notificationPreferences}>
             <div style={styles.notificationHeader}>

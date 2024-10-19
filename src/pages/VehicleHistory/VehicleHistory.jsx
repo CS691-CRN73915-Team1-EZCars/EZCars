@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './styles';
 import data from '../../data/sampleRentals.json';
 
 const Summary = () => {
   const [loadedImages, setLoadedImages] = useState({});
-  const vehiclesData = data.filter(item => item.id);
-  const user = data.find(item => item.user).user;
+
+  // Memoize vehiclesData and user to prevent unnecessary recalculations
+  const vehiclesData = useMemo(() => data.filter(item => item.id), []);
+  const user = useMemo(() => data.find(item => item.user)?.user, []);
 
   useEffect(() => {
     const importAll = (r) => {
@@ -23,22 +25,22 @@ const Summary = () => {
     });
 
     setLoadedImages(loadedImgs);
-  }, [vehiclesData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // We've removed vehiclesData from dependencies and added the ESLint disable comment
+
+  if (!user) {
+    return <div>No user data found</div>;
+  }
 
   return (
     <div style={styles.summaryContainer}>
       <h2 style={styles.heading}>Vehicle Booking Summary</h2>
       
-      {/* <div style={styles.userInfoCard}>
-        <h3 style={styles.cardHeading}>User Information</h3>
-        <p style={styles.userInfoItem}><span style={styles.label}>Name:</span> {user.name}</p>
-        <p style={styles.userInfoItem}><span style={styles.label}>Email:</span> {user.email}</p>
-      </div> */}
-      
       <div style={styles.bookingHistory}>
-        {/* <h3 style={styles.sectionHeading}>Previous Bookings</h3> */}
         {user.bookings.map((booking, index) => {
           const vehicle = vehiclesData.find(v => v.id === booking.vehicleId);
+          if (!vehicle) return null; // Skip if vehicle not found
+
           return (
             <div key={index} style={styles.bookingCard}>
               <div style={styles.bookingContent}>
@@ -64,16 +66,14 @@ const Summary = () => {
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
                   <p style={styles.bookingDetail}>
-                <span style={styles.label}>Pick-up Date:</span> {new Date(booking.date).toLocaleDateString()}
-                </p>
-
+                    <span style={styles.label}>Pick-up Date:</span> {new Date(booking.date).toLocaleDateString()}
+                  </p>
                 </div>
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
                   <p style={styles.bookingDetail}>
-                <span style={styles.label}>Drop-off Date:</span> {new Date(new Date(booking.date).getTime() + booking.duration * 60 * 60 * 1000).toLocaleDateString()}
-                    </p>
-
+                    <span style={styles.label}>Drop-off Date:</span> {new Date(new Date(booking.date).getTime() + booking.duration * 60 * 60 * 1000).toLocaleDateString()}
+                  </p>
                 </div>
                 <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} hours</p>
               </div>

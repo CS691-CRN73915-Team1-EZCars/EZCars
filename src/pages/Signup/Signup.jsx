@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createUser } from '../../api/users'; // Adjust the import path as needed
 import styles from './styles';
 
 function Signup() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -28,15 +30,44 @@ function Signup() {
                 passwordHash: formData.password // Note: Hashing should be done on the server side
             });
             console.log('Signup successful', response);
-            setSuccess('Signup successful! You can now log in.');
-            // Optionally, redirect to login page after a delay
-            // setTimeout(() => window.location.href = '/login', 3000);
+            setSuccess('Signup successful! Redirecting to home page...');
+            setTimeout(() => navigate('/'), 2000);
         } catch (error) {
-            console.error('Signup error', error);
-            setError(error.message || 'An error occurred during signup. Please try again.');
+            console.error('Signup error:', error);
+            console.log('Error details:', JSON.stringify(error, null, 2));
+    
+            let errorMessage = 'An error occurred during signup. Please try again.';
+    
+            if (error.response) {
+                console.log('Error response:', JSON.stringify(error.response, null, 2));
+                errorMessage = error.response.data?.message || error.response.data || error.message || errorMessage;
+            } else if (error.request) {
+                console.log('Error request:', JSON.stringify(error.request, null, 2));
+                errorMessage = 'No response received from the server. Please try again.';
+            } else {
+                console.log('Error message:', error.message);
+                errorMessage = error.message || errorMessage;
+            }
+    
+            if (typeof errorMessage === 'string') {
+                if (errorMessage.includes('Duplicate entry')) {
+                    if (errorMessage.includes(formData.username)) {
+                        setError('This username is already taken.');
+                    } else if (errorMessage.includes(formData.email)) {
+                        setError('This email is already registered.');
+                    } else if (errorMessage.includes(formData.phoneNumber)) {
+                        setError('This phone number is already registered.');
+                    } else {
+                        setError('This information is already registered.');
+                    }
+                } else {
+                    setError(errorMessage);
+                }
+            } else {
+                setError('An unexpected error occurred. Please try again.');
+            }
         }
     };
-
     return (
         <div style={styles.signupPage}>
             <div style={styles.signupContainer}>
@@ -87,30 +118,6 @@ function Signup() {
                         required 
                         style={styles.input} 
                     />
-
-                    <label htmlFor="role" style={styles.label}>Role</label>
-                    <select 
-                        id="role" 
-                        name="role" 
-                        value={formData.role}
-                        onChange={handleChange}
-                        style={styles.input}
-                    >
-                        <option value="Customer">Customer</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-
-                    <label htmlFor="subscriptionStatus" style={styles.label}>Subscription Status</label>
-                    <select 
-                        id="subscriptionStatus" 
-                        name="subscriptionStatus" 
-                        value={formData.subscriptionStatus}
-                        onChange={handleChange}
-                        style={styles.input}
-                    >
-                        <option value="Normal">Normal</option>
-                        <option value="Premium">Premium</option>
-                    </select>
 
                     <button type="submit" style={styles.button}>Sign Up</button>
                 </form>
