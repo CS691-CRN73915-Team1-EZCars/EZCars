@@ -1,6 +1,5 @@
 const styles = {
     signupPage: {
-        backgroundImage: "url('C:\\Users\\avinash\\Desktop\\ezcars\\ezcars-app\\src\\image.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         height: '80vh',

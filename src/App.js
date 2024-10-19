@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Vehicles from "./pages/Vehicles/Vehicles";
 import About from "./pages/About/About";
-import Contact from "./pages/AccountSummary/AccountSummary";
+import Contact from "./pages/Contact/Contact";
 import AccountSummary from "./pages/AccountSummary/AccountSummary";
 import VehicleHistory from "./pages/VehicleHistory/VehicleHistory";
 import Footer from "./components/Footer/Footer";
@@ -26,8 +26,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/vehicles" element={<PrivateRoute><Vehicles /></PrivateRoute>} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
+          <Route path="/contact" element={<PrivateRoute><Contact /></PrivateRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/AccountSummary" element={<PrivateRoute><AccountSummary /></PrivateRoute>} />

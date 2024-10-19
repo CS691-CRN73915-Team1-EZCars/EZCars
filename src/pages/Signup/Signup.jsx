@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createUser } from '../../api/users'; // Adjust the import path as needed
+import { createUser } from '../../api/users'; 
 import styles from './styles';
 
 function Signup() {
@@ -27,10 +27,10 @@ function Signup() {
         try {
             const response = await createUser({
                 ...formData,
-                passwordHash: formData.password // Note: Hashing should be done on the server side
+                passwordHash: formData.password 
             });
             console.log('Signup successful', response);
-            setSuccess('Signup successful! Redirecting to home page...');
+            setSuccess('Signup successful! Redirecting to Login page...');
             setTimeout(() => navigate('/'), 2000);
         } catch (error) {
             console.error('Signup error:', error);
