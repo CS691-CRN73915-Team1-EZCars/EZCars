@@ -1,10 +1,5 @@
 {
-    "userId": 19,
-    "username": "harsh",
-    "email": "harsh@example.com",
-    "phoneNumber": "1234567890",
-    "role": "Customer",
-    "subscriptionStatus": "Normal",
+
     "accountStatus": "Active",
     "preferences": {
       "language": "English",
