@@ -23,7 +23,12 @@ function Login() {
             }
         } catch (error) {
             console.error('Error:', error);
-            setErrorMessage('An error occurred. Please try again later.');
+            if (error.response && error.response.data) {
+                // Extract and display the error message from the backend
+                setErrorMessage(error.response.data.message || 'An error occurred. Please try again later.');
+            } else {
+                setErrorMessage('An error occurred. Please try again later.');
+            }
         }
     };
 
