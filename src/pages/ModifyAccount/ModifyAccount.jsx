@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getUserById, updateUser } from '../../api/users';
-import styles from './styles'; // Adjust the import as necessary
+import styles from './styles'; 
 
 const ModifyAccount = () => {
-  // Get userId from localStorage
   const userId = localStorage.getItem('userId');
 
   const [accountDetails, setAccountDetails] = useState({
@@ -12,16 +11,28 @@ const ModifyAccount = () => {
     phoneNumber: ''
   });
 
-  const [isEditable, setIsEditable] = useState(false); // Single state for editing
+  const [originalDetails, setOriginalDetails] = useState(null); 
+  const [isEditable, setIsEditable] = useState(false);
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    phoneNumber: ''
+  });
+  const [successMessage, setSuccessMessage] = useState(''); 
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const userData = await getUserById(userId);
-        console.log('Fetched user data:', userData); // Debugging line
+        console.log('Fetched user data:', userData);
 
-        // Assuming userData is in the format: { username, email, phoneNumber }
         setAccountDetails({
+          username: userData.username || '',
+          email: userData.email || '',
+          phoneNumber: userData.phoneNumber || ''
+        });
+
+        setOriginalDetails({
           username: userData.username || '',
           email: userData.email || '',
           phoneNumber: userData.phoneNumber || ''
@@ -31,13 +42,12 @@ const ModifyAccount = () => {
       }
     };
 
-    // Check if userId exists before fetching
     if (userId) {
       fetchUserDetails();
     } else {
       console.error('User ID not found in localStorage');
     }
-  }, [userId]); // Add userId as a dependency
+  }, [userId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,35 +55,79 @@ const ModifyAccount = () => {
       ...accountDetails,
       [name]: value
     });
+    
+    setErrors({
+      ...errors,
+      [name]: ''
+    });
   };
 
   const validateFields = () => {
-    return Object.values(accountDetails).every((value) => value.trim() !== '');
+    let validationErrors = {
+      username: '',
+      email: '',
+      phoneNumber: ''
+    };
+
+    if (!accountDetails.username.trim()) {
+      validationErrors.username = 'Username cannot be empty';
+    }
+    if (!accountDetails.email.trim()) {
+      validationErrors.email = 'Email cannot be empty';
+    }
+    if (!accountDetails.phoneNumber.trim()) {
+      validationErrors.phoneNumber = 'Phone Number cannot be empty';
+    }
+
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).every(key => !validationErrors[key]);
+  };
+
+  const isDetailsUnchanged = () => {
+    // Compare current details with the original details
+    return JSON.stringify(accountDetails) === JSON.stringify(originalDetails);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateFields()) {
-      alert('All fields must be filled out.');
+      return;
+    }
+
+    // Check if the details are unchanged
+    if (isDetailsUnchanged()) {
+      setSuccessMessage('Details are the same and up to date.');
+      setIsEditable(false); 
       return;
     }
 
     try {
       await updateUser(userId, accountDetails);
-      alert('Account details updated successfully!');
-      setIsEditable(false); // Disable editing after successful update
+      setSuccessMessage('Account details updated successfully!');
+      setIsEditable(false); 
+
+      // Update the original details to reflect the changes
+      setOriginalDetails({ ...accountDetails });
     } catch (error) {
       console.error('Error updating account:', error);
       alert('Failed to update account. Please try again.');
     }
   };
 
+  const handleEditToggle = () => {
+    setIsEditable((prev) => !prev);
+    setSuccessMessage('');
+  };
+
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Modify Account</h2>
-      <form onSubmit={handleSubmit}>
 
+      {/* Success message (Green) */}
+      {successMessage && <p style={styles.successMessage}>{successMessage}</p>}
+
+      <form onSubmit={handleSubmit}>
         {/* Username Field */}
         <div style={styles.formGroup}>
           <label htmlFor="username" style={styles.label}>Username:</label>
@@ -87,6 +141,7 @@ const ModifyAccount = () => {
             placeholder="Enter your username"
             style={styles.input}
           />
+          {errors.username && <span style={styles.error}>{errors.username}</span>} 
         </div>
 
         {/* Email Field */}
@@ -102,6 +157,7 @@ const ModifyAccount = () => {
             placeholder="Enter your email"
             style={styles.input}
           />
+          {errors.email && <span style={styles.error}>{errors.email}</span>}
         </div>
 
         {/* Phone Number Field */}
@@ -117,14 +173,15 @@ const ModifyAccount = () => {
             placeholder="Enter your phone number"
             style={styles.input}
           />
+          {errors.phoneNumber && <span style={styles.error}>{errors.phoneNumber}</span>}
         </div>
 
-        {/* Single Edit Button */}
+        {/* Edit Button */}
         <div style={styles.buttonContainer}>
-          <button 
-            type="button" 
-            style={styles.editButton} 
-            onClick={() => setIsEditable((prev) => !prev)} // Toggle edit mode
+          <button
+            type="button"
+            style={styles.editButton}
+            onClick={handleEditToggle} 
           >
             {isEditable ? 'Cancel' : 'Edit'}
           </button>

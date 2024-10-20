@@ -5,16 +5,16 @@ const styles = {
     padding: '30px',
     borderRadius: '12px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#ffffff', // White card background
+    backgroundColor: '#ffffff', 
     fontFamily: 'Arial, sans-serif',
   },
   pageBackground: {
-    backgroundColor: '#f0f2f5', // Light gray background (similar to Account Summary)
-    minHeight: '100vh', // Full viewport height to cover the entire page
+    backgroundColor: '#f0f2f5',
+    minHeight: '100vh',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center', // Center the card vertically and horizontally
-    padding: '20px', // Add padding for better spacing around the card
+    alignItems: 'center', 
+    padding: '20px', 
   },
   heading: {
     color: '#2c3e50',
@@ -81,6 +81,19 @@ const styles = {
     borderTop: '1px solid #ccc',
     color: '#777',
     fontSize: '14px',
+  },
+  successMessage: {
+    color: 'green', 
+    fontSize: '16px', 
+    marginBottom: '10px',
+    textAlign: 'center', 
+    width: '100%', 
+  },
+  error: {
+    color: 'red', 
+    fontSize: '16px',
+    marginTop: '-10px', 
+    marginBottom: '10px',
   },
 };
 
