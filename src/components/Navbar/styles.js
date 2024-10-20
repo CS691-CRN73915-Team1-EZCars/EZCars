@@ -79,6 +79,17 @@ const styles = {
     dropdownLinkHover: {
       backgroundColor: '#ff7f00',
     },
+    authButton: {
+      backgroundColor: '#ff7f00', // Button background color
+      color: '#fff', // Text color
+      padding: '10px 20px',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      fontSize: '16px',
+      transition: 'background-color 0.3s ease', // Smooth transition for hover
+      marginRight: '10px', // Add margin to the right of the Login button
+    },
   };
   
   export default styles;

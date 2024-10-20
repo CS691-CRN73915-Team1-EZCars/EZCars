@@ -31,7 +31,7 @@ function Signup() {
             });
             console.log('Signup successful', response);
             setSuccess('Signup successful! Redirecting to Login page...');
-            setTimeout(() => navigate('/'), 2000);
+            setTimeout(() => navigate('/login'), 2000);
         } catch (error) {
             console.error('Signup error:', error);
             console.log('Error details:', JSON.stringify(error, null, 2));
