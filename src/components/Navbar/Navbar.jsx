@@ -5,7 +5,8 @@ import styles from './styles'; // Assuming you have an external styles object
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem('token'); // Fetch the token from localStorage
-  const username = localStorage.getItem('username'); // Fetch the username from localStorage
+  //const username = localStorage.getItem('username'); // Fetch the username from localStorage
+  const [username, setUsername] = useState(localStorage.getItem('username') || 'Guest');
   const location = useLocation(); // Get the current location
   const navigate = useNavigate(); // Use navigate for redirection
 
@@ -18,6 +19,19 @@ const Navbar = () => {
   useEffect(() => {
     setDropdownOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    const handleUsernameUpdate = (event) => {
+      setUsername(event.detail);
+    };
+
+    window.addEventListener('usernameUpdated', handleUsernameUpdate);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('usernameUpdated', handleUsernameUpdate);
+    };
+  }, []);
 
   // Function to handle logout
   const handleLogout = () => {

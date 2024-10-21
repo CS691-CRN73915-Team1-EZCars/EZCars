@@ -84,7 +84,6 @@ const ModifyAccount = () => {
   };
 
   const isDetailsUnchanged = () => {
-    // Compare current details with the original details
     return JSON.stringify(accountDetails) === JSON.stringify(originalDetails);
   };
 
@@ -95,7 +94,6 @@ const ModifyAccount = () => {
       return;
     }
 
-    // Check if the details are unchanged
     if (isDetailsUnchanged()) {
       setSuccessMessage('Details are the same and up to date.');
       setIsEditable(false); 
@@ -105,10 +103,16 @@ const ModifyAccount = () => {
     try {
       await updateUser(userId, accountDetails);
       setSuccessMessage('Account details updated successfully!');
-      setIsEditable(false); 
+      setIsEditable(false);
 
       // Update the original details to reflect the changes
       setOriginalDetails({ ...accountDetails });
+
+      // Update the username in localStorage to reflect in the navbar
+      localStorage.setItem('username', accountDetails.username); 
+
+      // Dispatch a custom event to notify changes
+      window.dispatchEvent(new CustomEvent('usernameUpdated', { detail: accountDetails.username }));
     } catch (error) {
       console.error('Error updating account:', error);
       alert('Failed to update account. Please try again.');
@@ -124,11 +128,9 @@ const ModifyAccount = () => {
     <div style={styles.container}>
       <h2 style={styles.heading}>Modify Account</h2>
 
-      {/* Success message (Green) */}
       {successMessage && <p style={styles.successMessage}>{successMessage}</p>}
 
       <form onSubmit={handleSubmit}>
-        {/* Username Field */}
         <div style={styles.formGroup}>
           <label htmlFor="username" style={styles.label}>Username:</label>
           <input
@@ -141,10 +143,9 @@ const ModifyAccount = () => {
             placeholder="Enter your username"
             style={styles.input}
           />
-          {errors.username && <span style={styles.error}>{errors.username}</span>} 
+          {errors.username && <span style={styles.error}>{errors.username}</span>}
         </div>
 
-        {/* Email Field */}
         <div style={styles.formGroup}>
           <label htmlFor="email" style={styles.label}>Email:</label>
           <input
@@ -160,7 +161,6 @@ const ModifyAccount = () => {
           {errors.email && <span style={styles.error}>{errors.email}</span>}
         </div>
 
-        {/* Phone Number Field */}
         <div style={styles.formGroup}>
           <label htmlFor="phoneNumber" style={styles.label}>Phone Number:</label>
           <input
@@ -176,12 +176,11 @@ const ModifyAccount = () => {
           {errors.phoneNumber && <span style={styles.error}>{errors.phoneNumber}</span>}
         </div>
 
-        {/* Edit Button */}
         <div style={styles.buttonContainer}>
           <button
             type="button"
             style={styles.editButton}
-            onClick={handleEditToggle} 
+            onClick={handleEditToggle}
           >
             {isEditable ? 'Cancel' : 'Edit'}
           </button>
