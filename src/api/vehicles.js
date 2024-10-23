@@ -62,3 +62,29 @@ export const deleteVehicle = async (vehicleId) => {
     throw new Error('Failed to delete vehicle');
   }
 };
+
+
+
+export const searchVehicles = async (searchCriteria, page = 0, size = 12) => {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+  });
+
+  if (searchCriteria.searchText) queryParams.append('searchText', searchCriteria.searchText);
+  if (searchCriteria.make) queryParams.append('make', searchCriteria.make);
+  if (searchCriteria.model) queryParams.append('model', searchCriteria.model);
+  if (searchCriteria.year) queryParams.append('year', searchCriteria.year.toString());
+  if (searchCriteria.minPrice) queryParams.append('minPrice', searchCriteria.minPrice.toString());
+  if (searchCriteria.maxPrice) queryParams.append('maxPrice', searchCriteria.maxPrice.toString());
+
+  const response = await fetch(`${API_BASE_URL}/vehicles/search?${queryParams.toString()}`, {
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to search vehicles');
+  }
+
+  return response.json();
+};
