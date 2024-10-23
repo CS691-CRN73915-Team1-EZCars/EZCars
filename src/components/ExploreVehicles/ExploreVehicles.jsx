@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import carData from '../../data/carData.json';
+import { getAllVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
 
 const ExploreVehicles = () => {
   const [loadedImages, setLoadedImages] = useState({});
   const [selectedCar, setSelectedCar] = useState(null);
+  const [carData, setCarData] = useState([]); 
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const vehicles = await getAllVehicles(0, 6); // Fetch first 6 vehicles
+        setCarData(vehicles.content); // Assuming the API returns a paginated response
+      } catch (error) {
+        console.error('Error fetching vehicles:', error);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
 
   useEffect(() => {
     const importAll = (r) => {
@@ -18,11 +32,11 @@ const ExploreVehicles = () => {
     const loadedImgs = {};
     carData.forEach(car => {
       const imageName = car.imageUrl.split('/').pop();
-      loadedImgs[car.id] = images[imageName];
+      loadedImgs[car.vehicleId] = images[imageName];
     });
 
     setLoadedImages(loadedImgs);
-  }, []);
+  }, [carData]);
 
   const handleViewDetails = (car) => {
     setSelectedCar(car);
@@ -41,9 +55,9 @@ const ExploreVehicles = () => {
 
       <div style={styles.vehicleGrid}>
         {carData.map((car) => (
-          <div key={car.id} style={styles.vehicleCard}>
-            {loadedImages[car.id] ? (
-              <img src={loadedImages[car.id]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
+          <div key={car.vehicleId} style={styles.vehicleCard}>
+            {loadedImages[car.vehicleId] ? (
+              <img src={loadedImages[car.vehicleId]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
             ) : (
               <div>Loading image...</div>
             )}
@@ -70,7 +84,7 @@ const ExploreVehicles = () => {
             <span style={styles.closeLink} onClick={handleCloseDetails}>&times;</span>
             <div style={styles.carDetailsGrid}>
               <div>
-                <img src={loadedImages[selectedCar.id]} alt={`${selectedCar.make} ${selectedCar.model}`} style={styles.carDetailsImageImg} />
+                <img src={loadedImages[selectedCar.vehicleId]} alt={`${selectedCar.make} ${selectedCar.model}`} style={styles.carDetailsImageImg} />
               </div>
               <div>
                 <h2 style={styles.carDetailsInfoH2}>{selectedCar.make} {selectedCar.model}</h2>

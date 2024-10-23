@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "make": "Maserati",
     "model": "MC20",
     "year": 2022,
@@ -12,7 +11,6 @@
     "details": "Well-maintained Toyota Camry with low mileage. Features include a backup camera, Bluetooth connectivity, and advanced safety systems."
   },
   {
-    "id": 2,
     "make": "Tesla",
     "model": "Model-S",
     "year": 2022,
@@ -24,7 +22,6 @@
     "details": "Sporty car with excellent fuel efficiency. Includes Apple CarPlay, Android Auto, and a turbocharged engine."
   },
   {
-    "id": 3,
     "make": "Mercedes",
     "model": "F-150",
     "year": 2020,
@@ -36,7 +33,6 @@
     "details": "Powerful Mercedes F-150 with diesel engine. Features include a large touchscreen, 4WD, and towing package."
   },
   {
-    "id": 4,
     "make": "Ford",
     "model": "F-160",
     "year": 2023,
@@ -48,7 +44,6 @@
     "details": "Includes premium sound system and all-glass roof."
   },
   {
-    "id": 5,
     "make": "BMW",
     "model": "X5",
     "year": 2019,
@@ -60,7 +55,6 @@
     "details": "Luxury BMW X5 SUV with panoramic sunroof. Features include leather seats, navigation system, and premium audio."
   },
   {
-    "id": 6,
     "make": "Land Rover",
     "model": "Range Rover",
     "year": 2022,
