@@ -18,13 +18,13 @@ function Login() {
                 localStorage.setItem('userId', response.data.userId);
                 localStorage.setItem('username', response.data.username);
                 navigate('/'); // Redirect to home page
+                window.location.reload(); // Refresh the page
             } else {
                 setErrorMessage('Invalid username or password');
             }
         } catch (error) {
             console.error('Error:', error);
             if (error.response && error.response.data) {
-                // Extract and display the error message from the backend
                 setErrorMessage(error.response.data.message || 'An error occurred. Please try again later.');
             } else {
                 setErrorMessage('An error occurred. Please try again later.');
