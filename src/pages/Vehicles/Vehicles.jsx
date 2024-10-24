@@ -108,6 +108,11 @@ const Vehicles = () => {
     setPage((prevPage) => Math.min(totalPages - 1, prevPage + 1));
   };
 
+  const handleBookCar = (car) => {
+    // Implement booking logic here
+    console.log(`Booking car: ${car.make} ${car.model}`);
+  };
+
   return (
     <div style={styles.exploreVehicles}>
       <h1 style={styles.exploreVehiclesHeading}>All Vehicles</h1>
@@ -170,12 +175,20 @@ const Vehicles = () => {
                 {car.mileage} miles • {car.transmission} • {car.fuelType}
               </p>
               <p style={styles.vehiclePrice}>${car.price}</p>
-              <span 
-                style={styles.viewDetailsLink}
-                onClick={() => handleViewDetails(car)}
-              >
-                View Details <span style={styles.tiltedArrow}>➔</span>
-              </span>
+              <div style={styles.actionButtons}>
+                <span 
+                  style={styles.viewDetailsLink}
+                  onClick={() => handleViewDetails(car)}
+                >
+                  View Details <span style={styles.tiltedArrow}>➔</span>
+                </span>
+                <button 
+                  style={styles.bookButton}
+                  onClick={() => handleBookCar(car)}
+                >
+                  Book
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -207,6 +220,12 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Transmission:</strong> {selectedCar.transmission}</p>
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
+                <button 
+                  style={styles.bookButton}
+                  onClick={() => handleBookCar(selectedCar)}
+                >
+                  Book This Car
+                </button>
               </div>
             </div>
           </div>

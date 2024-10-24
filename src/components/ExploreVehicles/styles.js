@@ -112,13 +112,19 @@ viewAllLink:{
    cursor:'pointer',
 },
 bookButton: {
-  backgroundColor: '#4CAF50',
+  backgroundColor: '#f97316',
   color: 'white',
   border: 'none',
   padding: '10px 20px',
   borderRadius: '5px',
   cursor: 'pointer',
-  marginRight: '10px',
+  marginLeft: '50px',
+},
+actionButtons: {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: '10px',
 },
 };
 

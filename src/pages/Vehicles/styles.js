@@ -151,6 +151,21 @@ const styles = {
       fontSize: '1em',
       margin: '0 10px',
     },
+    bookButton: {
+      backgroundColor: '#f97316',
+      color: 'white',
+      border: 'none',
+      padding: '10px 20px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginLeft: '50px',
+    },
+    actionButtons: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: '10px',
+    },
   };
   
   export { styles };
