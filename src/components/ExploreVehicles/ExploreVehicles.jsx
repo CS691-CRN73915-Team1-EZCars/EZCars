@@ -46,6 +46,8 @@ const ExploreVehicles = () => {
     setSelectedCar(null);
   };
 
+  //const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+
   return (
     <div style={styles.exploreVehicles}>
       <h1 style={styles.exploreVehiclesHeading}>Explore Our Vehicles</h1>

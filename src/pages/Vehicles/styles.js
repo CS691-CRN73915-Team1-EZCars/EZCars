@@ -62,7 +62,7 @@ const styles = {
       backgroundColor: "white",
       padding: "30px",
       borderRadius: "10px",
-      maxWidth: "800px",
+      maxWidth: "950px",
       width: "90%",
       position: "relative",
     },

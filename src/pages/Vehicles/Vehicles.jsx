@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAllVehicles, searchVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
+import carMakeModelData from '../../data/carData.json';
 
 const Vehicles = () => {
   const [loadedImages, setLoadedImages] = useState({});
@@ -16,6 +17,13 @@ const Vehicles = () => {
     minPrice: '',
     maxPrice: '',
   });
+  const [makes, setMakes] = useState([]);
+  const [models, setModels] = useState([]);
+
+  useEffect(() => {
+    setMakes(carMakeModelData.makes);
+    setModels(carMakeModelData.models);
+  }, []);
 
   const fetchVehicles = useCallback(async () => {
     try {
@@ -39,7 +47,7 @@ const Vehicles = () => {
 
         vehicles = await searchVehicles(searchParams, page, 12);
       } else {
-        vehicles = await getAllVehicles(page, 12);
+        vehicles = await getAllVehicles(page, 6);
       }
       setCarData(vehicles.content);
       setTotalPages(vehicles.totalPages);
@@ -114,21 +122,15 @@ const Vehicles = () => {
         />
         <select name="make" value={filters.make} onChange={handleFilterChange} style={styles.filterSelect}>
           <option value="">All Makes</option>
-          <option value="Tesla">Tesla</option>
-          <option value="Mercedes">Mercedes</option>
-          <option value="Ford">Ford</option>
-          <option value="Maserati">Maserati</option>
-          <option value="BMW">BMW</option>
-          <option value="Land Rover">Land Rover</option>
+          {makes.map((make, index) => (
+            <option key={index} value={make}>{make}</option>
+          ))}
         </select>
         <select name="model" value={filters.model} onChange={handleFilterChange} style={styles.filterSelect}>
           <option value="">All Models</option>
-          <option value="Model-S">Model-S</option>
-          <option value="F-160">F-160</option>
-          <option value="F-150">F-150</option>
-          <option value="MC20">MC20</option>
-          <option value="X5">X5</option>
-          <option value="Range Rover">Range Rover</option>
+          {models.map((model, index) => (
+            <option key={index} value={model}>{model}</option>
+          ))}
         </select>
         <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
           <option value="">All Years</option>
