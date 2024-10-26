@@ -16,7 +16,8 @@ const ModifyAccount = () => {
   const [errors, setErrors] = useState({
     username: '',
     email: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    general: ''
   });
   const [successMessage, setSuccessMessage] = useState(''); 
 
@@ -39,6 +40,7 @@ const ModifyAccount = () => {
         });
       } catch (error) {
         console.error('Error fetching user details:', error);
+        setErrors(prev => ({ ...prev, general: 'Failed to fetch user details. Please try again.' }));
       }
     };
 
@@ -46,20 +48,22 @@ const ModifyAccount = () => {
       fetchUserDetails();
     } else {
       console.error('User ID not found in localStorage');
+      setErrors(prev => ({ ...prev, general: 'User ID not found. Please log in again.' }));
     }
   }, [userId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAccountDetails({
-      ...accountDetails,
+    setAccountDetails(prev => ({
+      ...prev,
       [name]: value
-    });
+    }));
     
-    setErrors({
-      ...errors,
-      [name]: ''
-    });
+    setErrors(prev => ({
+      ...prev,
+      [name]: '',
+      general: ''
+    }));
   };
 
   const validateFields = () => {
@@ -79,8 +83,8 @@ const ModifyAccount = () => {
       validationErrors.phoneNumber = 'Phone Number cannot be empty';
     }
 
-    setErrors(validationErrors);
-    return Object.keys(validationErrors).every(key => !validationErrors[key]);
+    setErrors(prev => ({ ...prev, ...validationErrors }));
+    return Object.values(validationErrors).every(error => !error);
   };
 
   const isDetailsUnchanged = () => {
@@ -104,24 +108,64 @@ const ModifyAccount = () => {
       await updateUser(userId, accountDetails);
       setSuccessMessage('Account details updated successfully!');
       setIsEditable(false);
-
-      // Update the original details to reflect the changes
+      
+      // Update original details to reflect changes
       setOriginalDetails({ ...accountDetails });
 
-      // Update the username in localStorage to reflect in the navbar
+      // Update username in localStorage
       localStorage.setItem('username', accountDetails.username); 
 
       // Dispatch a custom event to notify changes
       window.dispatchEvent(new CustomEvent('usernameUpdated', { detail: accountDetails.username }));
+
+      // Clear errors after successful update
+      setErrors({
+        username: '',
+        email: '',
+        phoneNumber: '',
+        general: ''
+      });
+      
     } catch (error) {
       console.error('Error updating account:', error);
-      alert('Failed to update account. Please try again.');
+
+      let errorMessage = 'Failed to update account with given data!!.';
+      
+      if (error.response && error.response.data) {
+        console.log('Error response:', JSON.stringify(error.response.data, null, 2));
+        
+        // Check for specific duplicate entry errors
+        if (error.response.data.message.includes('Duplicate entry')) {
+          if (error.response.data.message.includes(accountDetails.username)) {
+            setErrors(prev => ({ ...prev, username: 'This username is already taken.' }));
+          } else if (error.response.data.message.includes(accountDetails.email)) {
+            setErrors(prev => ({ ...prev, email: 'This email is already registered.' }));
+          } else {
+            setErrors(prev => ({ ...prev, general: 'This information is already registered.' }));
+          }
+          return; 
+        }
+        
+      } else if (error.request) {
+        console.log('Error request:', JSON.stringify(error.request, null, 2));
+        errorMessage = 'No response received from the server. Please try again.';
+        
+      } 
+      setErrors(prev => ({ ...prev, general: errorMessage }));
     }
   };
 
   const handleEditToggle = () => {
-    setIsEditable((prev) => !prev);
+    setIsEditable(prev => !prev);
     setSuccessMessage('');
+    
+    // Clear errors when toggling edit mode
+    setErrors({
+      username: '',
+      email: '',
+      phoneNumber: '',
+      general: ''
+    });
   };
 
   return (
@@ -129,6 +173,7 @@ const ModifyAccount = () => {
       <h2 style={styles.heading}>Modify Account</h2>
 
       {successMessage && <p style={styles.successMessage}>{successMessage}</p>}
+      {errors.general && <p style={styles.errorMessage}>{errors.general}</p>}
 
       <form onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
