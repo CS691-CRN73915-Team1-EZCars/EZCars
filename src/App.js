@@ -11,8 +11,9 @@ import VehicleHistory from "./pages/VehicleHistory/VehicleHistory";
 import Footer from "./components/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
-import CustomerSupport from "./pages/Customer Support/CustomerSupport";
+import CustomerSupport from "./pages/CustomerSupport/CustomerSupport";
 import ModifyAccount from "./pages/ModifyAccount/ModifyAccount";
+import NotFound from './pages/NotFound/NotFound';
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<NotFound />} />
 
           {/* Private routes */}
           <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
