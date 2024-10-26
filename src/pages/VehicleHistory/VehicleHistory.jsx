@@ -16,7 +16,7 @@ const Summary = () => {
       return images;
     };
     
-    const images = importAll(require.context('../../assets/images/exploreVehiclesSection', false, /\.(png|jpe?g|svg|webp|avif)$/));
+    const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
     
     const loadedImgs = {};
     vehiclesData.forEach(vehicle => {
