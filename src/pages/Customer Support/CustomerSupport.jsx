@@ -12,8 +12,10 @@ const CustomerSupport = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filterStatus, setFilterStatus] = useState("OPEN");
+    const [showPopup, setShowPopup] = useState(false);
   
     const customerId = localStorage.getItem("userId");
+    const customerName = localStorage.getItem("username");
   
     useEffect(() => {
       fetchTickets();
@@ -52,9 +54,15 @@ const CustomerSupport = () => {
     const handleSubmitNewTicket = async (e) => {
       e.preventDefault();
       try {
-        await createTicket({ ...newTicket, customerId });
+        await createTicket({
+          ...newTicket,
+          customerId,
+          customerName,
+        });
         setNewTicket({ description: "", priority: "MEDIUM" }); // Reset to default MEDIUM priority
         fetchTickets(); // Refresh the ticket list
+        setShowPopup(true); // Show the pop-up
+        setTimeout(() => setShowPopup(false), 3000); // Hide the pop-up after 3 seconds
       } catch (err) {
         setError("Failed to create ticket. Please try again.");
       }
@@ -88,6 +96,12 @@ const CustomerSupport = () => {
           />
           <button type="submit" style={styles.button}>Submit Ticket</button>
         </form>
+
+        {showPopup && (
+          <div style={styles.popup}>
+            Ticket created successfully!
+          </div>
+        )}
 
         <h2 style={styles.subHeading}>Your Tickets</h2>
         <div style={styles.filterContainer}>

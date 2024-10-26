@@ -113,6 +113,17 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
     },
+    popup: {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        padding: '15px',
+        borderRadius: '5px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+        zIndex: 1000,
+      },
   };
   
   export default styles;
