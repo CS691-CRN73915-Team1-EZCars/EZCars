@@ -115,7 +115,7 @@ const ExploreVehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
                 {isLoggedIn && (
                   <button 
-                    style={styles.bookButton}
+                    style={styles.bookCarButton}
                     onClick={() => handleBookCar(selectedCar)}
                   >
                     Book This Car

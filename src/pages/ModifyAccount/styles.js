@@ -95,6 +95,12 @@ const styles = {
     marginTop: '-10px', 
     marginBottom: '10px',
   },
+  errorMessage: {
+    color: 'red', 
+    fontSize: '16px',
+    marginTop: '-10px', 
+    marginBottom: '10px',
+  },
 };
 
 export default styles;

@@ -165,36 +165,40 @@ const Vehicles = () => {
       </div>
 
       <div style={styles.vehicleGrid}>
-        {carData.map((car) => (
-          <div key={car.vehicleId} style={styles.vehicleCard}>
-            {loadedImages[car.vehicleId] ? (
-              <img src={loadedImages[car.vehicleId]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
-            ) : (
-              <div>Loading image...</div>
-            )}
-            <div style={styles.vehicleCardContent}>
-              <h3>{car.make} {car.model} - {car.year}</h3>
-              <p>
-                {car.mileage} miles • {car.transmission} • {car.fuelType}
-              </p>
-              <p style={styles.vehiclePrice}>${car.price}</p>
-              <div style={styles.actionButtons}>
-                <span 
-                  style={styles.viewDetailsLink}
-                  onClick={() => handleViewDetails(car)}
-                >
-                  View Details <span style={styles.tiltedArrow}>➔</span>
-                </span>
-                <button 
-                  style={styles.bookButton}
-                  onClick={() => handleBookCar(car)}
-                >
-                  Book
-                </button>
+        {carData.length === 0 ? (
+          <p style={styles.searchResult}>No results found!!</p>
+        ) : (
+          carData.map((car) => (
+            <div key={car.vehicleId} style={styles.vehicleCard}>
+              {loadedImages[car.vehicleId] ? (
+                <img src={loadedImages[car.vehicleId]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
+              ) : (
+                <div>Loading image...</div>
+              )}
+              <div style={styles.vehicleCardContent}>
+                <h3>{car.make} {car.model} - {car.year}</h3>
+                <p>
+                  {car.mileage} miles • {car.transmission} • {car.fuelType}
+                </p>
+                <p style={styles.vehiclePrice}>${car.price}</p>
+                <div style={styles.actionButtons}>
+                  <span 
+                    style={styles.viewDetailsLink}
+                    onClick={() => handleViewDetails(car)}
+                  >
+                    View Details <span style={styles.tiltedArrow}>➔</span>
+                  </span>
+                  <button 
+                    style={styles.bookButton}
+                    onClick={() => handleBookCar(car)}
+                  >
+                    Book
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Conditional rendering for pagination */}
@@ -227,7 +231,7 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
                 <button 
-                  style={styles.bookButton}
+                  style={styles.bookCarButton}
                   onClick={() => handleBookCar(selectedCar)}
                 >
                   Book This Car

@@ -126,6 +126,15 @@ actionButtons: {
   alignItems: 'center',
   marginTop: '10px',
 },
+bookCarButton: {
+  backgroundColor: '#f97316',
+  color: 'white',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginTop: '30px',
+},
 };
 
 export { styles };
