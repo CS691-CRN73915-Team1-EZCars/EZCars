@@ -11,6 +11,7 @@ import VehicleHistory from "./pages/VehicleHistory/VehicleHistory";
 import Footer from "./components/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import CustomerSupport from "./pages/Customer Support/CustomerSupport";
 import ModifyAccount from "./pages/ModifyAccount/ModifyAccount";
 
 const PrivateRoute = ({ children }) => {
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/AccountSummary" element={<PrivateRoute><AccountSummary /></PrivateRoute>} />
           <Route path="/VehicleHistory" element={<PrivateRoute><VehicleHistory /></PrivateRoute>} />
           <Route path="/modify_account" element={<PrivateRoute><ModifyAccount /></PrivateRoute>} />
+          <Route path="/CustomerSupport" element={<PrivateRoute><CustomerSupport /></PrivateRoute>} />
         </Routes>
         <Footer />
       </div>
