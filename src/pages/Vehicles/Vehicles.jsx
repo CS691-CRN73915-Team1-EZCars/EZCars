@@ -20,6 +20,9 @@ const Vehicles = () => {
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
 
+  // Define how many vehicles to display per page
+  const vehiclesPerPage = 12;
+
   useEffect(() => {
     setMakes(carMakeModelData.makes);
     setModels(carMakeModelData.models);
@@ -45,9 +48,9 @@ const Vehicles = () => {
           searchParams.maxPrice = parseFloat(filters.maxPrice);
         }
 
-        vehicles = await searchVehicles(searchParams, page, 12);
+        vehicles = await searchVehicles(searchParams, page, vehiclesPerPage);
       } else {
-        vehicles = await getAllVehicles(page, 6);
+        vehicles = await getAllVehicles(page, vehiclesPerPage);
       }
       setCarData(vehicles.content);
       setTotalPages(vehicles.totalPages);
@@ -194,15 +197,18 @@ const Vehicles = () => {
         ))}
       </div>
 
-      <div style={styles.paginationContainer}>
-        <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
-          Previous
-        </button>
-        <span style={styles.pageInfo}>Page {page + 1} of {totalPages}</span>
-        <button onClick={handleNextPage} disabled={page === totalPages - 1} style={styles.paginationButton}>
-          Next
-        </button>
-      </div>
+      {/* Conditional rendering for pagination */}
+      {totalPages > 1 && (
+        <div style={styles.paginationContainer}>
+          <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
+            Previous
+          </button>
+          <span style={styles.pageInfo}>Page {page + 1} of {totalPages}</span>
+          <button onClick={handleNextPage} disabled={page === totalPages - 1} style={styles.paginationButton}>
+            Next
+          </button>
+        </div>
+      )}
 
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
