@@ -1,0 +1,104 @@
+[
+    {
+      "id": 1,
+      "make": "Maserati",
+      "model": "MC20",
+      "year": 2022,
+      "transmission": "Manual",
+      "fuelType": "Gasoline",
+      "price": 2599,
+      "mileage": 15,
+      "imageUrl": "car1.jpg",
+      "details": "Well-maintained Maserati MC20 with low mileage. Features include a backup camera, Bluetooth connectivity, and advanced safety systems."
+    },
+    {
+      "id": 2,
+      "make": "Tesla",
+      "model": "Model-S",
+      "year": 2022,
+      "transmission": "Automatic",
+      "fuelType": "Electric",
+      "price": 2250,
+      "mileage": 20,
+      "imageUrl": "car2.webp",
+      "details": "Sporty Tesla Model-S with excellent fuel efficiency. Includes Apple CarPlay, Android Auto, and a turbocharged engine."
+    },
+    {
+      "id": 3,
+      "make": "Mercedes",
+      "model": "F-150",
+      "year": 2020,
+      "transmission": "Automatic",
+      "fuelType": "Diesel",
+      "price": 3875,
+      "mileage": 35,
+      "imageUrl": "car3.avif",
+      "details": "Powerful Mercedes F-150 with diesel engine. Features include a large touchscreen, 4WD, and towing package."
+    },
+    {
+      "id": 4,
+      "make": "Ford",
+      "model": "F-160",
+      "year": 2023,
+      "transmission": "Automatic",
+      "fuelType": "Electric",
+      "price": 4999,
+      "mileage": 50,
+      "imageUrl": "car4.webp",
+      "details": "Ford F-160 includes premium sound system and all-glass roof."
+    },
+    {
+      "id": 5,
+      "make": "BMW",
+      "model": "X5",
+      "year": 2019,
+      "transmission": "Automatic",
+      "fuelType": "Gasoline",
+      "price": 4200,
+      "mileage": 45,
+      "imageUrl": "car5.webp",
+      "details": "Luxury BMW X5 SUV with panoramic sunroof. Features include leather seats, navigation system, and premium audio."
+    },
+    {
+      "id": 6,
+      "make": "Land Rover",
+      "model": "Range Rover",
+      "year": 2022,
+      "transmission": "Automatic",
+      "fuelType": "Electric",
+      "price": 2850,
+      "mileage": 18,
+      "imageUrl": "car6.jpg",
+      "details": "Efficient Range Rover EV with long range. Includes fast charging capability and advanced driver assistance features."
+    },
+    {
+      "user": {
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "bookings": [
+          {
+            "vehicleId": 2,
+            "date": "2024-10-15",
+            "duration": 24,
+            "pickupLocation": "123 Main St, Los Angeles, CA",
+            "dropoffLocation": "456 Oak St, San Francisco, CA"
+          },
+          {
+            "vehicleId": 5,
+            "date": "2024-09-20",
+            "duration": 48,
+            "pickupLocation": "789 Pine St, New York, NY",
+            "dropoffLocation": "101 Maple Ave, Boston, MA"
+          },
+          {
+            "vehicleId": 1,
+            "date": "2024-08-05",
+            "duration": 72,
+            "pickupLocation": "202 Elm St, Miami, FL",
+            "dropoffLocation": "303 Cedar Blvd, Orlando, FL"
+          }
+        ]
+      }
+    }
+  ]
+  

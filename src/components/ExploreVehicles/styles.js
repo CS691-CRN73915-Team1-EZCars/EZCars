@@ -62,7 +62,7 @@ const styles = {
     backgroundColor: "white",
     padding: "30px",
     borderRadius: "10px",
-    maxWidth: "800px",
+    maxWidth: "950px",
     width: "90%",
     position: "relative",
   },
@@ -110,7 +110,22 @@ viewAllLink:{
    color:'black',
    textDecoration:'none',
    cursor:'pointer',
-}
+},
+bookButton: {
+  backgroundColor: '#f97316',
+  color: 'white',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginLeft: '50px',
+},
+actionButtons: {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: '10px',
+},
 };
 
 export { styles };
