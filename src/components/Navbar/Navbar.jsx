@@ -101,8 +101,11 @@ const Navbar = () => {
                     <Link to="/AccountSummary" style={styles.dropdownLink}>
                       Account Summary
                     </Link>
-                    <Link to="/modify_account" style={styles.dropdownLink}>
+                    <Link to="/ModifyAccount" style={styles.dropdownLink}>
                       Modify Account
+                    </Link>
+                    <Link to="/CustomerSupport" style={styles.dropdownLink}>
+                    Customer Support
                     </Link>
                     <div onClick={handleLogout} style={styles.dropdownLink}>
                       Logout

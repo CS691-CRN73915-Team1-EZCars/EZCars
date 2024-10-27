@@ -88,7 +88,7 @@ const styles = {
       color: "#333",
     },
     carDetailsInfoP: {
-      margin: "5px 0",
+      margin: "6px 0",
       color: "#666",
     },
     searchAndFilterContainer: {
@@ -165,6 +165,20 @@ const styles = {
       justifyContent: 'space-between',
       alignItems: 'center',
       marginTop: '10px',
+    },
+    bookCarButton: {
+      backgroundColor: '#f97316',
+      color: 'white',
+      border: 'none',
+      padding: '10px 20px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginTop: '30px',
+    },
+    searchResult: {
+      fontSize: '32px', 
+      textAlign: 'center', 
+      marginTop: '30px', 
     },
   };
   

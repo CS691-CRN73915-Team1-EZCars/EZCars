@@ -31,7 +31,7 @@ const ExploreVehicles = () => {
       return images;
     };
     
-    const images = importAll(require.context('../../assets/images/exploreVehiclesSection', false, /\.(png|jpe?g|svg|webp|avif)$/));
+    const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
     
     const loadedImgs = {};
     carData.forEach(car => {
@@ -115,7 +115,7 @@ const ExploreVehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
                 {isLoggedIn && (
                   <button 
-                    style={styles.bookButton}
+                    style={styles.bookCarButton}
                     onClick={() => handleBookCar(selectedCar)}
                   >
                     Book This Car

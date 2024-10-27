@@ -20,6 +20,9 @@ const Vehicles = () => {
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
 
+  // Define how many vehicles to display per page
+  const vehiclesPerPage = 12;
+
   useEffect(() => {
     setMakes(carMakeModelData.makes);
     setModels(carMakeModelData.models);
@@ -45,9 +48,9 @@ const Vehicles = () => {
           searchParams.maxPrice = parseFloat(filters.maxPrice);
         }
 
-        vehicles = await searchVehicles(searchParams, page, 12);
+        vehicles = await searchVehicles(searchParams, page, vehiclesPerPage);
       } else {
-        vehicles = await getAllVehicles(page, 6);
+        vehicles = await getAllVehicles(page, vehiclesPerPage);
       }
       setCarData(vehicles.content);
       setTotalPages(vehicles.totalPages);
@@ -67,7 +70,7 @@ const Vehicles = () => {
       return images;
     };
     
-    const images = importAll(require.context('../../assets/images/exploreVehiclesSection', false, /\.(png|jpe?g|svg|webp|avif)$/));
+    const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
     
     const loadedImgs = {};
     carData.forEach(car => {
@@ -162,47 +165,54 @@ const Vehicles = () => {
       </div>
 
       <div style={styles.vehicleGrid}>
-        {carData.map((car) => (
-          <div key={car.vehicleId} style={styles.vehicleCard}>
-            {loadedImages[car.vehicleId] ? (
-              <img src={loadedImages[car.vehicleId]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
-            ) : (
-              <div>Loading image...</div>
-            )}
-            <div style={styles.vehicleCardContent}>
-              <h3>{car.make} {car.model} - {car.year}</h3>
-              <p>
-                {car.mileage} miles • {car.transmission} • {car.fuelType}
-              </p>
-              <p style={styles.vehiclePrice}>${car.price}</p>
-              <div style={styles.actionButtons}>
-                <span 
-                  style={styles.viewDetailsLink}
-                  onClick={() => handleViewDetails(car)}
-                >
-                  View Details <span style={styles.tiltedArrow}>➔</span>
-                </span>
-                <button 
-                  style={styles.bookButton}
-                  onClick={() => handleBookCar(car)}
-                >
-                  Book
-                </button>
+        {carData.length === 0 ? (
+          <p style={styles.searchResult}>No results found!!</p>
+        ) : (
+          carData.map((car) => (
+            <div key={car.vehicleId} style={styles.vehicleCard}>
+              {loadedImages[car.vehicleId] ? (
+                <img src={loadedImages[car.vehicleId]} alt={`${car.make} ${car.model}`} style={styles.vehicleCardImg} />
+              ) : (
+                <div>Loading image...</div>
+              )}
+              <div style={styles.vehicleCardContent}>
+                <h3>{car.make} {car.model} - {car.year}</h3>
+                <p>
+                  {car.mileage} miles • {car.transmission} • {car.fuelType}
+                </p>
+                <p style={styles.vehiclePrice}>${car.price}</p>
+                <div style={styles.actionButtons}>
+                  <span 
+                    style={styles.viewDetailsLink}
+                    onClick={() => handleViewDetails(car)}
+                  >
+                    View Details <span style={styles.tiltedArrow}>➔</span>
+                  </span>
+                  <button 
+                    style={styles.bookButton}
+                    onClick={() => handleBookCar(car)}
+                  >
+                    Book
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
-      <div style={styles.paginationContainer}>
-        <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
-          Previous
-        </button>
-        <span style={styles.pageInfo}>Page {page + 1} of {totalPages}</span>
-        <button onClick={handleNextPage} disabled={page === totalPages - 1} style={styles.paginationButton}>
-          Next
-        </button>
-      </div>
+      {/* Conditional rendering for pagination */}
+      {totalPages > 1 && (
+        <div style={styles.paginationContainer}>
+          <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
+            Previous
+          </button>
+          <span style={styles.pageInfo}>Page {page + 1} of {totalPages}</span>
+          <button onClick={handleNextPage} disabled={page === totalPages - 1} style={styles.paginationButton}>
+            Next
+          </button>
+        </div>
+      )}
 
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
@@ -221,7 +231,7 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
                 <button 
-                  style={styles.bookButton}
+                  style={styles.bookCarButton}
                   onClick={() => handleBookCar(selectedCar)}
                 >
                   Book This Car

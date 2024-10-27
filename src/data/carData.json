@@ -1,5 +1,5 @@
 {
-  "makes": ["Tesla", "Mercedes", "Ford", "Maserati", "BMW", "Land Rover"],
-  "models": ["Model-S", "F-160", "F-150", "MC20", "X5", "Range Rover"]
+  "makes": ["Tesla", "Mercedes", "Ford", "Maserati", "BMW", "Land Rover","Toyota","Honda","Mercedes-Benz","Chevrolet","Nissan","Audi","Hyundai","Jeep","Kia","Subaru","Mazda","Volkswagen","Porsche","GMC","Lexus","Cadillac"],
+  "models": ["Model S","Camry","Mustang Mach-E","Accord","X5","C-Class","Bolt EV","Leaf","Q5","Elantra","RAV4","F-150", "Wrangler","Sportage","Outback","Golf","911","Silverado","Yukon","RX 350","Escalade","Tucson"]
 }
 
