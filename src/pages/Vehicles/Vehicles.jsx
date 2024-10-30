@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Range } from 'react-range';
 import { getAllVehicles, searchVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
 import carMakeModelData from '../../data/carData.json';
@@ -14,13 +15,13 @@ const Vehicles = () => {
     make: '',
     model: '',
     year: '',
-    minPrice: '',
-    maxPrice: '',
+    minPrice: 10,
+    maxPrice: 1000,
   });
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
+  const [priceRange, setPriceRange] = useState([50, 1000]);
 
-  // Define how many vehicles to display per page
   const vehiclesPerPage = 12;
 
   useEffect(() => {
@@ -36,16 +37,12 @@ const Vehicles = () => {
           searchText: searchTerm,
           make: filters.make,
           model: filters.model,
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
         };
 
         if (filters.year) {
           searchParams.year = parseInt(filters.year);
-        }
-        if (filters.minPrice) {
-          searchParams.minPrice = parseFloat(filters.minPrice);
-        }
-        if (filters.maxPrice) {
-          searchParams.maxPrice = parseFloat(filters.maxPrice);
         }
 
         vehicles = await searchVehicles(searchParams, page, vehiclesPerPage);
@@ -103,6 +100,16 @@ const Vehicles = () => {
     setPage(0);
   };
 
+  const handlePriceRangeChange = (values) => {
+    setPriceRange(values);
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      minPrice: values[0],
+      maxPrice: values[1]
+    }));
+    setPage(0);
+  };
+
   const handlePrevPage = () => {
     setPage((prevPage) => Math.max(0, prevPage - 1));
   };
@@ -112,7 +119,6 @@ const Vehicles = () => {
   };
 
   const handleBookCar = (car) => {
-    // Implement booking logic here
     console.log(`Booking car: ${car.make} ${car.model}`);
   };
 
@@ -146,22 +152,44 @@ const Vehicles = () => {
             <option key={i} value={2024 - i}>{2024 - i}</option>
           ))}
         </select>
-        <input
-          type="number"
-          name="minPrice"
-          placeholder="Min Price"
-          value={filters.minPrice}
-          onChange={handleFilterChange}
-          style={styles.priceInput}
-        />
-        <input
-          type="number"
-          name="maxPrice"
-          placeholder="Max Price"
-          value={filters.maxPrice}
-          onChange={handleFilterChange}
-          style={styles.priceInput}
-        />
+        <div style={styles.priceRangeContainer}>
+          <Range
+            step={10}
+            min={10}
+            max={1000}
+            values={priceRange}
+            onChange={handlePriceRangeChange}
+            renderTrack={({ props, children }) => (
+              <div
+                {...props}
+                style={{
+                  ...props.style,
+                  height: '6px',
+                  width: '100%',
+                  backgroundColor: '#ddd'
+                }}
+              >
+                {children}
+              </div>
+            )}
+            renderThumb={({ props }) => (
+              <div
+                {...props}
+                style={{
+                  ...props.style,
+                  height: '20px',
+                  width: '20px',
+                  borderRadius: '50%',
+                  backgroundColor: '#f97316'
+                }}
+              />
+            )}
+          />
+          <div style={styles.priceRangeLabels}>
+            <span style={styles.priceRangeLabel}>${priceRange[0]}</span>
+            <span style={styles.priceRangeLabel}>${priceRange[1]}</span>
+          </div>
+        </div>
       </div>
 
       <div style={styles.vehicleGrid}>
@@ -201,7 +229,6 @@ const Vehicles = () => {
         )}
       </div>
 
-      {/* Conditional rendering for pagination */}
       {totalPages > 1 && (
         <div style={styles.paginationContainer}>
           <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
