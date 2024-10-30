@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Range } from 'react-range';
 import { getAllVehicles, searchVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
@@ -11,6 +11,7 @@ const Vehicles = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     make: '',
     model: '',
@@ -23,6 +24,7 @@ const Vehicles = () => {
   const [priceRange, setPriceRange] = useState([50, 1000]);
 
   const vehiclesPerPage = 12;
+  const filterRef = useRef(null);
 
   useEffect(() => {
     setMakes(carMakeModelData.makes);
@@ -78,6 +80,19 @@ const Vehicles = () => {
     setLoadedImages(loadedImgs);
   }, [carData]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilters(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleViewDetails = (car) => {
     setSelectedCar(car);
   };
@@ -122,6 +137,10 @@ const Vehicles = () => {
     console.log(`Booking car: ${car.make} ${car.model}`);
   };
 
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
   return (
     <div style={styles.exploreVehicles}>
       <h1 style={styles.exploreVehiclesHeading}>All Vehicles</h1>
@@ -134,61 +153,71 @@ const Vehicles = () => {
           onChange={handleSearch}
           style={styles.searchInput}
         />
-        <select name="make" value={filters.make} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Makes</option>
-          {makes.map((make, index) => (
-            <option key={index} value={make}>{make}</option>
-          ))}
-        </select>
-        <select name="model" value={filters.model} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Models</option>
-          {models.map((model, index) => (
-            <option key={index} value={model}>{model}</option>
-          ))}
-        </select>
-        <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Years</option>
-          {[...Array(10)].map((_, i) => (
-            <option key={i} value={2024 - i}>{2024 - i}</option>
-          ))}
-        </select>
-        <div style={styles.priceRangeContainer}>
-          <Range
-            step={10}
-            min={10}
-            max={1000}
-            values={priceRange}
-            onChange={handlePriceRangeChange}
-            renderTrack={({ props, children }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: '6px',
-                  width: '100%',
-                  backgroundColor: '#ddd'
-                }}
-              >
-                {children}
+        <div style={styles.filterDropdown} ref={filterRef}>
+          <button onClick={toggleFilters} style={styles.filterButton}>
+            Filters
+          </button>
+          {showFilters && (
+            <div style={styles.filterMenu}>
+              <select name="make" value={filters.make} onChange={handleFilterChange} style={styles.filterSelect}>
+                <option value="">All Makes</option>
+                {makes.map((make, index) => (
+                  <option key={index} value={make}>{make}</option>
+                ))}
+              </select>
+              <select name="model" value={filters.model} onChange={handleFilterChange} style={styles.filterSelect}>
+                <option value="">All Models</option>
+                {models.map((model, index) => (
+                  <option key={index} value={model}>{model}</option>
+                ))}
+              </select>
+              <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
+                <option value="">All Years</option>
+                {[...Array(10)].map((_, i) => (
+                  <option key={i} value={2024 - i}>{2024 - i}</option>
+                ))}
+              </select>
+              <div style={styles.priceRangeContainer}>
+                <span style={styles.priceRangetext}>Price Range</span>
+                <Range
+                  step={10}
+                  min={10}
+                  max={1000}
+                  values={priceRange}
+                  onChange={handlePriceRangeChange}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '6px',
+                        width: '100%',
+                        backgroundColor: '#ddd'
+                      }}
+                    >
+                      {children}
+                    </div>
+                  )}
+                  renderThumb={({ props }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '20px',
+                        width: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: '#f97316'
+                      }}
+                    />
+                  )}
+                />
+                <div style={styles.priceRangeLabels}>
+                  <span style={styles.priceRangeLabel}>${priceRange[0]}</span>
+                  <span style={styles.priceRangeLabel}>${priceRange[1]}</span>
+                </div>
               </div>
-            )}
-            renderThumb={({ props }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: '20px',
-                  width: '20px',
-                  borderRadius: '50%',
-                  backgroundColor: '#f97316'
-                }}
-              />
-            )}
-          />
-          <div style={styles.priceRangeLabels}>
-            <span style={styles.priceRangeLabel}>${priceRange[0]}</span>
-            <span style={styles.priceRangeLabel}>${priceRange[1]}</span>
-          </div>
+            </div>
+          )}
         </div>
       </div>
 

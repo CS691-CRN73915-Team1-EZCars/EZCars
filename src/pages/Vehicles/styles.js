@@ -111,17 +111,7 @@ const styles = {
     width: '200px',
     flex: '1 1 200px',
   },
-  filterSelect: {
-    padding: '10px',
-    fontSize: '1em',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    flex: '1 1 150px',
-    appearance: 'none',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right 10px top 50%',
-    backgroundSize: '12px auto',
-  },
+
   paginationContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -209,12 +199,67 @@ const styles = {
   priceRangeLabels: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginTop: '5px',
+    marginTop: '10px',
+  },
+  priceRangetext: {
+    marginBottom: '10px',
   },
   priceRangeLabel: {
     fontSize: '0.9em',
     color: '#666',
   },
+  filterOptions: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '10px',
+    marginBottom: '20px',
+    backgroundColor: '#ffffff',
+    padding: '15px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  },
+  filterDropdown: {
+  position: 'relative',
+  display: 'inline-block',
+},
+filterButton: {
+  padding: '10px 20px',
+  fontSize: '1em',
+  backgroundColor: '#f97316',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+},
+filterMenu: {
+  position: 'absolute',
+  top: '100%',
+  right: 0,
+  backgroundColor: 'white',
+  boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
+  zIndex: 1,
+  minWidth: '280px',
+  padding: '20px',
+  borderRadius: '5px',
+},
+filterSelect: {
+  width: '100%',
+  padding: '10px',
+  marginBottom: '15px',
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+},
+rangeTrack: {
+  height: '6px',
+  width: '100%',
+  backgroundColor: '#ddd'
+},
+rangeThumb: {
+  height: '20px',
+  width: '20px',
+  borderRadius: '50%',
+  backgroundColor: '#f97316'
+},
 };
 
 export { styles };
