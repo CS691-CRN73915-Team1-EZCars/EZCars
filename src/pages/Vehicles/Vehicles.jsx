@@ -17,11 +17,11 @@ const Vehicles = () => {
     model: '',
     year: '',
     minPrice: 10,
-    maxPrice: 1000,
+    maxPrice: 1200,
   });
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
-  const [priceRange, setPriceRange] = useState([50, 1000]);
+  const [priceRange, setPriceRange] = useState([50, 1200]);
 
   const vehiclesPerPage = 12;
   const filterRef = useRef(null);
@@ -182,7 +182,7 @@ const Vehicles = () => {
                 <Range
                   step={10}
                   min={10}
-                  max={1000}
+                  max={1200}
                   values={priceRange}
                   onChange={handlePriceRangeChange}
                   renderTrack={({ props, children }) => (

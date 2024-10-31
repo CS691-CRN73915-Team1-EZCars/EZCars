@@ -1,13 +1,47 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './styles';
-import data from '../../data/sampleRentals.json';
+import { getAllBookingsByUserId } from '../../api/bookVehicle'; 
+import { getAllVehicles } from '../../api/vehicles';
 
 const Summary = () => {
+  const [bookings, setBookings] = useState([]);
+  const [vehicles, setVehicles] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Memoize vehiclesData and user to prevent unnecessary recalculations
-  const vehiclesData = useMemo(() => data.filter(item => item.id), []);
-  const user = useMemo(() => data.find(item => item.user)?.user, []);
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch bookings
+        const bookingsResponse = await getAllBookingsByUserId(userId);
+        console.log('bookingsResponse', bookingsResponse);
+        setBookings(bookingsResponse || []);
+
+        // Fetch all vehicles
+        const vehiclesResponse = await getAllVehicles(0, 200);
+        const allVehicles = vehiclesResponse.content || [];
+
+        // Create a map of vehicle ID to vehicle data
+        const vehicleMap = {};
+        allVehicles.forEach(vehicle => {
+          vehicleMap[vehicle.vehicleId] = vehicle;
+        });
+
+        setVehicles(vehicleMap);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
 
   useEffect(() => {
     const importAll = (r) => {
@@ -19,35 +53,34 @@ const Summary = () => {
     const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
     
     const loadedImgs = {};
-    vehiclesData.forEach(vehicle => {
+    Object.values(vehicles).forEach(vehicle => {
       const imageName = vehicle.imageUrl.split('/').pop();
-      loadedImgs[vehicle.id] = images[imageName];
+      loadedImgs[vehicle.vehicleId] = images[imageName];
     });
 
     setLoadedImages(loadedImgs);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // We've removed vehiclesData from dependencies and added the ESLint disable comment
+  }, [vehicles]);
 
-  if (!user) {
-    return <div>No user data found</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  if (!bookings || bookings.length === 0) return <div>No bookings found</div>;
 
   return (
     <div style={styles.summaryContainer}>
       <h2 style={styles.heading}>Vehicle Booking Summary</h2>
       
       <div style={styles.bookingHistory}>
-        {user.bookings.map((booking, index) => {
-          const vehicle = vehiclesData.find(v => v.id === booking.vehicleId);
-          if (!vehicle) return null; // Skip if vehicle not found
+        {bookings.map((booking) => {
+          const vehicle = vehicles[booking.vehicleId];
+          if (!vehicle) return null;
 
           return (
-            <div key={index} style={styles.bookingCard}>
+            <div key={booking.id} style={styles.bookingCard}>
               <div style={styles.bookingContent}>
                 <div style={styles.imageContainer}>
-                  {loadedImages[vehicle.id] && (
+                  {loadedImages[vehicle.vehicleId] && (
                     <img 
-                      src={loadedImages[vehicle.id]} 
+                      src={loadedImages[vehicle.vehicleId]} 
                       alt={`${vehicle.make} ${vehicle.model}`} 
                       style={styles.vehicleImage} 
                     />
@@ -66,16 +99,19 @@ const Summary = () => {
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Pick-up Date:</span> {new Date(booking.date).toLocaleDateString()}
+                    <span style={styles.label}>Pick-up Date:</span> {new Date(booking.pickUpDate).toLocaleDateString()}
                   </p>
                 </div>
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Drop-off Date:</span> {new Date(new Date(booking.date).getTime() + booking.duration * 60 * 60 * 1000).toLocaleDateString()}
+                    <span style={styles.label}>Drop-off Date:</span> {new Date(new Date(booking.pickUpDate).getTime() + booking.duration * 60 * 60 * 1000).toLocaleDateString()}
                   </p>
                 </div>
-                <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} hours</p>
+                <div style={styles.bookingStatusRow}>
+                  <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} hours</p>
+                  <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
+                </div>
               </div>
             </div>
           );

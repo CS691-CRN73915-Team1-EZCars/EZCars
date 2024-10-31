@@ -10,7 +10,6 @@ const getHeaders = () => {
 
 export const getAllVehicles = async (page = 0, size = 12) => {
   const response = await fetch(`${API_BASE_URL}/vehicles?page=${page}&size=${size}`, {
-  //  headers: getHeaders(),
   });
   if (!response.ok) {
     throw new Error('Failed to fetch vehicles');
