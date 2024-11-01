@@ -91,6 +91,57 @@ const styles = {
     margin: "5px 0",
     color: "#666",
   },
+  compareScroll: {
+    display: "flex",
+    position: "fixed",
+    bottom: "0",
+    left: "0",
+    width: "100%",
+    backgroundColor: "rgba(241, 241, 241, 0.9)", // Add transparency
+    padding: "15px 0", // Increase padding for height
+    alignItems: "center",
+    justifyContent: "flex-start",
+    overflowX: "auto",
+    borderTop: "1px solid #ccc",
+    boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)",
+    backdropFilter: "blur(5px)", // Optional: add a slight blur effect
+  },
+  carImageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 10px",
+    padding: "5px",
+    border: "1px solid #ddd",
+    borderRadius: "5px",
+    backgroundColor: "white",
+  },
+  carImage: {
+    width: "70px", // Increase image size if desired
+    height: "50px",
+    objectFit: "cover",
+    marginBottom: "5px",
+  },
+  removeButton: {
+    backgroundColor: "#ff4d4f",
+    color: "white",
+    border: "none",
+    padding: "3px 8px",
+    borderRadius: "3px",
+    cursor: "pointer",
+    fontSize: "12px",
+  },
+  compareButton: {
+    backgroundColor: "#007BFF",
+    color: "white",
+    border: "none",
+    padding: "10px 20px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    marginLeft: "10px",
+    whiteSpace: "nowrap",
+  },
   
 // View All Styles
 viewAllContainer:{
@@ -135,6 +186,25 @@ bookCarButton: {
   cursor: 'pointer',
   marginTop: '30px',
 },
+modalBackground: {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 1000,
+},
+modalContent: {
+  backgroundColor: "white",
+  padding: "30px",
+  borderRadius: "10px",
+  maxWidth: "800px",
+  width: "90%",
+}
 };
 
 export { styles };

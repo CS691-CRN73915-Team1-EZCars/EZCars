@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getAllVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
+import CompareVehicles from '../CompareVehicles/CompareVehicles';
 
 const ExploreVehicles = () => {
   const [loadedImages, setLoadedImages] = useState({});
   const [selectedCar, setSelectedCar] = useState(null);
   const [carData, setCarData] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [compareList, setCompareList] = useState([]);
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,10 +33,10 @@ const ExploreVehicles = () => {
       r.keys().forEach((item) => { images[item.replace('./', '')] = r(item); });
       return images;
     };
-    
-    const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
-    
-    const loadedImgs = {};
+
+  const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
+
+  const loadedImgs = {};
     carData.forEach(car => {
       const imageName = car.imageUrl.split('/').pop();
       loadedImgs[car.vehicleId] = images[imageName];
@@ -51,8 +54,24 @@ const ExploreVehicles = () => {
   };
 
   const handleBookCar = (car) => {
-    // Implement booking logic here
     console.log(`Booking car: ${car.make} ${car.model}`);
+  };
+
+  const handleCompareCar = (car) => {
+    setCompareList(prevList => {
+      if (prevList.find(v => v.vehicleId === car.vehicleId)) {
+        return prevList.filter(v => v.vehicleId !== car.vehicleId);
+      } else if (prevList.length < 3) {
+        return [...prevList, car];
+      } else {
+        alert("You can only compare up to 3 vehicles.");
+        return prevList;
+      }
+    });
+  };
+
+  const showComparisonPage = () => {
+    setShowComparisonModal(true);
   };
 
   return (
@@ -91,11 +110,61 @@ const ExploreVehicles = () => {
                     Book
                   </button>
                 )}
+                {isLoggedIn && (
+                  <button 
+                    style={styles.compareButton}
+                    onClick={() => handleCompareCar(car)}
+                  >
+                    {compareList.find(v => v.vehicleId === car.vehicleId) ? 'Remove from Compare' : 'Compare'}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {isLoggedIn && (
+        <div style={styles.compareScroll}>
+          {compareList.map((car) => (
+            <div key={car.vehicleId}>
+              <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
+              <button onClick={() => handleCompareCar(car)}>Remove</button>
+            </div>
+          ))}
+          {compareList.length > 1 && (
+            <button onClick={showComparisonPage}>Compare</button>
+          )}
+        </div>
+      )}
+
+      {/* Scrollable Comparison Section */}
+      <div style={styles.compareScroll}>
+        {compareList.map((car) => (
+          <div key={car.vehicleId} style={styles.carImage}>
+            <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
+            <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>
+              Remove
+            </button>
+          </div>
+        ))}
+
+        {/* Only show the Compare button if there are multiple cars selected */}
+        {compareList.length > 1 && (
+          <button style={styles.compareButton} onClick={showComparisonPage}>
+            Compare
+          </button>
+        )}
+      </div>
+
+      
+      {showComparisonModal && (
+        <div style={styles.modalBackground} onClick={() => setShowComparisonModal(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+          <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
+          </div>
+        </div>
+      )}
 
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
@@ -127,6 +196,7 @@ const ExploreVehicles = () => {
         </div>
       )}
     </div>
+    
   );
 };
 
