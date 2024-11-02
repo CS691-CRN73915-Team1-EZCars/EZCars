@@ -97,14 +97,14 @@ const styles = {
     bottom: "0",
     left: "0",
     width: "100%",
-    backgroundColor: "rgba(241, 241, 241, 0.9)", // Add transparency
-    padding: "15px 0", // Increase padding for height
+    backgroundColor: "rgba(128, 128, 128, 0.5)", // Add transparency
+    padding: "0 0", // Increase padding for height
     alignItems: "center",
     justifyContent: "flex-start",
     overflowX: "auto",
     borderTop: "1px solid #ccc",
     boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)",
-    backdropFilter: "blur(5px)", // Optional: add a slight blur effect
+    backdropFilter: "blur(2px)", // Optional: add a slight blur effect
   },
   carImageContainer: {
     display: "flex",
@@ -198,13 +198,6 @@ modalBackground: {
   alignItems: "center",
   zIndex: 1000,
 },
-modalContent: {
-  backgroundColor: "white",
-  padding: "30px",
-  borderRadius: "10px",
-  maxWidth: "800px",
-  width: "90%",
-}
 };
 
 export { styles };

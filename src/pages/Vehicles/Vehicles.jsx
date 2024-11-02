@@ -240,7 +240,7 @@ const Vehicles = () => {
           )}
         </div>
       </div>
-
+          
       <div style={styles.compareScroll}>
         {compareList.map((car) => (
           <div key={car.vehicleId} style={styles.carImage}>
@@ -258,7 +258,7 @@ const Vehicles = () => {
       {showComparisonModal && (
         <div style={styles.modalBackground} onClick={() => setShowComparisonModal(false)}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <CompareVehicles compareList={compareList} />
+            <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
           </div>
         </div>
       )}

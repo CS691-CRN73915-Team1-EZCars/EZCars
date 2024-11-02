@@ -285,15 +285,16 @@ compareScroll: {
   bottom: "0",
   left: "0",
   width: "100%",
-  backgroundColor: "rgba(241, 241, 241, 0.9)", // Transparent background
-  padding: "15px 0",
+  backgroundColor: "rgba(128, 128, 128, 0.5)",
+  padding: "15px 0", // Remove vertical padding if using a fixed height
   alignItems: "center",
   justifyContent: "flex-start",
   overflowX: "auto",
   borderTop: "1px solid #ccc",
   boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)",
-  backdropFilter: "blur(5px)", // Optional blur effect for transparency
+  backdropFilter: "blur(0px)",
 },
+
 
 // Individual Car Image in the Comparison List
 carImageContainer: {
@@ -312,29 +313,6 @@ carImage: {
   height: "50px",
   objectFit: "cover",
   marginBottom: "5px",
-},
-
-// Remove Button
-removeButton: {
-  backgroundColor: "#ff4d4f",
-  color: "white",
-  border: "none",
-  padding: "3px 8px",
-  borderRadius: "3px",
-  cursor: "pointer",
-  fontSize: "12px",
-},
-
-// Main Compare Button
-compareButton: {
-  backgroundColor: "#007BFF",
-  color: "white",
-  border: "none",
-  padding: "10px 20px",
-  borderRadius: "5px",
-  cursor: "pointer",
-  marginLeft: "10px",
-  whiteSpace: "nowrap",
 },
 };
 

@@ -129,11 +129,11 @@ const ExploreVehicles = () => {
           {compareList.map((car) => (
             <div key={car.vehicleId}>
               <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
-              <button onClick={() => handleCompareCar(car)}>Remove</button>
+              <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>Remove</button>
             </div>
           ))}
           {compareList.length > 1 && (
-            <button onClick={showComparisonPage}>Compare</button>
+            <button style={styles.compareButton} onClick={showComparisonPage}>Compare</button>
           )}
         </div>
       )}
@@ -156,7 +156,6 @@ const ExploreVehicles = () => {
           </button>
         )}
       </div>
-
       
       {showComparisonModal && (
         <div style={styles.modalBackground} onClick={() => setShowComparisonModal(false)}>

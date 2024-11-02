@@ -1,8 +1,8 @@
 // src/components/CompareVehicles/CompareVehicles.jsx
 import React from 'react';
+import styles from './styles';
 
-const CompareVehicles = ({ compareList, loadedImages }) => {
-  // Use the first car in the list as a baseline for comparison
+const CompareVehicles = ({ compareList, loadedImages, onClose }) => {
   const baseCar = compareList[0];
 
   const calculateDifference = (vehicle) => {
@@ -10,27 +10,42 @@ const CompareVehicles = ({ compareList, loadedImages }) => {
     return baseCar.price - vehicle.price;
   };
 
+  const isDifferent = (property, vehicle) => {
+    return vehicle[property] !== baseCar[property];
+  };
+
   return (
-    <div>
+    <div style={styles.modalContainer}>
+      <button onClick={onClose} style={styles.closeButton}>X</button>
       <h2>Compare Vehicles</h2>
-      <div style={{ display: "flex", gap: "20px" }}>
+      <div style={styles.comparisonContainer}>
         {compareList.map((vehicle, index) => (
-          <div key={index} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px", backgroundColor: "#fff" }}>
+          <div key={index} style={styles.vehicleCard}>
             <img 
               src={loadedImages[vehicle.vehicleId]} 
               alt={`${vehicle.make} ${vehicle.model}`} 
-              style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "8px 8px 0 0" }} 
+              style={styles.vehicleImage} 
             />
             <h3>{vehicle.make} {vehicle.model}</h3>
-            <p>Year: {vehicle.year}</p>
-            <p>Price: ${vehicle.price}</p>
-            <p>Mileage: {vehicle.mileage} miles</p>
-            <p>Transmission: {vehicle.transmission}</p>
-            <p>Fuel Type: {vehicle.fuelType}</p>
-
-            {/* Show price difference relative to the base car */}
+            <div style={styles.vehicleProperties}>
+              <p style={isDifferent('year', vehicle) ? styles.highlight : {}}>
+                Year: {vehicle.year}
+              </p>
+              <p style={isDifferent('price', vehicle) ? styles.highlight : {}}>
+                Price: ${vehicle.price}
+              </p>
+              <p style={isDifferent('mileage', vehicle) ? styles.highlight : {}}>
+                Mileage: {vehicle.mileage} miles
+              </p>
+              <p style={isDifferent('transmission', vehicle) ? styles.highlight : {}}>
+                Transmission: {vehicle.transmission}
+              </p>
+              <p style={isDifferent('fuelType', vehicle) ? styles.highlight : {}}>
+                Fuel Type: {vehicle.fuelType}
+              </p>
+            </div>
             {vehicle.vehicleId !== baseCar.vehicleId && (
-              <p>
+              <p style={calculateDifference(vehicle) > 0 ? styles.saveBox : styles.payBox}>
                 {calculateDifference(vehicle) > 0
                   ? `Save $${calculateDifference(vehicle)}`
                   : `Pay $${Math.abs(calculateDifference(vehicle))} more`}
