@@ -98,16 +98,30 @@ const styles = {
       fontSize: '14px',
     },
     bookingDuration: {
-      width: '100%',
+      flex: '1',
       margin: '8px 0',
       fontSize: '16px',
       fontWeight: 'bold',
       color: '#27ae60',
     },
+    bookingStatus: {
+      flex: '1',
+      margin: '8px 0',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      color: '#27ae60',
+      textAlign: 'left',
+    },
     label: {
       fontWeight: 'bold',
       color: '#7f8c8d',
       marginRight: '5px',
+    },
+    bookingStatusRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginTop: '10px',
     },
   };
   

@@ -26,6 +26,8 @@ api.interceptors.request.use(
       if (isTokenExpired(token)) {
         // Token is expired
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
         window.location.href = '/login'; 
         return Promise.reject('Token is expired');
       }
@@ -49,6 +51,8 @@ export const fetchProtectedData = () => {
 // Add a logout function to clear the token
 export const logout = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('username');
 
   window.location.href = '/login'; 
 };

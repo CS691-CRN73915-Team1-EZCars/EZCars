@@ -13,6 +13,7 @@ import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import CustomerSupport from "./pages/CustomerSupport/CustomerSupport";
 import ModifyAccount from "./pages/ModifyAccount/ModifyAccount";
+import BookVehicle from "./pages/BookVehicle/BookVehicle";
 import NotFound from './pages/NotFound/NotFound';
 
 const PrivateRoute = ({ children }) => {
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/VehicleHistory" element={<PrivateRoute><VehicleHistory /></PrivateRoute>} />
           <Route path="/ModifyAccount" element={<PrivateRoute><ModifyAccount /></PrivateRoute>} />
           <Route path="/CustomerSupport" element={<PrivateRoute><CustomerSupport /></PrivateRoute>} />
+          <Route path="/BookVehicle" element={<PrivateRoute><BookVehicle /></PrivateRoute>} />
         </Routes>
         <Footer />
       </div>

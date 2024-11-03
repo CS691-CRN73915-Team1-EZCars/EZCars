@@ -1,33 +1,43 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Range } from 'react-range';
 import { getAllVehicles, searchVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
 import carMakeModelData from '../../data/carData.json';
+import CompareVehicles from '../../components/CompareVehicles/CompareVehicles';
 
 const Vehicles = () => {
   const [loadedImages, setLoadedImages] = useState({});
   const [selectedCar, setSelectedCar] = useState(null);
   const [carData, setCarData] = useState([]);
   const [page, setPage] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [compareList, setCompareList] = useState([]);
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [filters, setFilters] = useState({
     make: '',
     model: '',
     year: '',
-    minPrice: '',
-    maxPrice: '',
+    minPrice: 10,
+    maxPrice: 1200,
   });
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
+  const [priceRange, setPriceRange] = useState([50, 1200]);
+  
 
-  // Define how many vehicles to display per page
   const vehiclesPerPage = 12;
+  const filterRef = useRef(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
     setMakes(carMakeModelData.makes);
     setModels(carMakeModelData.models);
-  }, []);
-
+  }, []);  
+  
   const fetchVehicles = useCallback(async () => {
     try {
       let vehicles;
@@ -36,16 +46,12 @@ const Vehicles = () => {
           searchText: searchTerm,
           make: filters.make,
           model: filters.model,
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
         };
 
         if (filters.year) {
           searchParams.year = parseInt(filters.year);
-        }
-        if (filters.minPrice) {
-          searchParams.minPrice = parseFloat(filters.minPrice);
-        }
-        if (filters.maxPrice) {
-          searchParams.maxPrice = parseFloat(filters.maxPrice);
         }
 
         vehicles = await searchVehicles(searchParams, page, vehiclesPerPage);
@@ -81,6 +87,19 @@ const Vehicles = () => {
     setLoadedImages(loadedImgs);
   }, [carData]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilters(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleViewDetails = (car) => {
     setSelectedCar(car);
   };
@@ -103,6 +122,16 @@ const Vehicles = () => {
     setPage(0);
   };
 
+  const handlePriceRangeChange = (values) => {
+    setPriceRange(values);
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      minPrice: values[0],
+      maxPrice: values[1]
+    }));
+    setPage(0);
+  };
+
   const handlePrevPage = () => {
     setPage((prevPage) => Math.max(0, prevPage - 1));
   };
@@ -112,8 +141,28 @@ const Vehicles = () => {
   };
 
   const handleBookCar = (car) => {
-    // Implement booking logic here
     console.log(`Booking car: ${car.make} ${car.model}`);
+  };
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
+  const handleCompareCar = (car) => {
+    setCompareList((prevList) => {
+      if (prevList.some((v) => v.vehicleId === car.vehicleId)) {
+        return prevList.filter((v) => v.vehicleId !== car.vehicleId);
+      } else if (prevList.length < 3) {
+        return [...prevList, car];
+      } else {
+        alert("You can only compare up to 3 vehicles.");
+        return prevList;
+      }
+    });
+  };
+
+  const showComparisonPage = () => {
+    setShowComparisonModal(true);
   };
 
   return (
@@ -128,41 +177,98 @@ const Vehicles = () => {
           onChange={handleSearch}
           style={styles.searchInput}
         />
-        <select name="make" value={filters.make} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Makes</option>
-          {makes.map((make, index) => (
-            <option key={index} value={make}>{make}</option>
-          ))}
-        </select>
-        <select name="model" value={filters.model} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Models</option>
-          {models.map((model, index) => (
-            <option key={index} value={model}>{model}</option>
-          ))}
-        </select>
-        <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Years</option>
-          {[...Array(10)].map((_, i) => (
-            <option key={i} value={2024 - i}>{2024 - i}</option>
-          ))}
-        </select>
-        <input
-          type="number"
-          name="minPrice"
-          placeholder="Min Price"
-          value={filters.minPrice}
-          onChange={handleFilterChange}
-          style={styles.priceInput}
-        />
-        <input
-          type="number"
-          name="maxPrice"
-          placeholder="Max Price"
-          value={filters.maxPrice}
-          onChange={handleFilterChange}
-          style={styles.priceInput}
-        />
+        <div style={styles.filterDropdown} ref={filterRef}>
+          <button onClick={toggleFilters} style={styles.filterButton}>
+            Filters
+          </button>
+          {showFilters && (
+            <div style={styles.filterMenu}>
+              <select name="make" value={filters.make} onChange={handleFilterChange} style={styles.filterSelect}>
+                <option value="">All Makes</option>
+                {makes.map((make, index) => (
+                  <option key={index} value={make}>{make}</option>
+                ))}
+              </select>
+              <select name="model" value={filters.model} onChange={handleFilterChange} style={styles.filterSelect}>
+                <option value="">All Models</option>
+                {models.map((model, index) => (
+                  <option key={index} value={model}>{model}</option>
+                ))}
+              </select>
+              <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
+                <option value="">All Years</option>
+                {[...Array(10)].map((_, i) => (
+                  <option key={i} value={2024 - i}>{2024 - i}</option>
+                ))}
+              </select>
+              <div style={styles.priceRangeContainer}>
+                <span style={styles.priceRangetext}>Price Range</span>
+                <Range
+                  step={10}
+                  min={10}
+                  max={1200}
+                  values={priceRange}
+                  onChange={handlePriceRangeChange}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '6px',
+                        width: '100%',
+                        backgroundColor: '#ddd'
+                      }}
+                    >
+                      {children}
+                    </div>
+                  )}
+                  renderThumb={({ props }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '20px',
+                        width: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: '#f97316'
+                      }}
+                    />
+                  )}
+                />
+                <div style={styles.priceRangeLabels}>
+                  <span style={styles.priceRangeLabel}>${priceRange[0]}</span>
+                  <span style={styles.priceRangeLabel}>${priceRange[1]}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+          
+      {isLoggedIn && compareList.length > 0 &&(
+        <div style={styles.compareScroll}>
+          {compareList.map((car) => (
+            <div key={car.vehicleId}>
+              <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
+              <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>Remove</button>
+            </div>
+          ))}
+          {compareList.length > 1 && (
+            <button style={styles.compareButton} onClick={showComparisonPage}>Compare</button>
+          )}
+        </div>
+      )}
+      
+      {/* Removed inline comparison section */}
+
+      {showComparisonModal &&  (
+        <div style={styles.modalBackground}>
+          <div style={styles.modalContent}>
+          <span style={styles.closeButton} onClick={() => setShowComparisonModal(false)}>&times;</span>
+            <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
+          </div>
+        </div>
+      )}
 
       <div style={styles.vehicleGrid}>
         {carData.length === 0 ? (
@@ -194,6 +300,12 @@ const Vehicles = () => {
                   >
                     Book
                   </button>
+                  <button 
+                    style={styles.compareButton}
+                    onClick={() => handleCompareCar(car)}
+                  >
+                    {compareList.find(v => v.vehicleId === car.vehicleId) ? 'Remove from Compare' : 'Compare'}
+                  </button>
                 </div>
               </div>
             </div>
@@ -201,7 +313,6 @@ const Vehicles = () => {
         )}
       </div>
 
-      {/* Conditional rendering for pagination */}
       {totalPages > 1 && (
         <div style={styles.paginationContainer}>
           <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
@@ -213,7 +324,6 @@ const Vehicles = () => {
           </button>
         </div>
       )}
-
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
           <div style={styles.carDetailsContent} onClick={(e) => e.stopPropagation()}>
@@ -230,12 +340,14 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Transmission:</strong> {selectedCar.transmission}</p>
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
-                <button 
-                  style={styles.bookCarButton}
-                  onClick={() => handleBookCar(selectedCar)}
-                >
-                  Book This Car
-                </button>
+                {isLoggedIn && (
+                  <button 
+                    style={styles.bookCarButton}
+                    onClick={() => handleBookCar(selectedCar)}
+                  >
+                    Book This Car
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -244,5 +356,7 @@ const Vehicles = () => {
     </div>
   );
 };
+
+      
 
 export default Vehicles;
