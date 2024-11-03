@@ -1,4 +1,4 @@
-const styles = {
+export const styles = {
   exploreVehicles: {
     padding: "60px 80px",
     backgroundColor: "#f5f5f5",
@@ -9,8 +9,8 @@ const styles = {
   },
   vehicleGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)", // Ensures 3 cards in a row
-    gap: "20px", // Consistent gap between cards
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "20px",
     padding: "20px 25px",
   },
   vehicleCard: {
@@ -58,6 +58,7 @@ const styles = {
     alignItems: "center",
     zIndex: 1000,
   },
+  
   carDetailsContent: {
     backgroundColor: "white",
     padding: "30px",
@@ -66,18 +67,10 @@ const styles = {
     width: "90%",
     position: "relative",
   },
-  closeLink: {
-    position: "absolute",
-    top: "10px",
-    right: "15px",
-    fontSize: "24px",
-    color: "#333",
-    cursor: "pointer",
-  },
   carDetailsGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr", // Two columns for car details
-    gap: "20px", // Gap between details
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
   },
   carDetailsImageImg: {
     width: "100%",
@@ -97,31 +90,14 @@ const styles = {
     bottom: "0",
     left: "0",
     width: "100%",
-    backgroundColor: "rgba(128, 128, 128, 0.5)", // Add transparency
-    padding: "0 0", // Increase padding for height
+    backgroundColor: "rgba(128, 128, 128, 0.5)",
+    padding: "15px 0",
     alignItems: "center",
     justifyContent: "flex-start",
     overflowX: "auto",
     borderTop: "1px solid #ccc",
     boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)",
-    backdropFilter: "blur(2px)", // Optional: add a slight blur effect
-  },
-  carImageContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "0 10px",
-    padding: "5px",
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-    backgroundColor: "white",
-  },
-  carImage: {
-    width: "70px", // Increase image size if desired
-    height: "50px",
-    objectFit: "cover",
-    marginBottom: "5px",
+    backdropFilter: "blur(5px)",
   },
   removeButton: {
     backgroundColor: "#ff4d4f",
@@ -132,6 +108,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "12px",
   },
+  
   compareButton: {
     backgroundColor: "#007BFF",
     color: "white",
@@ -142,62 +119,113 @@ const styles = {
     marginLeft: "10px",
     whiteSpace: "nowrap",
   },
-  
-// View All Styles
-viewAllContainer:{
-   display:'flex',
-   flexDirection:'column',
-   alignItems:'center',
-   justifyContent:'center',
-   padding:'0 60px',
-   margin:'40px',
-},
-viewAllTitle:{
-   fontSize:'1.8em',
-   color:'#333',
-},
-viewAllLink:{
-   fontSize:'1.4em',
-   color:'black',
-   textDecoration:'none',
-   cursor:'pointer',
-},
-bookButton: {
-  backgroundColor: '#f97316',
-  color: 'white',
-  border: 'none',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  marginLeft: '50px',
-},
-actionButtons: {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: '10px',
-},
-bookCarButton: {
-  backgroundColor: '#f97316',
-  color: 'white',
-  border: 'none',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  marginTop: '30px',
-},
-modalBackground: {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 1000,
-},
-};
+  viewAllContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0 60px',
+    margin: '40px',
+  },
+  viewAllTitle: {
+    fontSize: '1.8em',
+    color: '#333',
+  },
+  viewAllLink: {
+    fontSize: '1.4em',
+    color: 'black',
+    textDecoration: 'none',
+    cursor: 'pointer',
+  },
+  bookButton: {
+    backgroundColor: '#f97316',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginLeft: '50px',
+  },
+  actionButtons: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '10px',
+  },
+  bookCarButton: {
+    backgroundColor: '#f97316',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginTop: '30px',
+  },
+  modalBackground: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(128, 128, 128, 0.5)",
+    backdropFilter: "blur(5px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: "20px",
+    borderRadius: "10px",
+    maxWidth: "90%",
+    maxHeight: "80%",
+    overflow: "auto",
+    display: "flex",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    position: "relative",
+  },
+  closeButton: {
+    position: "absolute",
+    top: "10px",
+    right: "15px",
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#333",
+    cursor: "pointer",
+    background: "none",
+    border: "none",
+    padding: "0",
+    zIndex: 1,
+  },
 
-export { styles };
+  // Popup styling
+  popupOverlay: {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    right: '0',
+    bottom: '0',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  popupContent: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    textAlign: 'center',
+    width: '300px',
+  },
+  popupCloseButton: {
+    marginTop: '15px', 
+    padding: '8px 12px', 
+    borderRadius: '5px', 
+    border: 'none', 
+    cursor: 'pointer', 
+    color: '#fff', 
+    backgroundColor: '#007bff', 
+  }, 
+};

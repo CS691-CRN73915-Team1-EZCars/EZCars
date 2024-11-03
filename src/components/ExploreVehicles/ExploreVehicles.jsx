@@ -10,6 +10,8 @@ const ExploreVehicles = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [compareList, setCompareList] = useState([]);
   const [showComparisonModal, setShowComparisonModal] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -34,9 +36,9 @@ const ExploreVehicles = () => {
       return images;
     };
 
-  const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
+    const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
 
-  const loadedImgs = {};
+    const loadedImgs = {};
     carData.forEach(car => {
       const imageName = car.imageUrl.split('/').pop();
       loadedImgs[car.vehicleId] = images[imageName];
@@ -47,10 +49,6 @@ const ExploreVehicles = () => {
 
   const handleViewDetails = (car) => {
     setSelectedCar(car);
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedCar(null);
   };
 
   const handleBookCar = (car) => {
@@ -64,7 +62,8 @@ const ExploreVehicles = () => {
       } else if (prevList.length < 3) {
         return [...prevList, car];
       } else {
-        alert("You can only compare up to 3 vehicles.");
+        setPopupMessage("You can only compare up to 3 vehicles.");
+        setShowPopup(true);
         return prevList;
       }
     });
@@ -72,6 +71,10 @@ const ExploreVehicles = () => {
 
   const showComparisonPage = () => {
     setShowComparisonModal(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
   };
 
   return (
@@ -124,7 +127,7 @@ const ExploreVehicles = () => {
         ))}
       </div>
 
-      {isLoggedIn && (
+      {isLoggedIn && compareList.length > 0 && (
         <div style={styles.compareScroll}>
           {compareList.map((car) => (
             <div key={car.vehicleId}>
@@ -138,37 +141,18 @@ const ExploreVehicles = () => {
         </div>
       )}
 
-      {/* Scrollable Comparison Section */}
-      <div style={styles.compareScroll}>
-        {compareList.map((car) => (
-          <div key={car.vehicleId} style={styles.carImage}>
-            <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
-            <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>
-              Remove
-            </button>
-          </div>
-        ))}
-
-        {/* Only show the Compare button if there are multiple cars selected */}
-        {compareList.length > 1 && (
-          <button style={styles.compareButton} onClick={showComparisonPage}>
-            Compare
-          </button>
-        )}
-      </div>
-      
       {showComparisonModal && (
-        <div style={styles.modalBackground} onClick={() => setShowComparisonModal(false)}>
-          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-          <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
+        <div style={styles.modalBackground}>
+          <div style={styles.modalContent}>
+            <span style={styles.closeButton} onClick={() => setShowComparisonModal(false)}>&times;</span>
+            <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
           </div>
         </div>
       )}
 
       {selectedCar && (
-        <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
-          <div style={styles.carDetailsContent} onClick={(e) => e.stopPropagation()}>
-            <span style={styles.closeLink} onClick={handleCloseDetails}>&times;</span>
+        <div style={styles.carDetailsModal}>
+          <div style={styles.carDetailsContent}>
             <div style={styles.carDetailsGrid}>
               <div>
                 <img src={loadedImages[selectedCar.vehicleId]} alt={`${selectedCar.make} ${selectedCar.model}`} style={styles.carDetailsImageImg} />
@@ -194,8 +178,17 @@ const ExploreVehicles = () => {
           </div>
         </div>
       )}
+
+      {showPopup && (
+        <div style={styles.popupOverlay}>
+          <div style={styles.popupContent}>
+            <h2>Note</h2>
+            <p>{popupMessage}</p>
+            <button onClick={closePopup} style={styles.popupCloseButton}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
-    
   );
 };
 

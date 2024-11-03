@@ -10,6 +10,7 @@ const Vehicles = () => {
   const [selectedCar, setSelectedCar] = useState(null);
   const [carData, setCarData] = useState([]);
   const [page, setPage] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -25,11 +26,14 @@ const Vehicles = () => {
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
   const [priceRange, setPriceRange] = useState([50, 1200]);
+  
 
   const vehiclesPerPage = 12;
   const filterRef = useRef(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
     setMakes(carMakeModelData.makes);
     setModels(carMakeModelData.models);
   }, []);  
@@ -241,23 +245,26 @@ const Vehicles = () => {
         </div>
       </div>
           
-      <div style={styles.compareScroll}>
-        {compareList.map((car) => (
-          <div key={car.vehicleId} style={styles.carImage}>
-            <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
-            <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>Remove</button>
-          </div>
-        ))}
-        {compareList.length > 1 && (
-          <button style={styles.compareButton} onClick={showComparisonPage}>Compare</button>
-        )}
-      </div>
+      {isLoggedIn && compareList.length > 0 &&(
+        <div style={styles.compareScroll}>
+          {compareList.map((car) => (
+            <div key={car.vehicleId}>
+              <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
+              <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>Remove</button>
+            </div>
+          ))}
+          {compareList.length > 1 && (
+            <button style={styles.compareButton} onClick={showComparisonPage}>Compare</button>
+          )}
+        </div>
+      )}
       
       {/* Removed inline comparison section */}
 
-      {showComparisonModal && (
-        <div style={styles.modalBackground} onClick={() => setShowComparisonModal(false)}>
-          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+      {showComparisonModal &&  (
+        <div style={styles.modalBackground}>
+          <div style={styles.modalContent}>
+          <span style={styles.closeButton} onClick={() => setShowComparisonModal(false)}>&times;</span>
             <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
           </div>
         </div>
@@ -317,7 +324,6 @@ const Vehicles = () => {
           </button>
         </div>
       )}
-
       {selectedCar && (
         <div style={styles.carDetailsModal} onClick={handleCloseDetails}>
           <div style={styles.carDetailsContent} onClick={(e) => e.stopPropagation()}>
@@ -334,20 +340,23 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Transmission:</strong> {selectedCar.transmission}</p>
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
-                <button 
-                  style={styles.bookCarButton}
-                  onClick={() => handleBookCar(selectedCar)}
-                >
-                  Book This Car
-                </button>
+                {isLoggedIn && (
+                  <button 
+                    style={styles.bookCarButton}
+                    onClick={() => handleBookCar(selectedCar)}
+                  >
+                    Book This Car
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };
+
+      
 
 export default Vehicles;

@@ -66,14 +66,14 @@ const styles = {
     width: "90%",
     position: "relative",
   },
-  closeLink: {
-    position: "absolute",
-    top: "10px",
-    right: "15px",
-    fontSize: "24px",
-    color: "#333",
-    cursor: "pointer",
-  },
+  //closeLink: {
+    //position: "absolute",
+    //top: "10px",
+    //right: "15px",
+    //fontSize: "24px",
+    //color: "#333",
+    //cursor: "pointer",
+  //},
   carDetailsGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
@@ -295,7 +295,29 @@ compareScroll: {
   backdropFilter: "blur(0px)",
 },
 
-
+modalBackground: {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(128, 128, 128, 0.5)",
+  backdropFilter: "blur(5px)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 1000,
+},
+modalContent: {
+  backgroundColor: "white",
+  padding: "20px",
+  borderRadius: "10px",
+  maxWidth: "80%",
+  maxHeight: "80%",
+  overflow: "auto",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  position: "relative",
+},
 // Individual Car Image in the Comparison List
 carImageContainer: {
   display: "flex",
@@ -313,6 +335,19 @@ carImage: {
   height: "50px",
   objectFit: "cover",
   marginBottom: "5px",
+},
+closeButton: {
+  position: "absolute",
+  top: "10px",
+  right: "15px",
+  fontSize: "24px",
+  fontWeight: "bold",
+  color: "#333",
+  cursor: "pointer",
+  background: "none",
+  border: "none",
+  padding: "0",
+  zIndex: 1,
 },
 };
 
