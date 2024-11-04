@@ -249,7 +249,7 @@ const Vehicles = () => {
         <div style={styles.compareScroll}>
           {compareList.map((car) => (
             <div key={car.vehicleId}>
-              <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
+              <img src={loadedImages[car.vehicleId]} alt={car.make} width="70" />
               <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>Remove</button>
             </div>
           ))}

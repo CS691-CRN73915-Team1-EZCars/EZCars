@@ -131,7 +131,7 @@ const ExploreVehicles = () => {
         <div style={styles.compareScroll}>
           {compareList.map((car) => (
             <div key={car.vehicleId}>
-              <img src={loadedImages[car.vehicleId]} alt={car.make} width="50" />
+              <img src={loadedImages[car.vehicleId]} alt={car.make} width="70" />
               <button style={styles.removeButton} onClick={() => handleCompareCar(car)}>Remove</button>
             </div>
           ))}
@@ -153,6 +153,11 @@ const ExploreVehicles = () => {
       {selectedCar && (
         <div style={styles.carDetailsModal}>
           <div style={styles.carDetailsContent}>
+          <span 
+        style={styles.closeButton} 
+        onClick={() => setSelectedCar(null)}
+          >&times;
+          </span>
             <div style={styles.carDetailsGrid}>
               <div>
                 <img src={loadedImages[selectedCar.vehicleId]} alt={`${selectedCar.make} ${selectedCar.model}`} style={styles.carDetailsImageImg} />
