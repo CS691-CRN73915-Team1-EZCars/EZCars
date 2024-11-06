@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Range } from 'react-range';
 import { getAllVehicles, searchVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
@@ -6,6 +7,7 @@ import carMakeModelData from '../../data/carData.json';
 import CompareVehicles from '../../components/CompareVehicles/CompareVehicles';
 
 const Vehicles = () => {
+  const navigate = useNavigate();
   const [loadedImages, setLoadedImages] = useState({});
   const [selectedCar, setSelectedCar] = useState(null);
   const [carData, setCarData] = useState([]);
@@ -26,8 +28,6 @@ const Vehicles = () => {
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
   const [priceRange, setPriceRange] = useState([50, 1200]);
-  
-
   const vehiclesPerPage = 12;
   const filterRef = useRef(null);
 
@@ -36,8 +36,8 @@ const Vehicles = () => {
     setIsLoggedIn(!!token);
     setMakes(carMakeModelData.makes);
     setModels(carMakeModelData.models);
-  }, []);  
-  
+  }, []);
+
   const fetchVehicles = useCallback(async () => {
     try {
       let vehicles;
@@ -49,11 +49,9 @@ const Vehicles = () => {
           minPrice: filters.minPrice,
           maxPrice: filters.maxPrice,
         };
-
         if (filters.year) {
           searchParams.year = parseInt(filters.year);
         }
-
         vehicles = await searchVehicles(searchParams, page, vehiclesPerPage);
       } else {
         vehicles = await getAllVehicles(page, vehiclesPerPage);
@@ -72,18 +70,17 @@ const Vehicles = () => {
   useEffect(() => {
     const importAll = (r) => {
       let images = {};
-      r.keys().forEach((item) => { images[item.replace('./', '')] = r(item); });
+      r.keys().forEach((item) => {
+        images[item.replace('./', '')] = r(item);
+      });
       return images;
     };
-    
     const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
-    
     const loadedImgs = {};
     carData.forEach(car => {
       const imageName = car.imageUrl.split('/').pop();
       loadedImgs[car.vehicleId] = images[imageName];
     });
-
     setLoadedImages(loadedImgs);
   }, [carData]);
 
@@ -93,7 +90,6 @@ const Vehicles = () => {
         setShowFilters(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -115,20 +111,13 @@ const Vehicles = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      [name]: value
-    }));
+    setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
     setPage(0);
   };
 
   const handlePriceRangeChange = (values) => {
     setPriceRange(values);
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      minPrice: values[0],
-      maxPrice: values[1]
-    }));
+    setFilters(prevFilters => ({ ...prevFilters, minPrice: values[0], maxPrice: values[1] }));
     setPage(0);
   };
 
@@ -141,7 +130,7 @@ const Vehicles = () => {
   };
 
   const handleBookCar = (car) => {
-    console.log(`Booking car: ${car.make} ${car.model}`);
+    navigate('/BookVehicle', { state: { vehicleId: car.vehicleId } });
   };
 
   const toggleFilters = () => {
@@ -168,7 +157,6 @@ const Vehicles = () => {
   return (
     <div style={styles.exploreVehicles}>
       <h1 style={styles.exploreVehiclesHeading}>All Vehicles</h1>
-
       <div style={styles.searchAndFilterContainer}>
         <input
           type="text"
@@ -212,12 +200,7 @@ const Vehicles = () => {
                   renderTrack={({ props, children }) => (
                     <div
                       {...props}
-                      style={{
-                        ...props.style,
-                        height: '6px',
-                        width: '100%',
-                        backgroundColor: '#ddd'
-                      }}
+                      style={{ ...props.style, height: '6px', width: '100%', backgroundColor: '#ddd' }}
                     >
                       {children}
                     </div>
@@ -225,13 +208,7 @@ const Vehicles = () => {
                   renderThumb={({ props }) => (
                     <div
                       {...props}
-                      style={{
-                        ...props.style,
-                        height: '20px',
-                        width: '20px',
-                        borderRadius: '50%',
-                        backgroundColor: '#f97316'
-                      }}
+                      style={{ ...props.style, height: '20px', width: '20px', borderRadius: '50%', backgroundColor: '#f97316' }}
                     />
                   )}
                 />
@@ -244,8 +221,7 @@ const Vehicles = () => {
           )}
         </div>
       </div>
-          
-      {isLoggedIn && compareList.length > 0 &&(
+      {isLoggedIn && compareList.length > 0 && (
         <div style={styles.compareScroll}>
           {compareList.map((car) => (
             <div key={car.vehicleId}>
@@ -258,18 +234,14 @@ const Vehicles = () => {
           )}
         </div>
       )}
-      
-      {/* Removed inline comparison section */}
-
-      {showComparisonModal &&  (
+      {showComparisonModal && (
         <div style={styles.modalBackground}>
           <div style={styles.modalContent}>
-          <span style={styles.closeButton} onClick={() => setShowComparisonModal(false)}>&times;</span>
+            <span style={styles.closeButton} onClick={() => setShowComparisonModal(false)}>&times;</span>
             <CompareVehicles compareList={compareList} loadedImages={loadedImages} />
           </div>
         </div>
       )}
-
       <div style={styles.vehicleGrid}>
         {carData.length === 0 ? (
           <p style={styles.searchResult}>No results found!!</p>
@@ -288,22 +260,14 @@ const Vehicles = () => {
                 </p>
                 <p style={styles.vehiclePrice}>${car.price}</p>
                 <div style={styles.actionButtons}>
-                  <span 
-                    style={styles.viewDetailsLink}
-                    onClick={() => handleViewDetails(car)}
-                  >
-                    View Details <span style={styles.tiltedArrow}>➔</span>
+                  <span style={styles.viewDetailsLink} onClick={() => handleViewDetails(car)}>
+                    View Details
+                    <span style={styles.tiltedArrow}>➔</span>
                   </span>
-                  <button 
-                    style={styles.bookButton}
-                    onClick={() => handleBookCar(car)}
-                  >
+                  <button style={styles.bookButton} onClick={() => handleBookCar(car)}>
                     Book
                   </button>
-                  <button 
-                    style={styles.compareButton}
-                    onClick={() => handleCompareCar(car)}
-                  >
+                  <button style={styles.compareButton} onClick={() => handleCompareCar(car)}>
                     {compareList.find(v => v.vehicleId === car.vehicleId) ? 'Remove from Compare' : 'Compare'}
                   </button>
                 </div>
@@ -312,7 +276,6 @@ const Vehicles = () => {
           ))
         )}
       </div>
-
       {totalPages > 1 && (
         <div style={styles.paginationContainer}>
           <button onClick={handlePrevPage} disabled={page === 0} style={styles.paginationButton}>
@@ -341,10 +304,7 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
                 {isLoggedIn && (
-                  <button 
-                    style={styles.bookCarButton}
-                    onClick={() => handleBookCar(selectedCar)}
-                  >
+                  <button style={styles.bookCarButton} onClick={() => handleBookCar(selectedCar)}>
                     Book This Car
                   </button>
                 )}
@@ -356,7 +316,5 @@ const Vehicles = () => {
     </div>
   );
 };
-
-      
 
 export default Vehicles;

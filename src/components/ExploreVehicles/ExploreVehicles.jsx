@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getAllVehicles } from '../../api/vehicles';
 import { styles } from "./styles";
 import CompareVehicles from '../CompareVehicles/CompareVehicles';
+import { useNavigate } from 'react-router-dom';
 
 const ExploreVehicles = () => {
+  const navigate = useNavigate();
   const [loadedImages, setLoadedImages] = useState({});
   const [selectedCar, setSelectedCar] = useState(null);
   const [carData, setCarData] = useState([]);
@@ -52,7 +54,7 @@ const ExploreVehicles = () => {
   };
 
   const handleBookCar = (car) => {
-    console.log(`Booking car: ${car.make} ${car.model}`);
+    navigate('/BookVehicle', { state: { vehicleId: car.vehicleId } });
   };
 
   const handleCompareCar = (car) => {
@@ -153,11 +155,11 @@ const ExploreVehicles = () => {
       {selectedCar && (
         <div style={styles.carDetailsModal}>
           <div style={styles.carDetailsContent}>
-          <span 
-        style={styles.closeButton} 
-        onClick={() => setSelectedCar(null)}
-          >&times;
-          </span>
+            <span 
+              style={styles.closeButton} 
+              onClick={() => setSelectedCar(null)}
+            >&times;
+            </span>
             <div style={styles.carDetailsGrid}>
               <div>
                 <img src={loadedImages[selectedCar.vehicleId]} alt={`${selectedCar.make} ${selectedCar.model}`} style={styles.carDetailsImageImg} />

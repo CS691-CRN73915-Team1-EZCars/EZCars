@@ -264,7 +264,7 @@ removeButton: {
   backgroundColor: "#ff4d4f",
   color: "white",
   border: "none",
-  padding: "3px 8px",
+  padding: "5px 8px",
   borderRadius: "3px",
   cursor: "pointer",
   fontSize: "12px",

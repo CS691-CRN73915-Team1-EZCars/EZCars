@@ -19,7 +19,13 @@ const Summary = () => {
         // Fetch bookings
         const bookingsResponse = await getAllBookingsByUserId(userId);
         console.log('bookingsResponse', bookingsResponse);
-        setBookings(bookingsResponse || []);
+        
+        // Sort bookings in reverse chronological order
+        const sortedBookings = bookingsResponse.sort((a, b) => 
+          new Date(b.pickUpDate) - new Date(a.pickUpDate)
+        );
+        
+        setBookings(sortedBookings || []);
 
         // Fetch all vehicles
         const vehiclesResponse = await getAllVehicles(0, 200);
