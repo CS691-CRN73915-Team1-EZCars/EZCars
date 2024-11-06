@@ -123,6 +123,15 @@ const styles = {
       width: '100%',
       marginTop: '10px',
     },
+    fullPageMessage: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '70vh',
+      fontSize: '40px',
+      color: '#2c3e50',
+      backgroundColor: '#f8f9fa',
+    },
   };
   
   export default styles;

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles';
 import { getAllBookingsByUserId } from '../../api/bookVehicle'; 
 import { getAllVehicles } from '../../api/vehicles';
+import styles from './styles';
 
 const Summary = () => {
   const [bookings, setBookings] = useState([]);
   const [vehicles, setVehicles] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [vehiclesLoaded, setVehiclesLoaded] = useState(false);
 
   const userId = localStorage.getItem('userId');
 
@@ -34,8 +34,10 @@ const Summary = () => {
         setVehicles(vehicleMap);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to fetch data. Please try again later.');
+        // Instead of setting an error state, we'll just set vehicles to an empty object
+        setVehicles({});
       } finally {
+        setVehiclesLoaded(true);
         setIsLoading(false);
       }
     };
@@ -61,9 +63,11 @@ const Summary = () => {
     setLoadedImages(loadedImgs);
   }, [vehicles]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!bookings || bookings.length === 0) return <div>No bookings found</div>;
+  if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
+  if (vehiclesLoaded && Object.keys(vehicles).length === 0) {
+    return <div style={styles.fullPageMessage}>No vehicles to show!!</div>;
+  }
+  if (!bookings || bookings.length === 0) return <div style={styles.fullPageMessage}>No bookings found</div>;
 
   return (
     <div style={styles.summaryContainer}>

@@ -336,17 +336,18 @@ carImage: {
   objectFit: "cover",
   marginBottom: "5px",
 },
-closeButton: {
+closeLink: {
   position: "absolute",
   top: "10px",
   right: "15px",
-  fontSize: "24px",
-  fontWeight: "bold",
+  fontSize: "32px",
   color: "#333",
   cursor: "pointer",
+  fontWeight: "bold",
+  lineHeight: "1",
+  padding: "5px 10px",
   background: "none",
   border: "none",
-  padding: "0",
   zIndex: 1,
 },
 };
