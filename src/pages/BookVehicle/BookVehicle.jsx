@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createBooking } from "../../api/bookVehicle";
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './styles';
@@ -12,36 +12,31 @@ const BookVehicle = () => {
   });
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [minDate, setMinDate] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   
   const vehicleId = location.state?.vehicleId;
 
-  const today = new Date().toISOString().split('T')[0];
-
-  const isDateValid = (date) => {
+  useEffect(() => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return new Date(date) >= today;
-  };
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedToday = `${year}-${month}-${day}`;
+    setMinDate(formattedToday);
+    setBookingData(prev => ({ ...prev, pickUpDate: formattedToday }));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'pickUpDate' && !isDateValid(value)) {
-      setError("Pick-up date cannot be in the past.");
-      return;
-    }
     setBookingData((prevData) => ({ ...prevData, [name]: value }));
     setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isDateValid(bookingData.pickUpDate)) {
-      setError("Pick-up date cannot be in the past.");
-      return;
-    }
     try {
       await createBooking({
         ...bookingData,
@@ -52,7 +47,7 @@ const BookVehicle = () => {
       setSuccessMessage("Booking created successfully!");
       setError(null);
       setBookingData({
-        pickUpDate: "",
+        pickUpDate: minDate,
         duration: "12",
         pickupLocation: "",
         dropoffLocation: "",
@@ -81,7 +76,7 @@ const BookVehicle = () => {
               onChange={handleChange}
               required
               style={styles.input}
-              min={today}
+              min={minDate}
             />
           </label>
           <label style={styles.label}>

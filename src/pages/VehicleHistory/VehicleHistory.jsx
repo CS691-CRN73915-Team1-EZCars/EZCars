@@ -12,6 +12,13 @@ const Summary = () => {
 
   const userId = localStorage.getItem('userId');
 
+  // Helper function to format date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    return date.toLocaleDateString();
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -84,6 +91,10 @@ const Summary = () => {
           const vehicle = vehicles[booking.vehicleId];
           if (!vehicle) return null;
 
+          // Calculate drop-off date
+          const pickUpDate = new Date(booking.pickUpDate);
+          const dropOffDate = new Date(pickUpDate.getTime() + booking.duration * 60 * 60 * 1000);
+
           return (
             <div key={booking.id} style={styles.bookingCard}>
               <div style={styles.bookingContent}>
@@ -109,13 +120,13 @@ const Summary = () => {
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Pick-up Date:</span> {new Date(booking.pickUpDate).toLocaleDateString()}
+                    <span style={styles.label}>Pick-up Date:</span> {formatDate(booking.pickUpDate)}
                   </p>
                 </div>
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Drop-off Date:</span> {new Date(new Date(booking.pickUpDate).getTime() + booking.duration * 60 * 60 * 1000).toLocaleDateString()}
+                    <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDate)}
                   </p>
                 </div>
                 <div style={styles.bookingStatusRow}>

@@ -1,5 +1,49 @@
 {
-  "makes": ["Tesla", "Mercedes", "Ford", "Maserati", "BMW", "Land Rover","Toyota","Honda","Mercedes-Benz","Chevrolet","Nissan","Audi","Hyundai","Jeep","Kia","Subaru","Mazda","Volkswagen","Porsche","GMC","Lexus","Cadillac"],
-  "models": ["Model S","Camry","Mustang Mach-E","Accord","X5","C-Class","Bolt EV","Leaf","Q5","Elantra","RAV4","F-150", "Wrangler","Sportage","Outback","Golf","911","Silverado","Yukon","RX 350","Escalade","Tucson"]
+  "makes": [
+    "Audi",
+    "BMW",
+    "Cadillac",
+    "Chevrolet",
+    "Ford",
+    "GMC",
+    "Honda",
+    "Hyundai",
+    "Jeep",
+    "Kia",
+    "Land Rover",
+    "Lexus",
+    "Mazda",
+    "Mercedes",
+    "Mercedes-Benz",
+    "Maserati",
+    "Nissan",
+    "Porsche",
+    "Subaru",
+    "Tesla",
+    "Toyota",
+    "Volkswagen"
+  ],
+  "models": [
+    "911",
+    "Accord",
+    "Bolt EV",
+    "Camry",
+    "C-Class",
+    "Elantra",
+    "F-150",
+    "Golf",
+    "Leaf",
+    "Mazda3", 
+    "Model S", 
+    "Mustang Mach-E", 
+    "Outback", 
+    "Q5", 
+    "RAV4", 
+    "Silverado", 
+    "Sportage", 
+    "Tucson", 
+    "Wrangler", 
+    "X5", 
+    "Yukon"
+  ]
 }
-
