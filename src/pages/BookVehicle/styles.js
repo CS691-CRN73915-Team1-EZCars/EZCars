@@ -2,9 +2,14 @@ const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '70vh',
+    minHeight: '75vh',
+    maxWidth: '800px',
+    margin: '0 auto',
     backgroundColor: '#f0f2f5',
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: 'Arial, sans-serif', 
+    borderRadius: '12px',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+    boxSizing: 'border-box',
   },
   content: {
     flex: 1,

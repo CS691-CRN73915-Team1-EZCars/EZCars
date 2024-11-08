@@ -37,6 +37,10 @@ const BookVehicle = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (new Date(bookingData.dropOffDate) < new Date(bookingData.pickUpDate)) {
+      setError("Drop-off date cannot be before the pick-up date.");
+      return;
+    }
     try {
       await createBooking({
         ...bookingData,
@@ -48,7 +52,7 @@ const BookVehicle = () => {
       setError(null);
       setBookingData({
         pickUpDate: minDate,
-        duration: "12",
+        dropoffDate: minDate,
         pickupLocation: "",
         dropoffLocation: "",
       });
@@ -80,20 +84,17 @@ const BookVehicle = () => {
             />
           </label>
           <label style={styles.label}>
-            Duration:
-            <select
-              name="duration"
-              value={bookingData.duration}
+  
+            Drop-Off Date:
+            <input
+              type="date"
+              name="dropOffDate"
+              value={bookingData.dropOffDate}
               onChange={handleChange}
               required
-              style={styles.select}
-            >
-              <option value="12">12 hrs</option>
-              <option value="24">24 hrs</option>
-              <option value="48">48 hrs</option>
-              <option value="72">72 hrs</option>
-              <option value="96">96 hrs</option>
-            </select>
+              style={styles.input}
+              min={bookingData.pickUpDate || minDate}
+              />
           </label>
           <label style={styles.label}>
             Pick-Up Location:

@@ -132,6 +132,19 @@ const styles = {
       color: '#2c3e50',
       backgroundColor: '#f8f9fa',
     },
+    deleteButton: {
+      backgroundColor: '#f97316', // Orange color
+      color: '#ffffff', // White text
+      padding: '10px 20px',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      display: 'inline-block', // Change to inline-block for better alignment
+      marginTop: '10px', // Add top margin
+      transition: 'background-color 0.3s ease',
+    },
   };
   
   export default styles;

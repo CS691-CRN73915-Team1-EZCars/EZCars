@@ -1,21 +1,26 @@
 const styles = {
-  container: {
-    maxWidth: '500px',
-    margin: '50px auto',
-    padding: '30px',
+  pageBackground: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '55vh',
+    maxWidth: '800px',
+    margin: '0 auto',
+    backgroundColor: '#f0f2f5',
+    fontFamily: 'Arial, sans-serif', 
     borderRadius: '12px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+    boxSizing: 'border-box',
+  },
+  container: {
+    maxWidth: '600px',
+    margin: '100px auto',
+    padding: '40px',
+    //borderRadius: '12px',
+    //boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
     backgroundColor: '#ffffff', 
     fontFamily: 'Arial, sans-serif',
   },
-  pageBackground: {
-    backgroundColor: '#f0f2f5',
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center', 
-    padding: '20px', 
-  },
+  
   heading: {
     color: '#2c3e50',
     textAlign: 'center',

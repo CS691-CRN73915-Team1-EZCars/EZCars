@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllBookingsByUserId } from '../../api/bookVehicle'; 
+import { getAllBookingsByUserId, deleteBooking } from '../../api/bookVehicle'; 
 import { getAllVehicles } from '../../api/vehicles';
 import styles from './styles';
 
@@ -8,7 +8,7 @@ const Summary = () => {
   const [vehicles, setVehicles] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [vehiclesLoaded, setVehiclesLoaded] = useState(false);
+  const [error, setError] = useState(null);
 
   const userId = localStorage.getItem('userId');
 
@@ -17,6 +17,16 @@ const Summary = () => {
     const date = new Date(dateString);
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     return date.toLocaleDateString();
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    try {
+      await deleteBooking(bookingId);
+      setBookings((prevBookings) => prevBookings.filter((booking) => booking.id !== bookingId));
+    } catch (error) {
+      console.error('Failed to delete booking:', error);
+      setError('Failed to delete booking. Please try again later.');
+    }
   };
 
   useEffect(() => {
@@ -47,10 +57,8 @@ const Summary = () => {
         setVehicles(vehicleMap);
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Instead of setting an error state, we'll just set vehicles to an empty object
-        setVehicles({});
+        setError('Failed to fetch data. Please try again later.');
       } finally {
-        setVehiclesLoaded(true);
         setIsLoading(false);
       }
     };
@@ -77,9 +85,7 @@ const Summary = () => {
   }, [vehicles]);
 
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
-  if (vehiclesLoaded && Object.keys(vehicles).length === 0) {
-    return <div style={styles.fullPageMessage}>No vehicles to show!!</div>;
-  }
+  if (error) return <div style={styles.fullPageMessage}>{error}</div>;
   if (!bookings || bookings.length === 0) return <div style={styles.fullPageMessage}>No bookings found</div>;
 
   return (
@@ -133,6 +139,9 @@ const Summary = () => {
                   <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} hours</p>
                   <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
                 </div>
+                <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>
+                  Delete Booking
+                </button>
               </div>
             </div>
           );
