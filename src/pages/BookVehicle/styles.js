@@ -88,6 +88,19 @@ const styles = {
     backgroundColor: '#f8d7da',
     borderRadius: '6px',
   },
+  usernameBox: {
+    marginBottom: '15px',
+  },
+  usernameBoxContent: {
+    padding: '10px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#333',
+    backgroundColor: '#f0f0f0',  // Background color for the username box
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    pointerEvents: 'none',  // Makes the box non-editable (also prevents interaction)
+  },
 };
 
 export default styles;

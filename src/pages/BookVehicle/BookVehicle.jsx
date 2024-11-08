@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { createBooking } from "../../api/bookVehicle";
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './styles';
+import {getUserById} from "../../api/users";
+
+
 
 const BookVehicle = () => {
   const [bookingData, setBookingData] = useState({
@@ -10,6 +13,7 @@ const BookVehicle = () => {
     pickupLocation: "",
     dropoffLocation: "",
   });
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [minDate, setMinDate] = useState("");
@@ -28,6 +32,21 @@ const BookVehicle = () => {
     setMinDate(formattedToday);
     setBookingData(prev => ({ ...prev, pickUpDate: formattedToday }));
   }, []);
+
+  useEffect(() => {
+    // Fetch the user data and extract the username from it
+    const fetchUser = async () => {
+      if (userId) {
+        try {
+          const user = await getUserById(userId); // Get user by ID
+          setUsername(user.username); // Assuming 'username' is a field in the user data
+        } catch (err) {
+          setError("Failed to fetch username.");
+        }
+      }
+    };
+    fetchUser();
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +89,12 @@ const BookVehicle = () => {
     <div style={styles.container}>
       <div style={styles.content}>
         <h1 style={styles.heading}>Book Vehicle</h1>
+        {username && (
+          <div style={styles.usernameBox}>
+            <label style={styles.label}>Username:</label>
+            <div style={styles.usernameBoxContent}>{username}</div>
+          </div>
+        )}
         <form onSubmit={handleSubmit} style={styles.form}>
           <label style={styles.label}>
             Pick-Up Date:

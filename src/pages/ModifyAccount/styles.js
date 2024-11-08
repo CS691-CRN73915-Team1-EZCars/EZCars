@@ -1,9 +1,10 @@
 const styles = {
   pageBackground: {
     display: 'flex',
+    justifyContent: 'center',
     flexDirection: 'column',
     minHeight: '55vh',
-    maxWidth: '800px',
+    maxWidth: '900px',
     margin: '0 auto',
     backgroundColor: '#f0f2f5',
     fontFamily: 'Arial, sans-serif', 
@@ -12,11 +13,12 @@ const styles = {
     boxSizing: 'border-box',
   },
   container: {
-    maxWidth: '600px',
-    margin: '100px auto',
+    width: '700px',
+    height: '500px', 
+    margin: '30px auto',
     padding: '40px',
-    //borderRadius: '12px',
-    //boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+    borderRadius: '12px',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
     backgroundColor: '#ffffff', 
     fontFamily: 'Arial, sans-serif',
   },

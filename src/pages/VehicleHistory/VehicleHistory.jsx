@@ -98,8 +98,10 @@ const Summary = () => {
           if (!vehicle) return null;
 
           // Calculate drop-off date
-          const pickUpDate = new Date(booking.pickUpDate);
-          const dropOffDate = new Date(pickUpDate.getTime() + booking.duration * 60 * 60 * 1000);
+          //const pickUpDate = new Date(booking.pickUpDate);
+          //const dropOffDate = new Date(pickUpDate.getTime() + booking.duration * 60 * 60 * 1000);
+          //const dropOffDate = booking.dropOffDate ? new Date(booking.dropOffDate) : new Date(pickUpDate.getTime() * 60 * 60 * 1000);
+          const dropOffDate = new Date(booking.pickUpDate);
 
           return (
             <div key={booking.id} style={styles.bookingCard}>
@@ -136,7 +138,6 @@ const Summary = () => {
                   </p>
                 </div>
                 <div style={styles.bookingStatusRow}>
-                  <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} hours</p>
                   <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
                 </div>
                 <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>
