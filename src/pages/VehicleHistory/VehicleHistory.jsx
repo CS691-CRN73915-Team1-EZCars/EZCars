@@ -97,11 +97,10 @@ const Summary = () => {
           const vehicle = vehicles[booking.vehicleId];
           if (!vehicle) return null;
 
-          // Calculate drop-off date
-          //const pickUpDate = new Date(booking.pickUpDate);
-          //const dropOffDate = new Date(pickUpDate.getTime() + booking.duration * 60 * 60 * 1000);
-          //const dropOffDate = booking.dropOffDate ? new Date(booking.dropOffDate) : new Date(pickUpDate.getTime() * 60 * 60 * 1000);
-          const dropOffDate = new Date(booking.pickUpDate);
+          // Calculate drop-off date based on duration in days
+          const pickUpDateTime = new Date(booking.pickUpDate);
+          // Calculate drop-off date by adding duration in days
+          const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000); // Convert days to milliseconds
 
           return (
             <div key={booking.id} style={styles.bookingCard}>
@@ -134,10 +133,12 @@ const Summary = () => {
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDate)}
+                    <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDateTime)}
                   </p>
                 </div>
                 <div style={styles.bookingStatusRow}>
+                  {/* Display duration in days */}
+                  <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>
                   <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
                 </div>
                 <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { createBooking } from "../../api/bookVehicle";
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './styles';
-import {getUserById} from "../../api/users";
-
-
+import { getUserById } from "../../api/users";
 
 const BookVehicle = () => {
   const [bookingData, setBookingData] = useState({
     pickUpDate: "",
-    duration: "12",
+    dropOffDate: "", 
+    duration: "",
     pickupLocation: "",
     dropoffLocation: "",
   });
@@ -17,6 +16,7 @@ const BookVehicle = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [minDate, setMinDate] = useState("");
+  const [minDropOffDate, setMinDropOffDate] = useState(""); 
   const location = useLocation();
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
@@ -31,6 +31,7 @@ const BookVehicle = () => {
     const formattedToday = `${year}-${month}-${day}`;
     setMinDate(formattedToday);
     setBookingData(prev => ({ ...prev, pickUpDate: formattedToday }));
+    setMinDropOffDate(formattedToday); 
   }, []);
 
   useEffect(() => {
@@ -51,27 +52,47 @@ const BookVehicle = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBookingData((prevData) => ({ ...prevData, [name]: value }));
+    
+    // If pickUpDate changes, update minDropOffDate
+    if (name === "pickUpDate") {
+      const selectedPickUpDate = new Date(value);
+      selectedPickUpDate.setDate(selectedPickUpDate.getDate() + 1); // Set to next day
+      const formattedMinDropOffDate = selectedPickUpDate.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+      setMinDropOffDate(formattedMinDropOffDate);
+      setBookingData(prevData => ({ ...prevData, dropOffDate: formattedMinDropOffDate })); // Reset drop-off date if needed
+    }
+
     setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (new Date(bookingData.dropOffDate) < new Date(bookingData.pickUpDate)) {
-      setError("Drop-off date cannot be before the pick-up date.");
+
+    // Calculate duration in days
+    const pickUpDateTime = new Date(bookingData.pickUpDate);
+    const dropOffDateTime = new Date(bookingData.dropOffDate);
+
+    if (dropOffDateTime <= pickUpDateTime) {
+      setError("Drop-off date must be a day ahead of pick Up date!!");
       return;
     }
+
+    // Calculate duration in days
+    const durationInDays = Math.ceil((dropOffDateTime - pickUpDateTime) / (1000 * 60 * 60 * 24));
+
     try {
       await createBooking({
         ...bookingData,
         userId,
         vehicleId,
         status: "PENDING",
+        duration: durationInDays, // Send calculated duration
       });
       setSuccessMessage("Booking created successfully!");
       setError(null);
       setBookingData({
         pickUpDate: minDate,
-        dropoffDate: minDate,
+        dropOffDate: minDropOffDate,
         pickupLocation: "",
         dropoffLocation: "",
       });
@@ -109,7 +130,6 @@ const BookVehicle = () => {
             />
           </label>
           <label style={styles.label}>
-  
             Drop-Off Date:
             <input
               type="date"
@@ -118,8 +138,8 @@ const BookVehicle = () => {
               onChange={handleChange}
               required
               style={styles.input}
-              min={bookingData.pickUpDate || minDate}
-              />
+              min={minDropOffDate} // Use updated min drop-off date here
+            />
           </label>
           <label style={styles.label}>
             Pick-Up Location:
