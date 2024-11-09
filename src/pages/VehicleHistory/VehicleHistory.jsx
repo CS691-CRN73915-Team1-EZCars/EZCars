@@ -12,7 +12,6 @@ const Summary = () => {
 
   const userId = localStorage.getItem('userId');
 
-  // Helper function to format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
@@ -33,22 +32,18 @@ const Summary = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Fetch bookings
         const bookingsResponse = await getAllBookingsByUserId(userId);
         console.log('bookingsResponse', bookingsResponse);
         
-        // Sort bookings in reverse chronological order
         const sortedBookings = bookingsResponse.sort((a, b) => 
           new Date(b.pickUpDate) - new Date(a.pickUpDate)
         );
         
         setBookings(sortedBookings || []);
 
-        // Fetch all vehicles
         const vehiclesResponse = await getAllVehicles(0, 200);
         const allVehicles = vehiclesResponse.content || [];
 
-        // Create a map of vehicle ID to vehicle data
         const vehicleMap = {};
         allVehicles.forEach(vehicle => {
           vehicleMap[vehicle.vehicleId] = vehicle;
@@ -86,12 +81,10 @@ const Summary = () => {
 
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
   
-  // Check if there are no bookings or no vehicles
   if (!bookings.length || Object.keys(vehicles).length === 0) {
     return <div style={styles.fullPageMessage}>No booking history!!</div>;
   }
 
-  // If there's an error and we have no data, show the error
   if (error && !bookings.length && Object.keys(vehicles).length === 0) {
     return <div style={styles.fullPageMessage}>{error}</div>;
   }
@@ -105,9 +98,7 @@ const Summary = () => {
           const vehicle = vehicles[booking.vehicleId];
           if (!vehicle) return null;
 
-          // Calculate drop-off date based on duration in days
           const pickUpDateTime = new Date(booking.pickUpDate);
-          // Calculate drop-off date by adding duration in days
           const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000);
 
           return (
@@ -127,8 +118,10 @@ const Summary = () => {
                   <p style={styles.vehicleDetail}><span style={styles.label}>Year:</span> {vehicle.year}</p>
                   <p style={styles.vehicleDetail}><span style={styles.label}>Transmission:</span> {vehicle.transmission}</p>
                   <p style={styles.vehicleDetail}><span style={styles.label}>Fuel Type:</span> {vehicle.fuelType}</p>
-                  <p style={styles.vehicleDetail}><span style={styles.label}>Price:</span> ${vehicle.price}/day</p>
                   <p style={styles.vehicleDetail}><span style={styles.label}>Mileage:</span> {vehicle.mileage} mpg</p>
+                  <p style={styles.bookingPrice}>
+                    <span style={styles.label}>Booking Price:</span> ${(vehicle.price * booking.duration).toFixed(2)}
+                  </p>
                 </div>
               </div>
               <div style={styles.bookingDetails}>

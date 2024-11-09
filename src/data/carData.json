@@ -45,5 +45,13 @@
     "Wrangler", 
     "X5", 
     "Yukon"
+  ],
+  "locations": [
+    "Newark, NJ, USA",
+    "Newport, Jersey City, NJ, USA",
+    "New York, NY, USA",
+    "Journal Square, Jersey City, NJ, USA",
+    "Exchange Place, Jersey City, NJ, USA",
+    "Times Square, New York, NY 10036, USA"
   ]
 }

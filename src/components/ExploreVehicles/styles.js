@@ -116,7 +116,6 @@ export const styles = {
     padding: "10px 20px",
     borderRadius: "5px",
     cursor: "pointer",
-    marginLeft: "10px",
     whiteSpace: "nowrap",
   },
   viewAllContainer: {
