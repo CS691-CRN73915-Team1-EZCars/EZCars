@@ -85,8 +85,16 @@ const Summary = () => {
   }, [vehicles]);
 
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
-  if (error) return <div style={styles.fullPageMessage}>{error}</div>;
-  if (!bookings || bookings.length === 0) return <div style={styles.fullPageMessage}>No bookings found</div>;
+  
+  // Check if there are no bookings or no vehicles
+  if (!bookings.length || Object.keys(vehicles).length === 0) {
+    return <div style={styles.fullPageMessage}>No booking history!!</div>;
+  }
+
+  // If there's an error and we have no data, show the error
+  if (error && !bookings.length && Object.keys(vehicles).length === 0) {
+    return <div style={styles.fullPageMessage}>{error}</div>;
+  }
 
   return (
     <div style={styles.summaryContainer}>
@@ -100,7 +108,7 @@ const Summary = () => {
           // Calculate drop-off date based on duration in days
           const pickUpDateTime = new Date(booking.pickUpDate);
           // Calculate drop-off date by adding duration in days
-          const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000); // Convert days to milliseconds
+          const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000);
 
           return (
             <div key={booking.id} style={styles.bookingCard}>
@@ -137,7 +145,6 @@ const Summary = () => {
                   </p>
                 </div>
                 <div style={styles.bookingStatusRow}>
-                  {/* Display duration in days */}
                   <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>
                   <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
                 </div>
