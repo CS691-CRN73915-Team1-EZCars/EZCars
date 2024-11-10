@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles';
-import data from '../../data/userData.json';
 import { Link } from 'react-router-dom';
 import { getUserById } from '../../api/users'; 
+import data from '../../data/userData.json';
+import { getAllBookingsByUserId } from "../../api/bookVehicle";
 
 const AccountSummary = () => {
   const [user, setUser] = useState(data);
-  const [notificationPreference, setNotificationPreference] = useState(
-    data.preferences.notifications.sms ? 'sms' : 'email'
-  );
+  const [bookings, setBookings] = useState([]);
+  const [notificationPreference, setNotificationPreference] = useState('email');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const userId = localStorage.getItem('userId');
 
@@ -16,14 +18,38 @@ const AccountSummary = () => {
     const fetchUserDetails = async () => {
       try {
         const userData = await getUserById(userId);
+        //setUser(userData);
         setUser(prevUser => ({ ...prevUser, ...userData }));
+        setNotificationPreference(userData.preferences?.notifications?.sms ? 'sms' : 'email');
       } catch (error) {
         console.error('Error fetching user details:', error);
+        setError('Failed to load user details');
       }
     };
-    if (userId) {
-      fetchUserDetails();
-    }
+
+    const fetchBookings = async () => {
+      try {
+        const bookingsData = await getAllBookingsByUserId(userId);
+        setBookings(Array.isArray(bookingsData) ? bookingsData : []);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        setError('Failed to load booking history');
+        setBookings([]);
+      }
+    };
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+      if (userId) {
+        await Promise.all([fetchUserDetails(), fetchBookings()]);
+      } else {
+        setError('User ID not found');
+      }
+      setIsLoading(false);
+    };
+
+    fetchData();
   }, [userId]);
 
   const handleNotificationChange = (type) => {
@@ -33,6 +59,20 @@ const AccountSummary = () => {
   const safelyGetNestedProp = (obj, path) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
+
+  const totalRides = bookings.length;
+
+  const lastRide = bookings[0]; 
+
+  const formatLastRide = (ride) => {
+    if (!ride) return 'No rides yet';
+    const vehicleMake = ride.vehicle?.make || 'NA';
+    const vehicleModel = ride.vehicle?.model ||'';
+    return `${vehicleMake} ${vehicleModel}`;
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div style={styles.summaryContainer}>
@@ -90,27 +130,23 @@ const AccountSummary = () => {
           <h3 style={styles.sectionHeading}>User Stats</h3>
           <div style={styles.infoItem}>
             <span style={styles.label}>Total Rides:</span>
-            <span style={styles.value}>{user.totalRides}</span>
+            <span style={styles.value}>{totalRides}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Total Distance (km):</span>
-            <span style={styles.value}>{user.totalDistanceKms}</span>
+            <span style={styles.value}>{user.totalDistanceKms || 'N/A'}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Total Spending:</span>
-            <span style={styles.value}>${user.totalSpending.toFixed(2)}</span>
+            <span style={styles.value}>${user.totalSpending}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Average Rating:</span>
-            <span style={styles.value}>{user.averageRating}</span>
+            <span style={styles.value}>{user.averageRating || 'N/A'}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Last Ride:</span>
-            <span style={styles.value}>
-              {safelyGetNestedProp(user, 'lastRide.date')} - 
-              {safelyGetNestedProp(user, 'lastRide.vehicle')} 
-              (Driver: {safelyGetNestedProp(user, 'lastRide.driverName')})
-            </span>
+            <span style={styles.value}>{formatLastRide(lastRide)}</span>
           </div>
         </div>
 

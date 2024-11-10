@@ -169,6 +169,7 @@ const ModifyAccount = () => {
   };
 
   return (
+   <div style={styles.pageBackground}>  
     <div style={styles.container}>
       <h2 style={styles.heading}>Modify Account</h2>
 
@@ -234,6 +235,7 @@ const ModifyAccount = () => {
         <button type="submit" style={styles.button} disabled={!isEditable}>Update Account</button>
       </form>
     </div>
+   </div>
   );
 };
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './styles';
 
-const CompareVehicles = ({ compareList, loadedImages, onClose }) => {
+const CompareVehicles = ({ compareList, loadedImages }) => {
   const baseCar = compareList[0];
 
   const calculateDifference = (vehicle) => {
@@ -16,7 +16,6 @@ const CompareVehicles = ({ compareList, loadedImages, onClose }) => {
 
   return (
     <div style={styles.modalContainer}>
-      <button onClick={onClose} style={styles.closeButton}>X</button>
       <h2>Compare Vehicles</h2>
       <div style={styles.comparisonContainer}>
         {compareList.map((vehicle, index) => (
