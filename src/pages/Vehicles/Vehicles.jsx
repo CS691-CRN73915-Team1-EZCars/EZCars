@@ -76,13 +76,17 @@ const Vehicles = () => {
       return images;
     };
     const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
-    const loadedImgs = {};
-    carData.forEach(car => {
-      const imageName = car.imageUrl.split('/').pop();
-      loadedImgs[car.vehicleId] = images[imageName];
+  
+    setLoadedImages((prevLoadedImages) => {
+      const newLoadedImages = { ...prevLoadedImages };
+      carData.forEach((car) => {
+        const imageName = car.imageUrl.split('/').pop();
+        newLoadedImages[car.vehicleId] = images[imageName];
+      });
+      return newLoadedImages;
     });
-    setLoadedImages(loadedImgs);
   }, [carData]);
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
