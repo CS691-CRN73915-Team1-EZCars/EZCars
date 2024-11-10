@@ -96,10 +96,35 @@ const styles = {
     fontSize: '16px',
     fontWeight: 'bold',
     color: '#333',
-    backgroundColor: '#f0f0f0',  // Background color for the username box
+    backgroundColor: '#f0f0f0',
     border: '1px solid #ddd',
     borderRadius: '4px',
-    pointerEvents: 'none',  // Makes the box non-editable (also prevents interaction)
+    pointerEvents: 'none',
+  },
+  popupOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  popupContent: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    maxWidth: '500px',
+    width: '90%',
+    maxHeight: '90%',
+    overflow: 'auto',
+  },
+  popupHeading: {
+    color: '#f97316',
+    marginBottom: '15px',
   },
 };
 
