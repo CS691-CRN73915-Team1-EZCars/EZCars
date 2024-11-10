@@ -1,6 +1,4 @@
 {
-
-    "accountStatus": "Active",
     "preferences": {
       "language": "English",
       "notifications": {
@@ -8,34 +6,15 @@
         "sms": false
       }
     },
+    "accountStatus": "ACTIVE",
+    "totalDistanceKms": 289,
+    "totalSpending": 2600,
+    "averageRating": 4.5,
     "subscriptionDetails": {
       "plan": "Basic",
       "startDate": "2024-01-01",
       "renewalDate": "2025-01-01"
-    },
-    "totalRides": 15,
-    "totalDistanceKms": 250.5,
-    "totalSpending": 1500.75,
-    "averageRating": 4.5,
-    "lastRide": {
-      "date": "2024-10-15",
-      "vehicle": "Toyota Camry",
-      "driverName": "John Doe"
-    },
-    "rideHistory": [
-      {
-        "date": "2024-10-10",
-        "destination": "Airport",
-        "distance": 20.5
-      },
-      {
-        "date": "2024-10-05",
-        "destination": "Downtown",
-        "distance": 15.0
-      }
-    ],
-    "referralCode": "HARSH123",
-    "accountCreationDate": "2024-01-01",
-    "feedback": "I would love to see more options for electric vehicles."
+    }
+    
   }
   

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles';
-import { getAllBookingsByUserId } from '../../api/bookVehicle'; 
+import { getAllBookingsByUserId, deleteBooking } from '../../api/bookVehicle'; 
 import { getAllVehicles } from '../../api/vehicles';
+import styles from './styles';
 
 const Summary = () => {
   const [bookings, setBookings] = useState([]);
@@ -12,20 +12,38 @@ const Summary = () => {
 
   const userId = localStorage.getItem('userId');
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    return date.toLocaleDateString();
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    try {
+      await deleteBooking(bookingId);
+      setBookings((prevBookings) => prevBookings.filter((booking) => booking.id !== bookingId));
+    } catch (error) {
+      console.error('Failed to delete booking:', error);
+      setError('Failed to delete booking. Please try again later.');
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Fetch bookings
         const bookingsResponse = await getAllBookingsByUserId(userId);
         console.log('bookingsResponse', bookingsResponse);
-        setBookings(bookingsResponse || []);
+        
+        const sortedBookings = bookingsResponse.sort((a, b) => 
+          new Date(b.pickUpDate) - new Date(a.pickUpDate)
+        );
+        
+        setBookings(sortedBookings || []);
 
-        // Fetch all vehicles
         const vehiclesResponse = await getAllVehicles(0, 200);
         const allVehicles = vehiclesResponse.content || [];
 
-        // Create a map of vehicle ID to vehicle data
         const vehicleMap = {};
         allVehicles.forEach(vehicle => {
           vehicleMap[vehicle.vehicleId] = vehicle;
@@ -61,9 +79,15 @@ const Summary = () => {
     setLoadedImages(loadedImgs);
   }, [vehicles]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!bookings || bookings.length === 0) return <div>No bookings found</div>;
+  if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
+  
+  if (!bookings.length || Object.keys(vehicles).length === 0) {
+    return <div style={styles.fullPageMessage}>No booking history!!</div>;
+  }
+
+  if (error && !bookings.length && Object.keys(vehicles).length === 0) {
+    return <div style={styles.fullPageMessage}>{error}</div>;
+  }
 
   return (
     <div style={styles.summaryContainer}>
@@ -73,6 +97,9 @@ const Summary = () => {
         {bookings.map((booking) => {
           const vehicle = vehicles[booking.vehicleId];
           if (!vehicle) return null;
+
+          const pickUpDateTime = new Date(booking.pickUpDate);
+          const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000);
 
           return (
             <div key={booking.id} style={styles.bookingCard}>
@@ -91,27 +118,32 @@ const Summary = () => {
                   <p style={styles.vehicleDetail}><span style={styles.label}>Year:</span> {vehicle.year}</p>
                   <p style={styles.vehicleDetail}><span style={styles.label}>Transmission:</span> {vehicle.transmission}</p>
                   <p style={styles.vehicleDetail}><span style={styles.label}>Fuel Type:</span> {vehicle.fuelType}</p>
-                  <p style={styles.vehicleDetail}><span style={styles.label}>Price:</span> ${vehicle.price}/day</p>
                   <p style={styles.vehicleDetail}><span style={styles.label}>Mileage:</span> {vehicle.mileage} mpg</p>
+                  <p style={styles.bookingPrice}>
+                    <span style={styles.label}>Booking Price:</span> ${(vehicle.price * booking.duration).toFixed(2)}
+                  </p>
                 </div>
               </div>
               <div style={styles.bookingDetails}>
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Pick-up Date:</span> {new Date(booking.pickUpDate).toLocaleDateString()}
+                    <span style={styles.label}>Pick-up Date:</span> {formatDate(booking.pickUpDate)}
                   </p>
                 </div>
                 <div style={styles.bookingColumn}>
                   <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
                   <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Drop-off Date:</span> {new Date(new Date(booking.pickUpDate).getTime() + booking.duration * 60 * 60 * 1000).toLocaleDateString()}
+                    <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDateTime)}
                   </p>
                 </div>
                 <div style={styles.bookingStatusRow}>
-                  <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} hours</p>
+                  <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>
                   <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
                 </div>
+                <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>
+                  Delete Booking
+                </button>
               </div>
             </div>
           );
