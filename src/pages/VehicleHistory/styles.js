@@ -8,6 +8,7 @@ const styles = {
     fontFamily: 'Arial, sans-serif',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   },
+  
   heading: {
     color: '#2c3e50',
     textAlign: 'center',
@@ -15,133 +16,126 @@ const styles = {
     fontSize: '28px',
     fontWeight: 'bold',
   },
-  userInfoCard: {
+  
+  filterContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '20px',
+   },
+
+   monthYearPicker:{
+     display:'flex',
+     gap:'10px'
+   },
+
+   filterSelect: {
+     padding: '8px',
+     borderRadius: '4px',
+     border: '1px solid #ccc',
+     fontSize: '14px',
+   },
+
+   fullPageMessage: {
+     display: 'flex',
+     justifyContent: 'center',
+     alignItems: 'center',
+     height: '70vh',
+     fontSize: '40px',
+     color: '#2c3e50',
+     backgroundColor: '#f8f9fa',
+   },
+
+   bookingHistory: {
+     marginTop: '20px'
+   },
+
+   bookingCard: {
     backgroundColor: '#ffffff',
     padding: '20px',
     borderRadius: '8px',
-    marginBottom: '30px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-    maxWidth: '1000px',
-    margin: '0 auto',
-  },
-  cardHeading: {
-    color: '#f97316',
-    marginBottom: '15px',
-    fontSize: '25px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  userInfoItem: {
-    margin: '10px 0',
-    textAlign: 'center',
-    fontSize: '16px',
-  },
-  sectionHeading: {
-    color: '#2c3e50',
-    marginBottom: '20px',
-    fontSize: '24px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  bookingCard: {
-    backgroundColor: '#ffffff',
-    padding: '20px',
-    borderRadius: '8px',
     marginBottom: '20px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
     width: '100%',
     maxWidth: '1000px',
-    margin: '0 auto 20px auto',
+    marginLeft: 'auto', 
+    marginRight: 'auto' 
   },
-  bookingContent: {
-    display: 'flex',
-    marginBottom: '20px',
-  },
-  imageContainer: {
-    flex: '0 0 40%',
-    marginRight: '50px',
-  },
-  vehicleImage: {
-    width: '100%',
-    height: 'auto',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  },
-  vehicleInfo: {
-    flex: '1',
-  },
-  vehicleName: {
-    color: '#f97316',
-    marginTop: '0',
-    marginBottom: '15px',
-    fontSize: '22px',
-    fontWeight: 'bold',
-  },
-  vehicleDetail: {
-    margin: '8px 0',
-    fontSize: '16px',
-  },
-  bookingPrice: {
-    margin: '8px 0',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    color: '#f97316', // Orange color to make it stand out
-  },
-  bookingDetails: {
-    borderTop: '1px solid #e0e0e0',
-    paddingTop: '15px',
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    backgroundColor: '#f8f9fa',
-  },
-  bookingColumn: {
-    flex: '1 0 45%',
-    marginBottom: '10px',
-  },
-  bookingDetail: {
-    margin: '8px 0',
-    fontSize: '14px',
-  },
-  bookingDuration: {
-    flex: '1',
-    margin: '8px 0',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#27ae60',
-  },
-  bookingStatus: {
-    flex: '1',
-    margin: '8px 0',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#27ae60',
-    textAlign: 'left',
-  },
-  label: {
-    fontWeight: 'bold',
-    color: '#7f8c8d',
-    marginRight: '5px',
-  },
-  bookingStatusRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: '10px',
-  },
-  fullPageMessage: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '70vh',
-    fontSize: '40px',
-    color: '#2c3e50',
-    backgroundColor: '#f8f9fa',
-  },
-  deleteButton: {
+
+   bookingContent: {
+     display: 'flex'
+   },
+
+   imageContainer:{
+     flexBasis:'40%',
+     marginRight:'20px'
+   },
+
+   vehicleImage:{
+     width:'100%',
+     height:'auto'
+   },
+
+   vehicleInfo:{
+     flexGrow:'1'
+   },
+
+   vehicleName:{
+     color:'#f97316', 
+     fontWeight:'bold', 
+     fontSize:'22px', 
+     marginTop:'0', 
+     marginBottom:'10px' 
+   },
+
+   vehicleDetail:{
+       marginBottom:'5px'
+   },
+
+   label:{
+       fontWeight:'bold', 
+       color:'#7f8c8d', 
+       marginRight:'5px' 
+   },
+
+   bookingDetails:{
+       borderTop:'1px solid #e0e0e0', 
+       paddingTop:'15px', 
+       display:'flex', 
+       flexWrap:'wrap', 
+       justifyContent:'space-between'
+   },
+
+   bookingColumn:{
+       flexBasis:'48%', 
+       marginBottom:'10px'
+   },
+
+   bookingDetail:{
+       marginBottom:'5px'
+   },
+
+   bookingStatusRow:{
+       display:'flex', 
+       justifyContent:'space-between', 
+       alignItems:'center', 
+       marginTop:'10px'
+   },
+
+   bookingDuration:{
+       fontWeight:'bold', 
+       color:'#27ae60' ,
+       marginLeft:'60px'
+   },
+
+   bookingStatus:{
+       fontWeight:'bold', 
+       color:'#27ae60' ,     
+   },
+
+   deleteButton: {
     backgroundColor: '#f97316',
     color: '#ffffff',
-    padding: '10px 20px',
+    padding: '5px 20px',
     fontSize: '16px',
     fontWeight: 'bold',
     border: 'none',

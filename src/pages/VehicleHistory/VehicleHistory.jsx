@@ -9,6 +9,12 @@ const Summary = () => {
   const [loadedImages, setLoadedImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    status: '',
+    year: '',
+    month: '',
+    sortDirection: 'asc'
+  });
 
   const userId = localStorage.getItem('userId');
 
@@ -28,18 +34,24 @@ const Summary = () => {
     }
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const bookingsResponse = await getAllBookingsByUserId(userId);
-        console.log('bookingsResponse', bookingsResponse);
-        
-        const sortedBookings = bookingsResponse.sort((a, b) => 
-          new Date(b.pickUpDate) - new Date(a.pickUpDate)
+        const bookingsResponse = await getAllBookingsByUserId(
+          userId,
+          filters.status,
+          filters.year ? parseInt(filters.year) : undefined,
+          filters.month ? parseInt(filters.month) : undefined,
+          filters.sortDirection
         );
-        
-        setBookings(sortedBookings || []);
+
+        setBookings(bookingsResponse || []);
 
         const vehiclesResponse = await getAllVehicles(0, 200);
         const allVehicles = vehiclesResponse.content || [];
@@ -59,7 +71,7 @@ const Summary = () => {
     };
 
     fetchData();
-  }, [userId]);
+  }, [userId, filters]);
 
   useEffect(() => {
     const importAll = (r) => {
@@ -80,75 +92,111 @@ const Summary = () => {
   }, [vehicles]);
 
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
-  
-  if (!bookings.length || Object.keys(vehicles).length === 0) {
-    return <div style={styles.fullPageMessage}>No booking history!!</div>;
-  }
-
-  if (error && !bookings.length && Object.keys(vehicles).length === 0) {
-    return <div style={styles.fullPageMessage}>{error}</div>;
-  }
 
   return (
     <div style={styles.summaryContainer}>
       <h2 style={styles.heading}>Vehicle Booking Summary</h2>
       
-      <div style={styles.bookingHistory}>
-        {bookings.map((booking) => {
-          const vehicle = vehicles[booking.vehicleId];
-          if (!vehicle) return null;
+      <div style={styles.filterContainer}>
+        <select name="status" value={filters.status} onChange={handleFilterChange} style={styles.filterSelect}>
+          <option value="">All Status</option>
+          <option value="PENDING">Pending</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="CANCELLED">Cancelled</option>
+          <option value="COMPLETED">Completed</option>
+        </select>
 
-          const pickUpDateTime = new Date(booking.pickUpDate);
-          const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000);
+        {/* Combined Month-Year Picker */}
+        <div style={styles.monthYearPicker}>
+          <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
+            <option value="">Year</option>
+            {[...Array(10)].map((_, i) => (
+              <option key={i} value={2024 - i}>{2024 - i}</option>
+            ))}
+          </select>
 
-          return (
-            <div key={booking.id} style={styles.bookingCard}>
-              <div style={styles.bookingContent}>
-                <div style={styles.imageContainer}>
-                  {loadedImages[vehicle.vehicleId] && (
-                    <img 
-                      src={loadedImages[vehicle.vehicleId]} 
-                      alt={`${vehicle.make} ${vehicle.model}`} 
-                      style={styles.vehicleImage} 
-                    />
-                  )}
-                </div>
-                <div style={styles.vehicleInfo}>
-                  <h4 style={styles.vehicleName}>{vehicle.make} {vehicle.model}</h4>
-                  <p style={styles.vehicleDetail}><span style={styles.label}>Year:</span> {vehicle.year}</p>
-                  <p style={styles.vehicleDetail}><span style={styles.label}>Transmission:</span> {vehicle.transmission}</p>
-                  <p style={styles.vehicleDetail}><span style={styles.label}>Fuel Type:</span> {vehicle.fuelType}</p>
-                  <p style={styles.vehicleDetail}><span style={styles.label}>Mileage:</span> {vehicle.mileage} mpg</p>
-                  <p style={styles.bookingPrice}>
-                    <span style={styles.label}>Booking Price:</span> ${(vehicle.price * booking.duration).toFixed(2)}
-                  </p>
-                </div>
-              </div>
-              <div style={styles.bookingDetails}>
-                <div style={styles.bookingColumn}>
-                  <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
-                  <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Pick-up Date:</span> {formatDate(booking.pickUpDate)}
-                  </p>
-                </div>
-                <div style={styles.bookingColumn}>
-                  <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
-                  <p style={styles.bookingDetail}>
-                    <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDateTime)}
-                  </p>
-                </div>
-                <div style={styles.bookingStatusRow}>
-                  <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>
-                  <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
-                </div>
-                <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>
-                  Delete Booking
-                </button>
-              </div>
-            </div>
-          );
-        })}
+          <select name="month" value={filters.month} onChange={handleFilterChange} style={styles.filterSelect}>
+            <option value="">Month</option>
+            {[...Array(12)].map((_, i) => (
+              <option key={i} value={i + 1}>{new Date(0, i).toLocaleString('default', { month: 'long' })}</option>
+            ))}
+          </select>
+        </div>
+
+        <select name="sortDirection" value={filters.sortDirection} onChange={handleFilterChange} style={styles.filterSelect}>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
       </div>
+
+      {/* Show message if no bookings found */}
+      {(!bookings.length && !error) && (
+        <div style={styles.fullPageMessage}>No bookings found with the selected filters!!</div>
+      )}
+
+      {/* Show message if no vehicles found */}
+      {(!Object.keys(vehicles).length && error === "No vehicles found.") && (
+        <div style={styles.fullPageMessage}>No vehicles found with the selected filters!!</div>
+      )}
+
+      {bookings.length > 0 && (
+        <div style={styles.bookingHistory}>
+          {bookings.map((booking) => {
+            const vehicle = vehicles[booking.vehicleId];
+            if (!vehicle) return null;
+
+            const pickUpDateTime = new Date(booking.pickUpDate);
+            const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000);
+
+            return (
+              <div key={booking.id} style={styles.bookingCard}>
+                <div style={styles.bookingContent}>
+                  <div style={styles.imageContainer}>
+                    {loadedImages[vehicle.vehicleId] && (
+                      <img 
+                        src={loadedImages[vehicle.vehicleId]} 
+                        alt={`${vehicle.make} ${vehicle.model}`} 
+                        style={styles.vehicleImage} 
+                      />
+                    )}
+                  </div>
+                  <div style={styles.vehicleInfo}>
+                    <h4 style={styles.vehicleName}>{vehicle.make} {vehicle.model}</h4>
+                    <p style={styles.vehicleDetail}><span style={styles.label}>Year:</span> {vehicle.year}</p>
+                    <p style={styles.vehicleDetail}><span style={styles.label}>Transmission:</span> {vehicle.transmission}</p>
+                    <p style={styles.vehicleDetail}><span style={styles.label}>Fuel Type:</span> {vehicle.fuelType}</p>
+                    <p style={styles.vehicleDetail}><span style={styles.label}>Mileage:</span> {vehicle.mileage} mpg</p>
+                    <p style={styles.bookingPrice}>
+                      <span style={styles.label}>Booking Price:</span> ${(vehicle.price * booking.duration).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+                <div style={styles.bookingDetails}>
+                  <div style={styles.bookingColumn}>
+                    <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
+                    <p style={styles.bookingDetail}>
+                      <span style={styles.label}>Pick-up Date:</span> {formatDate(booking.pickUpDate)}
+                    </p>
+                  </div>
+                  <div style={styles.bookingColumn}>
+                    <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
+                    <p style={styles.bookingDetail}>
+                      <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDateTime)}
+                    </p>
+                  </div>
+                  <div style={styles.bookingStatusRow}>
+                  <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
+                    <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>                 
+                  </div>
+                  <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>
+                    Delete Booking
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

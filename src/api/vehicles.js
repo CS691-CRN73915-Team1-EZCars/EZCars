@@ -87,3 +87,14 @@ export const searchVehicles = async (searchCriteria, page = 0, size = 12) => {
 
   return response.json();
 };
+
+
+export const getMakesAndModels = async () => {
+  const response = await fetch(`${API_BASE_URL}/vehicles/makes-and-models`, {
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch makes and models');
+  }
+  return response.json();
+};
