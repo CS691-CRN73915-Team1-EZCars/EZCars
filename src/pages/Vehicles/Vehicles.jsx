@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Range } from 'react-range';
-import { getAllVehicles, searchVehicles } from '../../api/vehicles';
+import { getAllVehicles, searchVehicles, getMakesAndModels} from '../../api/vehicles';
 import { styles } from "./styles";
-import carMakeModelData from '../../data/carData.json';
 import CompareVehicles from '../../components/CompareVehicles/CompareVehicles';
 
 const Vehicles = () => {
@@ -34,8 +33,18 @@ const Vehicles = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
-    setMakes(carMakeModelData.makes);
-    setModels(carMakeModelData.models);
+  
+    const fetchMakesAndModels = async () => {
+      try {
+        const data = await getMakesAndModels();
+        setMakes(data.makes);
+        setModels(data.models);
+      } catch (error) {
+        console.error('Error fetching makes and models:', error);
+      }
+    };
+  
+    fetchMakesAndModels();
   }, []);
 
   const fetchVehicles = useCallback(async () => {

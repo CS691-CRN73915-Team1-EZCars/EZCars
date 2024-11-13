@@ -1,0 +1,107 @@
+const styles = {
+    container: {
+      fontFamily: 'Arial, sans-serif',
+      color: '#333',
+      backgroundColor: '#f9f9f9',
+      padding: '40px 20px',
+      lineHeight: '1.6',
+    },
+    contactInfoSection: {
+      textAlign: 'center',
+      padding: '20px',
+      marginBottom: '40px',
+    },
+    heading: {
+      fontSize: '2.5rem',
+      fontWeight: '700',
+      margin: '0 0 10px',
+      color: '#333',
+    },
+    text: {
+      fontSize: '1rem',
+      maxWidth: '600px',
+      margin: '0 auto 20px',
+      color: '#555',
+    },
+    infoWrapper: {
+      display: 'flex',
+      justifyContent: 'space-around',
+      flexWrap: 'wrap',
+      marginTop: '20px',
+    },
+    infoItem: {
+      fontSize: '1rem',
+      color: '#555',
+      marginBottom: '20px',
+      textAlign: 'left',
+      minWidth: '200px',
+    },
+    formSection: {
+      textAlign: 'center',
+      marginBottom: '40px',
+    },
+    subheading: {
+      fontSize: '1.8rem',
+      fontWeight: '600',
+      marginBottom: '20px',
+      color: '#333',
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      maxWidth: '500px',
+      margin: '0 auto',
+    },
+    input: {
+      width: '100%',
+      padding: '10px',
+      margin: '10px 0',
+      fontSize: '1rem',
+      border: '1px solid #ccc',
+      borderRadius: '5px',
+    },
+    textarea: {
+      width: '100%',
+      padding: '10px',
+      margin: '10px 0',
+      fontSize: '1rem',
+      height: '100px',
+      border: '1px solid #ccc',
+      borderRadius: '5px',
+    },
+    button: {
+      padding: '10px 20px',
+      fontSize: '1rem',
+      color: '#fff',
+      backgroundColor: '#007bff',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    },
+    whyChooseUsSection: {
+      textAlign: 'center',
+      padding: '40px 20px',
+      backgroundColor: '#f0f0f0',
+      borderRadius: '10px',
+      marginTop: '40px',
+    },
+    benefitsList: {
+      listStyleType: 'none',
+      padding: 0,
+      fontSize: '1rem',
+      color: '#555',
+      maxWidth: '500px',
+      margin: '0 auto',
+      //textAlign: 'left',
+    },
+    benefitItem: {
+      marginBottom: '10px',
+      paddingLeft: '20px',
+      position: 'relative',
+      lineHeight: '1.6',
+    },
+  };
+  
+  export default styles;
+  

@@ -18,15 +18,21 @@ export const getAllBookings = async (page = 0, size = 10) => {
   return response.json();
 };
 
-export const getAllBookingsByUserId = async (userId) => {
-  const response = await fetch(`${API_BASE_URL}/bookings/user/${userId}`, {
-    headers: getHeaders(),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to fetch bookings for user');
-  }
-  return response.json();
-};
+  export const getAllBookingsByUserId = async (userId, status, year, month, sortDirection = 'asc') => {
+    const queryParams = new URLSearchParams();
+    if (status) queryParams.append('status', status);
+    if (year) queryParams.append('year', year.toString());
+    if (month) queryParams.append('month', month.toString());
+    queryParams.append('sortDirection', sortDirection);
+  
+    const response = await fetch(`${API_BASE_URL}/bookings/user/${userId}?${queryParams.toString()}`, {
+      headers: getHeaders(),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch bookings for user');
+    }
+    return response.json();
+  };
 
 export const getBookingById = async (bookingId) => {
   const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}`, {
