@@ -23,6 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:unit": "jest src/tests/unit --watchAll=false",
+    "test:integration": "jest src/tests/integration --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
