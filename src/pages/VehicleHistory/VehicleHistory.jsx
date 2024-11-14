@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { getAllBookingsByUserId, deleteBooking } from '../../api/bookVehicle'; 
-import { getAllVehicles } from '../../api/vehicles';
-import styles from './styles';
+import React, { useState, useEffect } from "react";
+import { getAllBookingsByUserId, deleteBooking } from "../../api/bookVehicle";
+import { getAllVehicles } from "../../api/vehicles";
+import styles from "./styles";
 
 const Summary = () => {
   const [bookings, setBookings] = useState([]);
@@ -9,14 +9,16 @@ const Summary = () => {
   const [loadedImages, setLoadedImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [filters, setFilters] = useState({
-    status: '',
-    year: '',
-    month: '',
-    sortDirection: 'asc'
+    status: "",
+    year: "",
+    month: "",
+    sortDirection: "asc",
   });
 
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -27,21 +29,29 @@ const Summary = () => {
   const handleDeleteBooking = async (bookingId) => {
     try {
       await deleteBooking(bookingId);
-      setBookings((prevBookings) => prevBookings.filter((booking) => booking.id !== bookingId));
+      setBookings((prevBookings) =>
+        prevBookings.filter((booking) => booking.id !== bookingId)
+      );
     } catch (error) {
-      console.error('Failed to delete booking:', error);
-      setError('Failed to delete booking. Please try again later.');
+      console.error("Failed to delete booking:", error);
+      setError("Failed to delete booking. Please try again later.");
     }
   };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
+    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
 
-  const handleViewBooking = (bookingId) => {
-    console.log(`Viewing booking with ID: ${bookingId}`);
-  
+  const handleViewBooking = (booking) => {
+    const vehicle = vehicles[booking.vehicleId];
+    setSelectedBooking({ ...booking, vehicle });
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedBooking(null);
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -62,14 +72,14 @@ const Summary = () => {
         const allVehicles = vehiclesResponse.content || [];
 
         const vehicleMap = {};
-        allVehicles.forEach(vehicle => {
+        allVehicles.forEach((vehicle) => {
           vehicleMap[vehicle.vehicleId] = vehicle;
         });
 
         setVehicles(vehicleMap);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch data. Please try again later.');
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data. Please try again later.");
       } finally {
         setIsLoading(false);
       }
@@ -81,15 +91,23 @@ const Summary = () => {
   useEffect(() => {
     const importAll = (r) => {
       let images = {};
-      r.keys().forEach((item) => { images[item.replace('./', '')] = r(item); });
+      r.keys().forEach((item) => {
+        images[item.replace("./", "")] = r(item);
+      });
       return images;
     };
-    
-    const images = importAll(require.context('../../assets/images/vehicles', false, /\.(png|jpe?g|svg|webp|avif)$/));
-    
+
+    const images = importAll(
+      require.context(
+        "../../assets/images/vehicles",
+        false,
+        /\.(png|jpe?g|svg|webp|avif)$/
+      )
+    );
+
     const loadedImgs = {};
-    Object.values(vehicles).forEach(vehicle => {
-      const imageName = vehicle.imageUrl.split('/').pop();
+    Object.values(vehicles).forEach((vehicle) => {
+      const imageName = vehicle.imageUrl.split("/").pop();
       loadedImgs[vehicle.vehicleId] = images[imageName];
     });
 
@@ -101,47 +119,72 @@ const Summary = () => {
   return (
     <div style={styles.summaryContainer}>
       <h2 style={styles.heading}>Vehicle Booking Summary</h2>
-      
+
       <div style={styles.filterContainer}>
-        <select name="status" value={filters.status} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="">All Status</option>
+        <select
+          name="status"
+          value={filters.status}
+          onChange={handleFilterChange}
+          style={styles.filterSelect}
+        >
+          <option value="">Status</option>
           <option value="PENDING">Pending</option>
           <option value="CONFIRMED">Confirmed</option>
           <option value="CANCELLED">Cancelled</option>
           <option value="COMPLETED">Completed</option>
         </select>
 
-        {/* Combined Month-Year Picker */}
         <div style={styles.monthYearPicker}>
-          <select name="year" value={filters.year} onChange={handleFilterChange} style={styles.filterSelect}>
+          <select
+            name="year"
+            value={filters.year}
+            onChange={handleFilterChange}
+            style={styles.filterSelect}
+          >
             <option value="">Year</option>
             {[...Array(10)].map((_, i) => (
-              <option key={i} value={2024 - i}>{2024 - i}</option>
+              <option key={i} value={2024 - i}>
+                {2024 - i}
+              </option>
             ))}
           </select>
 
-          <select name="month" value={filters.month} onChange={handleFilterChange} style={styles.filterSelect}>
+          <select
+            name="month"
+            value={filters.month}
+            onChange={handleFilterChange}
+            style={styles.filterSelect}
+          >
             <option value="">Month</option>
             {[...Array(12)].map((_, i) => (
-              <option key={i} value={i + 1}>{new Date(0, i).toLocaleString('default', { month: 'long' })}</option>
+              <option key={i} value={i + 1}>
+                {new Date(0, i).toLocaleString("default", { month: "long" })}
+              </option>
             ))}
           </select>
         </div>
 
-        <select name="sortDirection" value={filters.sortDirection} onChange={handleFilterChange} style={styles.filterSelect}>
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
+        <select
+          name="sortDirection"
+          value={filters.sortDirection}
+          onChange={handleFilterChange}
+          style={styles.filterSelect}
+        >
+          <option value="asc">Sort by Date: Oldest First</option>
+          <option value="desc">Sort by Date: Newest First</option>
         </select>
       </div>
 
-      {/* Show message if no bookings found */}
-      {(!bookings.length && !error) && (
-        <div style={styles.fullPageMessage}>No bookings found with the selected filters!!</div>
+      {!bookings.length && !error && (
+        <div style={styles.fullPageMessage}>
+          No bookings found with the selected filters!!
+        </div>
       )}
 
-      {/* Show message if no vehicles found */}
-      {(!Object.keys(vehicles).length && error === "No vehicles found.") && (
-        <div style={styles.fullPageMessage}>No vehicles found with the selected filters!!</div>
+      {!Object.keys(vehicles).length && error === "No vehicles found." && (
+        <div style={styles.fullPageMessage}>
+          No vehicles found with the selected filters!!
+        </div>
       )}
 
       {bookings.length > 0 && (
@@ -151,66 +194,129 @@ const Summary = () => {
             if (!vehicle) return null;
 
             const pickUpDateTime = new Date(booking.pickUpDate);
-            const dropOffDateTime = new Date(pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000);
+            const dropOffDateTime = new Date(
+              pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000
+            );
 
             return (
               <div key={booking.id} style={styles.bookingCard}>
                 <div style={styles.bookingContent}>
                   <div style={styles.imageContainer}>
                     {loadedImages[vehicle.vehicleId] && (
-                      <img 
-                        src={loadedImages[vehicle.vehicleId]} 
-                        alt={`${vehicle.make} ${vehicle.model}`} 
-                        style={styles.vehicleImage} 
+                      <img
+                        src={loadedImages[vehicle.vehicleId]}
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        style={styles.vehicleImage}
                       />
                     )}
                   </div>
                   <div style={styles.vehicleInfo}>
-                    <h4 style={styles.vehicleName}>{vehicle.make} {vehicle.model}</h4>
-                    <p style={styles.vehicleDetail}><span style={styles.label}>Year:</span> {vehicle.year}</p>
-                    <p style={styles.vehicleDetail}><span style={styles.label}>Transmission:</span> {vehicle.transmission}</p>
-                    <p style={styles.vehicleDetail}><span style={styles.label}>Fuel Type:</span> {vehicle.fuelType}</p>
-                    <p style={styles.vehicleDetail}><span style={styles.label}>Mileage:</span> {vehicle.mileage} mpg</p>
+                    <h4 style={styles.vehicleName}>
+                      {vehicle.make} {vehicle.model}
+                    </h4>
+                    <p style={styles.vehicleDetail}>
+                      <span style={styles.label}>Year:</span> {vehicle.year}
+                    </p>
+                    <p style={styles.vehicleDetail}>
+                      <span style={styles.label}>Transmission:</span>{" "}
+                      {vehicle.transmission}
+                    </p>
+                    <p style={styles.vehicleDetail}>
+                      <span style={styles.label}>Fuel Type:</span>{" "}
+                      {vehicle.fuelType}
+                    </p>
+                    <p style={styles.vehicleDetail}>
+                      <span style={styles.label}>Mileage:</span>{" "}
+                      {vehicle.mileage} mpg
+                    </p>
                     <p style={styles.bookingPrice}>
-                      <span style={styles.label}>Booking Price:</span> ${(vehicle.price * booking.duration).toFixed(2)}
+                      <span style={styles.label}>Booking Price:</span> $
+                      {(vehicle.price * booking.duration).toFixed(2)}
                     </p>
                   </div>
                 </div>
                 <div style={styles.bookingDetails}>
                   <div style={styles.bookingColumn}>
-                    <p style={styles.bookingDetail}><span style={styles.label}>Pick-up Location:</span> {booking.pickupLocation}</p>
                     <p style={styles.bookingDetail}>
-                      <span style={styles.label}>Pick-up Date:</span> {formatDate(booking.pickUpDate)}
+                      <span style={styles.label}>Pick-up Location:</span>{" "}
+                      {booking.pickupLocation}
+                    </p>
+                    <p style={styles.bookingDetail}>
+                      <span style={styles.label}>Pick-up Date:</span>{" "}
+                      {formatDate(booking.pickUpDate)}
                     </p>
                   </div>
                   <div style={styles.bookingColumn}>
-                    <p style={styles.bookingDetail}><span style={styles.label}>Drop-off Location:</span> {booking.dropoffLocation}</p>
                     <p style={styles.bookingDetail}>
-                      <span style={styles.label}>Drop-off Date:</span> {formatDate(dropOffDateTime)}
+                      <span style={styles.label}>Drop-off Location:</span>{" "}
+                      {booking.dropoffLocation}
+                    </p>
+                    <p style={styles.bookingDetail}>
+                      <span style={styles.label}>Drop-off Date:</span>{" "}
+                      {formatDate(dropOffDateTime)}
                     </p>
                   </div>
                   <div style={styles.bookingStatusRow}>
-                  <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
-                    <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>                 
+                    <p style={styles.bookingStatus}>
+                      <span style={styles.label}>Status:</span> {booking.status}
+                    </p>
+                    <p style={styles.bookingDuration}>
+                      <span style={styles.label}>Duration:</span>{" "}
+                      {booking.duration} day(s)
+                    </p>
                   </div>
                   <div style={styles.buttonContainer}>
-    <button
-      onClick={() => handleViewBooking(booking.id)}
-      style={styles.viewBookingButton}
-    >
-      View Booking
-    </button>
-    <button
-      onClick={() => handleDeleteBooking(booking.id)}
-      style={styles.deleteButton}
-    >
-      Delete Booking
-    </button>
-  </div>
+                  <button onClick={() => handleViewBooking(booking)} style={styles.viewBookingButton}>
+                 View Booking
+                    </button>
+                    <button
+                      onClick={() => handleDeleteBooking(booking.id)}
+                      style={styles.deleteButton}
+                    >
+                      Delete Booking
+                    </button>
+                  </div>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {isModalOpen && selectedBooking && (
+        <div style={styles.modalOverlay} onClick={handleCloseModal}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3 style={styles.modalTitle}>Booking Details</h3>
+            <div style={styles.modalBody}>
+              <div style={styles.modalImageContainer}>
+                {loadedImages[selectedBooking.vehicle.vehicleId] && (
+                  <img
+                    src={loadedImages[selectedBooking.vehicle.vehicleId]}
+                    alt={`${selectedBooking.vehicle.make} ${selectedBooking.vehicle.model}`}
+                    style={styles.modalVehicleImage}
+                  />
+                )}
+              </div>
+              <div style={styles.modalInfo}>
+                <h4 style={styles.modalVehicleName}>
+                  {selectedBooking.vehicle.make} {selectedBooking.vehicle.model}
+                </h4>
+                <p><span style={styles.label}>Year:</span> {selectedBooking.vehicle.year}</p>
+                <p><span style={styles.label}>Transmission:</span> {selectedBooking.vehicle.transmission}</p>
+                <p><span style={styles.label}>Fuel Type:</span> {selectedBooking.vehicle.fuelType}</p>
+                <p><span style={styles.label}>Mileage:</span> {selectedBooking.vehicle.mileage} mpg</p>
+                <p><span style={styles.label}>Booking ID:</span> {selectedBooking.id}</p>
+                <p><span style={styles.label}>Pick-up Location:</span> {selectedBooking.pickupLocation}</p>
+                <p><span style={styles.label}>Pick-up Date:</span> {formatDate(selectedBooking.pickUpDate)}</p>
+                <p><span style={styles.label}>Drop-off Location:</span> {selectedBooking.dropoffLocation}</p>
+                <p><span style={styles.label}>Drop-off Date:</span> {formatDate(new Date(new Date(selectedBooking.pickUpDate).getTime() + selectedBooking.duration * 24 * 60 * 60 * 1000))}</p>
+                <p><span style={styles.label}>Status:</span> {selectedBooking.status}</p>
+                <p><span style={styles.label}>Duration:</span> {selectedBooking.duration} day(s)</p>
+                <p><span style={styles.label}>Booking Price:</span> ${(selectedBooking.vehicle.price * selectedBooking.duration).toFixed(2)}</p>
+              </div>
+            </div>
+            <button onClick={handleCloseModal} style={styles.closeButton}>Close</button>
+          </div>
         </div>
       )}
     </div>
