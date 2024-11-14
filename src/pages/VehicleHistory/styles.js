@@ -102,16 +102,22 @@ const styles = {
        paddingTop:'15px', 
        display:'flex', 
        flexWrap:'wrap', 
-       justifyContent:'space-between'
+       justifyContent:'space-between',
+       alignItems: 'flex-end',
    },
 
    bookingColumn:{
        flexBasis:'48%', 
        marginBottom:'10px'
    },
+   buttonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '10px',
+  },
 
    bookingDetail:{
-       marginBottom:'5px'
+       marginBottom:'5px',
    },
 
    bookingStatusRow:{
@@ -135,14 +141,28 @@ const styles = {
    deleteButton: {
     backgroundColor: '#f97316',
     color: '#ffffff',
-    padding: '5px 20px',
+    padding: '7px 20px',
     fontSize: '16px',
     fontWeight: 'bold',
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
     display: 'inline-block',
-    marginTop: '10px',
+   // marginTop: '10px',
+    transition: 'background-color 0.3s ease',
+  },
+  viewBookingButton: {
+    backgroundColor: '#3498db',
+    color: '#ffffff',
+    padding: '7px 20px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    display: 'inline-block',
+   // margin: '10px',
+    marginRight: '10px',
     transition: 'background-color 0.3s ease',
   },
 };

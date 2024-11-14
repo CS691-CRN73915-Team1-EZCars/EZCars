@@ -39,6 +39,11 @@ const Summary = () => {
     setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
   };
 
+  const handleViewBooking = (bookingId) => {
+    console.log(`Viewing booking with ID: ${bookingId}`);
+  
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -188,9 +193,20 @@ const Summary = () => {
                   <p style={styles.bookingStatus}><span style={styles.label}>Status:</span> {booking.status}</p>
                     <p style={styles.bookingDuration}><span style={styles.label}>Duration:</span> {booking.duration} days</p>                 
                   </div>
-                  <button onClick={() => handleDeleteBooking(booking.id)} style={styles.deleteButton}>
-                    Delete Booking
-                  </button>
+                  <div style={styles.buttonContainer}>
+    <button
+      onClick={() => handleViewBooking(booking.id)}
+      style={styles.viewBookingButton}
+    >
+      View Booking
+    </button>
+    <button
+      onClick={() => handleDeleteBooking(booking.id)}
+      style={styles.deleteButton}
+    >
+      Delete Booking
+    </button>
+  </div>
                 </div>
               </div>
             );

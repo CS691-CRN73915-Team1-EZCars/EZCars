@@ -110,7 +110,7 @@ export const styles = {
   },
   
   compareButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#3498db",
     color: "white",
     border: "none",
     padding: "10px 20px",
