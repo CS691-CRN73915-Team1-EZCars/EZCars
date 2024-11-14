@@ -19,12 +19,16 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "jest": {
+    "reporters": [
+      "default",
+      ["jest-junit", { "outputDirectory": "./reports", "outputName": "junit.xml" }]
+    ]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:unit": "jest src/tests/unit --watchAll=false",
-    "test:integration": "jest src/tests/integration --watchAll=false",
+    "test": "jest --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,6 +50,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "jest-junit": "^16.0.0"
   }
 }
