@@ -107,6 +107,9 @@ const Navbar = () => {
                     <Link to="/CustomerSupport" style={styles.dropdownLink}>
                     Customer Support
                     </Link>
+                    <Link to="/VehicleHistory" style={styles.dropdownLink}>
+                    View Bookings
+                    </Link>
                     <div onClick={handleLogout} style={styles.dropdownLink}>
                       Logout
                     </div>
