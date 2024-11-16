@@ -18,12 +18,15 @@ export const getAllBookings = async (page = 0, size = 10) => {
   return response.json();
 };
 
-  export const getAllBookingsByUserId = async (userId, status, year, month, sortDirection = 'asc') => {
+  export const getAllBookingsByUserId = async (userId, status, year, month, sortDirection = 'asc', page = 0, 
+    size = 10) => {
     const queryParams = new URLSearchParams();
     if (status) queryParams.append('status', status);
     if (year) queryParams.append('year', year.toString());
     if (month) queryParams.append('month', month.toString());
     queryParams.append('sortDirection', sortDirection);
+    queryParams.append('page', page.toString());
+    queryParams.append('size', size.toString());
   
     const response = await fetch(`${API_BASE_URL}/bookings/user/${userId}?${queryParams.toString()}`, {
       headers: getHeaders(),
