@@ -64,6 +64,13 @@ const styles = {
       borderRadius: '8px',
       border: '1px solid #c6f6d5',
     },
+    input: {
+      padding: '10px',
+      fontSize: '16px',
+      border: '1px solid #ccc',
+      borderRadius: '4px',
+      marginBottom: '10px',
+    },
   };
   
   export default styles;

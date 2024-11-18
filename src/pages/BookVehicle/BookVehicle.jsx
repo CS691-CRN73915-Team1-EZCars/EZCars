@@ -253,6 +253,7 @@ const BookVehicle = () => {
             <Elements stripe={stripePromise}>
               <StripePayment
                 amount={totalAmount}
+                bookingId={bookingId}
                 onPaymentSuccess={handleUpdateBooking}
               />
             </Elements>
