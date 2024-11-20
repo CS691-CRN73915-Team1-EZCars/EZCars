@@ -239,6 +239,29 @@ const styles = {
     display: 'block',
     margin: '20px auto 0',
   },
+  paginationContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '20px',
+  },
+  paginationButton: {
+    backgroundColor: '#f97316',
+    color: '#ffffff',
+    padding: '10px 20px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    margin: '0 10px',
+    transition: 'background-color 0.3s ease',
+  },
+  pageInfo: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#2c3e50',
+  },
 };
 
 export default styles;

@@ -6,6 +6,8 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.6",
+    "@stripe/react-stripe-js": "^2.9.0",
+    "@stripe/stripe-js": "^4.10.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",

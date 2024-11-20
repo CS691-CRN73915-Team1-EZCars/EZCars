@@ -11,6 +11,9 @@ const Summary = () => {
   const [error, setError] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+const [totalPages, setTotalPages] = useState(0);
+const pageSize = 10;
   const [filters, setFilters] = useState({
     status: "",
     year: "",
@@ -63,10 +66,13 @@ const Summary = () => {
           filters.status,
           filters.year ? parseInt(filters.year) : undefined,
           filters.month ? parseInt(filters.month) : undefined,
-          filters.sortDirection
+          filters.sortDirection,
+          currentPage,
+          pageSize
         );
 
-        setBookings(bookingsResponse || []);
+        setBookings(bookingsResponse.content || []);
+        setTotalPages(bookingsResponse.totalPages);
 
         const vehiclesResponse = await getAllVehicles(0, 200);
         const allVehicles = vehiclesResponse.content || [];
@@ -86,7 +92,7 @@ const Summary = () => {
     };
 
     fetchData();
-  }, [userId, filters]);
+  }, [userId, filters, currentPage]);
 
   useEffect(() => {
     const importAll = (r) => {
@@ -113,6 +119,18 @@ const Summary = () => {
 
     setLoadedImages(loadedImgs);
   }, [vehicles]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
 
@@ -319,6 +337,27 @@ const Summary = () => {
           </div>
         </div>
       )}
+      {bookings.length > 0 && totalPages > 1 && (
+  <div style={styles.paginationContainer}>
+    <button
+      onClick={handlePreviousPage}
+      disabled={currentPage === 0}
+      style={styles.paginationButton}
+    >
+      Previous
+    </button>
+    <span style={styles.pageInfo}>
+      Page {currentPage + 1} of {totalPages}
+    </span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages - 1}
+      style={styles.paginationButton}
+    >
+      Next
+    </button>
+  </div>
+)}
     </div>
   );
 };
