@@ -7,7 +7,7 @@ import { getAllBookingsByUserId } from "../../api/bookVehicle";
 
 const AccountSummary = () => {
   const [user, setUser] = useState(data);
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState({ content: [], totalElements: 0 });
   const [notificationPreference, setNotificationPreference] = useState('email');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +18,6 @@ const AccountSummary = () => {
     const fetchUserDetails = async () => {
       try {
         const userData = await getUserById(userId);
-        //setUser(userData);
         setUser(prevUser => ({ ...prevUser, ...userData }));
         setNotificationPreference(userData.preferences?.notifications?.sms ? 'sms' : 'email');
       } catch (error) {
@@ -30,11 +29,11 @@ const AccountSummary = () => {
     const fetchBookings = async () => {
       try {
         const bookingsData = await getAllBookingsByUserId(userId);
-        setBookings(Array.isArray(bookingsData) ? bookingsData : []);
+        setBookings(bookingsData); // Set the entire response object
       } catch (error) {
         console.error('Error fetching bookings:', error);
         setError('Failed to load booking history');
-        setBookings([]);
+        setBookings({ content: [], totalElements: 0 });
       }
     };
 
@@ -60,14 +59,14 @@ const AccountSummary = () => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
 
-  const totalRides = bookings.length;
+  const totalRides = bookings.totalElements || 0;
 
-  const lastRide = bookings[0]; 
+  const lastRide = bookings.content && bookings.content.length > 0 ? bookings.content[0] : null;
 
   const formatLastRide = (ride) => {
     if (!ride) return 'No rides yet';
     const vehicleMake = ride.vehicle?.make || 'NA';
-    const vehicleModel = ride.vehicle?.model ||'';
+    const vehicleModel = ride.vehicle?.model || '';
     return `${vehicleMake} ${vehicleModel}`;
   };
 

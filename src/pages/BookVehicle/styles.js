@@ -126,6 +126,12 @@ const styles = {
     color: '#f97316',
     marginBottom: '15px',
   },
+  paymentContainer: {
+    padding: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    marginTop: '20px',
+  },
 };
 
 export default styles;
