@@ -54,7 +54,7 @@ const Rating = () => {
                 <div style={styles.bookingHistory}>
                     {ratings.map((rating) => (
                         <div key={rating.ratingId} style={styles.bookingCard}>
-                            <h4 style={styles.userName}>User Name: {rating.userName}</h4>
+                            <h4 style={styles.userName}> Name: {rating.userName}</h4>
                             <p style={styles.bookingDetail}>
                                 <span style={styles.label}>Rating:</span> {rating.rating} / 5
                             </p>
