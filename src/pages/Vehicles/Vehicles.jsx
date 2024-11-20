@@ -163,6 +163,10 @@ const Vehicles = () => {
     });
   };
 
+  const handleRatingClick = (vehicleId) => {
+    navigate(`/VehicleRating/${vehicleId}`); 
+};
+
   const showComparisonPage = () => {
     setShowComparisonModal(true);
   };
@@ -272,6 +276,25 @@ const Vehicles = () => {
                   {car.mileage} miles • {car.transmission} • {car.fuelType}
                 </p>
                 <p style={styles.vehiclePrice}>${car.price}</p>
+                <div style={styles.ratingContainer}
+                 onClick={() => handleRatingClick(car.vehicleId)}>
+                {[...Array(5)].map((_, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      ...styles.starRating,
+                      ...(index < Math.round(car.rating)
+                        ? styles.filledStar
+                        : styles.emptyStar),
+                    }}
+                  >
+                    ★
+                  </span>
+                ))}
+                <span style={styles.ratingNumber}>
+                  ({car.rating.toFixed(1)})
+                </span>
+              </div>
                 <div style={styles.actionButtons}>
                   <span style={styles.viewDetailsLink} onClick={() => handleViewDetails(car)}>
                     View Details
@@ -316,6 +339,25 @@ const Vehicles = () => {
                 <p style={styles.carDetailsInfoP}><strong>Transmission:</strong> {selectedCar.transmission}</p>
                 <p style={styles.carDetailsInfoP}><strong>Fuel Type:</strong> {selectedCar.fuelType}</p>
                 <p style={styles.carDetailsInfoP}><strong>Details:</strong> {selectedCar.details}</p>
+                <div style={styles.ratingContainer}
+               onClick={() => handleRatingClick(selectedCar.vehicleId)}>
+                  {[...Array(5)].map((_, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        ...styles.starRating,
+                        ...(index < Math.round(selectedCar.rating)
+                          ? styles.filledStar
+                          : styles.emptyStar),
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                  <span style={styles.ratingNumber}>
+                    ({selectedCar.rating.toFixed(1)})
+                  </span>
+                </div>
                 {isLoggedIn && (
                   <button style={styles.bookCarButton} onClick={() => handleBookCar(selectedCar)}>
                     Book This Car
