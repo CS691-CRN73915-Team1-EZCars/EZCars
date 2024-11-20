@@ -350,6 +350,25 @@ closeLink: {
   border: "none",
   zIndex: 1,
 },
+ratingContainer: {
+  display: "flex",
+  alignItems: "center",
+  marginTop: "5px",
+},
+starRating: {
+  fontSize: "20px",
+  marginRight: "5px",
+},
+filledStar: {
+  color: "#FFD700",
+},
+emptyStar: {
+  color: "#D3D3D3", 
+},
+ratingNumber: {
+  fontSize: "14px",
+  verticalAlign: "middle",
+},
 };
 
 export { styles };

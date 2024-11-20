@@ -227,4 +227,23 @@ export const styles = {
     color: '#fff', 
     backgroundColor: '#007bff', 
   }, 
+  ratingContainer: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: "5px",
+  },
+  starRating: {
+    fontSize: "20px",
+    marginRight: "5px",
+  },
+  filledStar: {
+    color: "#FFD700",
+  },
+  emptyStar: {
+    color: "#D3D3D3", 
+  },
+  ratingNumber: {
+    fontSize: "14px",
+    verticalAlign: "middle",
+  },
 };
