@@ -262,6 +262,39 @@ const styles = {
     fontWeight: 'bold',
     color: '#2c3e50',
   },
+  confirmButton: {
+    backgroundColor: '#f97316', // Red color for cancellation
+    color: '#ffffff',
+    padding: '10px 20px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginRight: '10px',
+    transition: 'background-color 0.3s ease, transform 0.2s ease',
+  },
+
+  cancelButton: {
+    backgroundColor: '#3498db', // Blue color for keeping booking
+    color: '#ffffff',
+    padding: '10px 20px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease, transform 0.2s ease',
+  },
+
+  confirmButtonHover: {
+    backgroundColor: '#f97316', // Darker red on hover
+  },
+
+  cancelButtonHover: {
+    backgroundColor: '#2980b9', // Darker blue on hover
+  },
+  
 };
 
 export default styles;
