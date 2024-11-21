@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getAllBookingsByUserId, updateBookingStatus } from "../../api/bookVehicle";
+import {
+  getAllBookingsByUserId,
+  updateBookingStatus,
+} from "../../api/bookVehicle";
 import { getAllVehicles } from "../../api/vehicles";
 import styles from "./styles";
 
@@ -13,8 +16,10 @@ const Summary = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [showCancellationConfirmation, setShowCancellationConfirmation] = useState(false);
+  const [showCancellationConfirmation, setShowCancellationConfirmation] =
+    useState(false);
   const [bookingToCancel, setBookingToCancel] = useState(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const pageSize = 10;
   const [filters, setFilters] = useState({
     status: "",
@@ -43,9 +48,16 @@ const Summary = () => {
       );
       setShowCancellationConfirmation(false);
     } catch (error) {
+      setShowCancellationConfirmation(false);
       console.error("Failed to cancel booking:", error);
-      setError("Failed to cancel booking. Please try again later.");
+      setError("You cannot cancel booking at this moment. Cancellations are only allowed one day prior to the pickup date!!");
+      setShowErrorModal(true);
     }
+  };
+
+  const closeErrorModal = () => {
+    setShowErrorModal(false);
+    setError(null);
   };
 
   const closeCancellationConfirmation = () => {
@@ -110,6 +122,7 @@ const Summary = () => {
       });
       return images;
     };
+
     const images = importAll(
       require.context(
         "../../assets/images/vehicles",
@@ -117,6 +130,7 @@ const Summary = () => {
         /\.(png|jpe?g|svg|webp|avif)$/
       )
     );
+
     const loadedImgs = {};
     Object.values(vehicles).forEach((vehicle) => {
       const imageName = vehicle.imageUrl.split("/").pop();
@@ -392,15 +406,33 @@ const Summary = () => {
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
             <h3 style={styles.modalTitle}>Confirm Cancellation</h3>
-            <p>Are you sure you want to cancel this booking?</p>
+            <p style={styles.confirmMessage}>Are you sure you want to cancel this booking?</p>
             <div style={styles.buttonContainer}>
-            <button onClick={confirmCancellation} style={styles.confirmButton}>
+              <button
+                onClick={confirmCancellation}
+                style={styles.confirmButton}
+              >
                 Yes, Cancel Booking
               </button>
-              <button onClick={closeCancellationConfirmation} style={styles.cancelButton}>
+              <button
+                onClick={closeCancellationConfirmation}
+                style={styles.cancelButton}
+              >
                 No, Keep Booking
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showErrorModal && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <h3 style={styles.modalTitle}>Alert</h3>
+            <p style={styles.errorMessage}>{error}</p>
+            <button onClick={closeErrorModal} style={styles.closeButton}>
+              Close
+            </button>
           </div>
         </div>
       )}

@@ -263,7 +263,7 @@ const styles = {
     color: '#2c3e50',
   },
   confirmButton: {
-    backgroundColor: '#f97316', // Red color for cancellation
+    backgroundColor: '#f97316', 
     color: '#ffffff',
     padding: '10px 20px',
     fontSize: '16px',
@@ -288,12 +288,27 @@ const styles = {
   },
 
   confirmButtonHover: {
-    backgroundColor: '#f97316', // Darker red on hover
+    backgroundColor: '#f97316',
   },
 
   cancelButtonHover: {
-    backgroundColor: '#2980b9', // Darker blue on hover
+    backgroundColor: '#2980b9',
   },
+  confirmMessage: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    margin: '30px',
+  },
+  errorMessage: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '30px',
+  }
   
 };
 
