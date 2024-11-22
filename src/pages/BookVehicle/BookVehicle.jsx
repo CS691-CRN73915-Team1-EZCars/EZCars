@@ -16,8 +16,6 @@ const BookVehicle = () => {
     pickUpDate: "",
     dropOffDate: "",
     duration: "",
-    pickupLocation: "",
-    dropoffLocation: "",
   });
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
