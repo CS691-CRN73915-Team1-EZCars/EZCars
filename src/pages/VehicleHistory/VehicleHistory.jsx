@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   getAllBookingsByUserId,
   updateBookingStatus,
@@ -8,6 +9,7 @@ import styles from "./styles";
 
 const Summary = () => {
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +52,9 @@ const Summary = () => {
     } catch (error) {
       setShowCancellationConfirmation(false);
       console.error("Failed to cancel booking:", error);
-      setError("You cannot cancel booking at this moment. Cancellations are only allowed one day prior to the pickup date!!");
+      setError(
+        "You cannot cancel booking at this moment. Cancellations are only allowed one day prior to the pickup date!!"
+      );
       setShowErrorModal(true);
     }
   };
@@ -74,6 +78,10 @@ const Summary = () => {
     const vehicle = vehicles[booking.vehicleId];
     setSelectedBooking({ ...booking, vehicle });
     setIsModalOpen(true);
+  };
+
+  const handleModify = (booking) => {
+    navigate(`/ModifyBooking`, { state: { booking } });
   };
 
   const handleCloseModal = () => {
@@ -294,6 +302,14 @@ const Summary = () => {
                     </p>
                   </div>
                   <div style={styles.buttonContainer}>
+                    {booking.status === "CONFIRMED" && (
+                      <button
+                        onClick={() => handleModify(booking)}
+                       style={styles.modifyBookingButton}
+                      >
+                        Modify
+                      </button>
+                    )}
                     <button
                       onClick={() => handleViewBooking(booking)}
                       style={styles.viewBookingButton}
@@ -406,7 +422,9 @@ const Summary = () => {
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
             <h3 style={styles.modalTitle}>Confirm Cancellation</h3>
-            <p style={styles.confirmMessage}>Are you sure you want to cancel this booking?</p>
+            <p style={styles.confirmMessage}>
+              Are you sure you want to cancel this booking?
+            </p>
             <div style={styles.buttonContainer}>
               <button
                 onClick={confirmCancellation}
