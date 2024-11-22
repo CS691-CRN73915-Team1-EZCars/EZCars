@@ -58,9 +58,9 @@ const ModifyBooking = () => {
 
     if (booking) {
       setBookingData({
-       // pickUpDate: booking.pickUpDate,
-      //  dropOffDate: booking.dropOffDate,
-      //  duration: booking.duration,
+        pickUpDate: booking.pickUpDate,
+        dropOffDate: booking.dropOffDate,
+        duration: booking.duration,
         pickupLocation: booking.pickupLocation,
         dropoffLocation: booking.dropoffLocation,
       });
@@ -123,9 +123,14 @@ const ModifyBooking = () => {
       const vehicleDetailsFetched = await fetchVehicleDetails(vehicleId);
       if (vehicleDetailsFetched) {
         setVehicleDetails(vehicleDetailsFetched);
-        const totalPrice = vehicleDetailsFetched.price * durationInDays;
-        setTotalAmount(totalPrice);
-        setShowPaymentForm(true);
+        if (durationInDays !== booking.duration) {
+          const totalPrice = ((vehicleDetailsFetched.price * durationInDays) - (vehicleDetailsFetched.price * booking.duration));
+          setTotalAmount(totalPrice);
+          setShowPaymentForm(true);
+        } else {
+            await updateBookingStatus(booking.id, 'CONFIRMED');
+            await handleUpdateBooking();
+        }
       } else {
         throw new Error("Failed to fetch vehicle details.");
       }
@@ -141,12 +146,12 @@ const ModifyBooking = () => {
       const durationInDays = Math.ceil(
         (dropOffDateTime - pickUpDateTime) / (1000 * 60 * 60 * 24)
       );
-      await updateBooking({
-        ...bookingData,
-        vehicleId,
-        status: "PENDING",
-        duration: durationInDays,
-      });
+
+        await updateBooking(booking.id,{
+            ...bookingData,
+            status: "PENDING",
+            duration: durationInDays
+          });
       const bookingDetailsFetched = await getBookingById(booking.id);
       if (bookingDetailsFetched) {
         setFetchedBookingData(bookingDetailsFetched);
@@ -154,7 +159,7 @@ const ModifyBooking = () => {
         setError(null);
       } else {
         throw new Error("Failed to fetch booking details.");
-      }
+    }
     } catch (err) {
       setError(err.message || "Failed to modify booking.");
       setSuccessMessage(null);
@@ -250,7 +255,7 @@ const ModifyBooking = () => {
               style={styles.button}
               onClick={handleModifyBooking}
             >
-              Proceed to Payment
+              Proceed to Update
             </button>
           </form>
         ) : (
