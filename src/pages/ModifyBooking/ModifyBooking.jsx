@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createBooking, getBookingById, updateBookingStatus } from "../../api/bookVehicle";
+import { updateBooking, getBookingById, updateBookingStatus } from "../../api/bookVehicle";
 import { useLocation, useNavigate } from "react-router-dom";
 import locationData from "../../data/carData.json";
 import styles from "./styles";
@@ -11,12 +11,31 @@ import StripePayment from "../../components/Payment/StripePayment";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHER_KEY);
 
-const BookVehicle = () => {
-  const [bookingData, setBookingData] = useState({
-    pickUpDate: "",
-    dropOffDate: "",
-    duration: "",
+const ModifyBooking = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const booking = location.state?.booking;
+
+  const [bookingData, setBookingData] = useState(() => {
+    const pickUpDate = booking?.pickUpDate || "";
+    const duration = booking?.duration || "";
+    let dropOffDate = "";
+  
+    if (pickUpDate && duration) {
+      const pickUpDateTime = new Date(pickUpDate);
+      pickUpDateTime.setDate(pickUpDateTime.getDate() + parseInt(duration));
+      dropOffDate = pickUpDateTime.toISOString().split('T')[0];
+    }
+  
+    return {
+      pickUpDate,
+      duration,
+      dropOffDate,
+      pickupLocation: booking?.pickupLocation || "",
+      dropoffLocation: booking?.dropoffLocation || "",
+    };
   });
+  
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -27,20 +46,31 @@ const BookVehicle = () => {
   const [fetchedBookingData, setFetchedBookingData] = useState(null);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [bookingId, setBookingId] = useState(null);
 
-  const location = useLocation();
-  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-  const vehicleId = location.state?.vehicleId;
+  const vehicleId = booking?.vehicleId;
 
   useEffect(() => {
     const today = new Date();
     const formattedToday = today.toISOString().split("T")[0];
     setMinDate(formattedToday);
-    setBookingData((prev) => ({ ...prev, pickUpDate: formattedToday }));
-    setMinDropOffDate(formattedToday);
-  }, []);
+  
+    if (booking) {
+      const pickUpDate = new Date(booking.pickUpDate);
+      const dropOffDate = new Date(pickUpDate);
+      dropOffDate.setDate(pickUpDate.getDate() + parseInt(booking.duration));
+      const formattedDropOffDate = dropOffDate.toISOString().split('T')[0];
+      setMinDropOffDate(formattedDropOffDate);
+  
+      setBookingData({
+        pickUpDate: booking.pickUpDate,
+        dropOffDate: formattedDropOffDate,
+        duration: booking.duration,
+        pickupLocation: booking.pickupLocation,
+        dropoffLocation: booking.dropoffLocation,
+      });
+    }
+  }, [booking]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -61,7 +91,7 @@ const BookVehicle = () => {
     setBookingData((prevData) => ({ ...prevData, [name]: value }));
     if (name === "pickUpDate") {
       const selectedPickUpDate = new Date(value);
-      selectedPickUpDate.setDate(selectedPickUpDate.getDate() + 1);
+      selectedPickUpDate.setDate(selectedPickUpDate.getDate() + booking.duration);
       const formattedMinDropOffDate = selectedPickUpDate
         .toISOString()
         .split("T")[0];
@@ -94,14 +124,18 @@ const BookVehicle = () => {
     const durationInDays = Math.ceil(
       (dropOffDateTime - pickUpDateTime) / (1000 * 60 * 60 * 24)
     );
-
     try {
       const vehicleDetailsFetched = await fetchVehicleDetails(vehicleId);
       if (vehicleDetailsFetched) {
         setVehicleDetails(vehicleDetailsFetched);
-        const totalPrice = vehicleDetailsFetched.price * durationInDays;
-        setTotalAmount(totalPrice);
-        setShowPaymentForm(true);
+        if (durationInDays !== booking.duration) {
+          const totalPrice = ((vehicleDetailsFetched.price * durationInDays) - (vehicleDetailsFetched.price * booking.duration));
+          setTotalAmount(totalPrice);
+          setShowPaymentForm(true);
+        } else {
+            await updateBookingStatus(booking.id, 'CONFIRMED');
+            await handleUpdateBooking();
+        }
       } else {
         throw new Error("Failed to fetch vehicle details.");
       }
@@ -110,7 +144,7 @@ const BookVehicle = () => {
     }
   };
 
-  const handleCreateBooking = async () => {
+  const handleModifyBooking = async () => {
     try {
       const pickUpDateTime = new Date(bookingData.pickUpDate);
       const dropOffDateTime = new Date(bookingData.dropOffDate);
@@ -118,47 +152,33 @@ const BookVehicle = () => {
         (dropOffDateTime - pickUpDateTime) / (1000 * 60 * 60 * 24)
       );
 
-      const createdBookingResponse = await createBooking({
-        ...bookingData,
-        userId,
-        vehicleId,
-        status: "PENDING",
-        duration: durationInDays,
-      });
-
-      const bookingId = createdBookingResponse.id;
-      setBookingId(bookingId);
-      const bookingDetailsFetched = await getBookingById(bookingId);
-
+        await updateBooking(booking.id,{
+            ...bookingData,
+            status: "PENDING",
+            duration: durationInDays
+          });
+      const bookingDetailsFetched = await getBookingById(booking.id);
       if (bookingDetailsFetched) {
         setFetchedBookingData(bookingDetailsFetched);
-       // setShowConfirmationPopup(true);
-        setSuccessMessage("Booking Initiated successfully!");
+        setSuccessMessage("Booking Modified successfully!");
         setError(null);
-        setBookingData({
-          pickUpDate: minDate,
-          dropOffDate: minDropOffDate,
-          pickupLocation: "",
-          dropoffLocation: "",
-        });
       } else {
         throw new Error("Failed to fetch booking details.");
-      }
+    }
     } catch (err) {
-      setError(err.message || "Failed to create booking.");
+      setError(err.message || "Failed to modify booking.");
       setSuccessMessage(null);
     }
   };
 
   const handleUpdateBooking = async () => {
     try {
-      if (!bookingId) {
+      if (!booking.id) {
         throw new Error("Booking ID not found.");
       }
-       await updateBookingStatus(bookingId, 'CONFIRMED');
-      console.log('Booking CONFIRMED successfully!');
+      await updateBookingStatus(booking.id, 'CONFIRMED');
+      console.log('Booking Modified successfully!');
       setShowConfirmationPopup(true);
-     
     } catch (error) {
       console.error('Error updating booking status:', error);
       setError(error.message || "Failed to update booking status.");
@@ -168,14 +188,13 @@ const BookVehicle = () => {
   return (
     <div style={styles.container}>
       <div style={styles.content}>
-        <h1 style={styles.heading}>Book Vehicle</h1>
+        <h1 style={styles.heading}>Modify Vehicle</h1>
         {username && (
           <div style={styles.usernameBox}>
             <label style={styles.label}>Username:</label>
             <div style={styles.usernameBoxContent}>{username}</div>
           </div>
         )}
-
         {!showPaymentForm ? (
           <form onSubmit={handleProceedToPayment} style={styles.form}>
             <label style={styles.label}>
@@ -239,9 +258,9 @@ const BookVehicle = () => {
             <button
               type="submit"
               style={styles.button}
-              onClick={handleCreateBooking}
+              onClick={handleModifyBooking}
             >
-              Proceed to Payment
+              Proceed to Update
             </button>
           </form>
         ) : (
@@ -251,24 +270,21 @@ const BookVehicle = () => {
             <Elements stripe={stripePromise}>
               <StripePayment
                 amount={totalAmount}
-                bookingId={bookingId}
+                bookingId={booking.id}
                 onPaymentSuccess={handleUpdateBooking}
               />
             </Elements>
           </div>
         )}
-
         {successMessage && <div style={styles.success}>{successMessage}</div>}
         {error && <div style={styles.error}>{error}</div>}
       </div>
-
       {showConfirmationPopup && fetchedBookingData && vehicleDetails && (
         <div style={styles.popupOverlay}>
           <div style={styles.popupContent}>
             <h2 style={styles.popupHeading}>Booking Status</h2>
             <p>
-              Your booking is processed. We will soon confirm your booking and
-              you will receive updates through email.
+              Your booking is processed. We will soon confirm your booking and you will receive updates through email.
             </p>
             <h3>Booking Details:</h3>
             <p>Pick-up Date: {fetchedBookingData.pickUpDate}</p>
@@ -298,4 +314,4 @@ const BookVehicle = () => {
   );
 };
 
-export default BookVehicle;
+export default ModifyBooking;
