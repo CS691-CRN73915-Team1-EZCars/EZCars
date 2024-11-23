@@ -54,12 +54,17 @@ const ModifyBooking = () => {
     const today = new Date();
     const formattedToday = today.toISOString().split("T")[0];
     setMinDate(formattedToday);
-    setMinDropOffDate(formattedToday);
-
+  
     if (booking) {
+      const pickUpDate = new Date(booking.pickUpDate);
+      const dropOffDate = new Date(pickUpDate);
+      dropOffDate.setDate(pickUpDate.getDate() + parseInt(booking.duration));
+      const formattedDropOffDate = dropOffDate.toISOString().split('T')[0];
+      setMinDropOffDate(formattedDropOffDate);
+  
       setBookingData({
         pickUpDate: booking.pickUpDate,
-        dropOffDate: booking.dropOffDate,
+        dropOffDate: formattedDropOffDate,
         duration: booking.duration,
         pickupLocation: booking.pickupLocation,
         dropoffLocation: booking.dropoffLocation,
