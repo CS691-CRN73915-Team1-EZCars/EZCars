@@ -45,7 +45,9 @@ const Navbar = () => {
 
   return (
     <nav style={styles.navbar}>
-      <div style={styles.logo}>EzCars</div>
+      <Link to="/" style={styles.logoLink}>
+    <div style={styles.logo}>EzCars</div>
+  </Link>
       <div style={styles.navContainer}>
         <ul style={styles.navLinks}>
           <li>
