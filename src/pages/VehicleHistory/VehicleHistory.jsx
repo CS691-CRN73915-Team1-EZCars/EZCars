@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { getAllBookingsByUserId, deleteBooking } from "../../api/bookVehicle";
+import { useNavigate } from 'react-router-dom';
+import {
+  getAllBookingsByUserId,
+  updateBookingStatus,
+} from "../../api/bookVehicle";
 import { getAllVehicles } from "../../api/vehicles";
 import styles from "./styles";
 
 const Summary = () => {
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -12,15 +17,18 @@ const Summary = () => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-const [totalPages, setTotalPages] = useState(0);
-const pageSize = 10;
+  const [totalPages, setTotalPages] = useState(0);
+  const [showCancellationConfirmation, setShowCancellationConfirmation] =
+    useState(false);
+  const [bookingToCancel, setBookingToCancel] = useState(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const pageSize = 10;
   const [filters, setFilters] = useState({
     status: "",
     year: "",
     month: "",
     sortDirection: "asc",
   });
-
   const userId = localStorage.getItem("userId");
 
   const formatDate = (dateString) => {
@@ -29,16 +37,36 @@ const pageSize = 10;
     return date.toLocaleDateString();
   };
 
-  const handleDeleteBooking = async (bookingId) => {
+  const handleCancelBooking = (bookingId) => {
+    setBookingToCancel(bookingId);
+    setShowCancellationConfirmation(true);
+  };
+
+  const confirmCancellation = async () => {
     try {
-      await deleteBooking(bookingId);
+      await updateBookingStatus(bookingToCancel, "CANCELLED");
       setBookings((prevBookings) =>
-        prevBookings.filter((booking) => booking.id !== bookingId)
+        prevBookings.filter((booking) => booking.id !== bookingToCancel)
       );
+      setShowCancellationConfirmation(false);
     } catch (error) {
-      console.error("Failed to delete booking:", error);
-      setError("Failed to delete booking. Please try again later.");
+      setShowCancellationConfirmation(false);
+      console.error("Failed to cancel booking:", error);
+      setError(
+        "You cannot cancel booking at this moment. Cancellations are only allowed one day prior to the pickup date!!"
+      );
+      setShowErrorModal(true);
     }
+  };
+
+  const closeErrorModal = () => {
+    setShowErrorModal(false);
+    setError(null);
+  };
+
+  const closeCancellationConfirmation = () => {
+    setShowCancellationConfirmation(false);
+    setBookingToCancel(null);
   };
 
   const handleFilterChange = (e) => {
@@ -50,6 +78,10 @@ const pageSize = 10;
     const vehicle = vehicles[booking.vehicleId];
     setSelectedBooking({ ...booking, vehicle });
     setIsModalOpen(true);
+  };
+
+  const handleModify = (booking) => {
+    navigate(`/ModifyBooking`, { state: { booking } });
   };
 
   const handleCloseModal = () => {
@@ -70,18 +102,15 @@ const pageSize = 10;
           currentPage,
           pageSize
         );
-
         setBookings(bookingsResponse.content || []);
         setTotalPages(bookingsResponse.totalPages);
 
         const vehiclesResponse = await getAllVehicles(0, 200);
         const allVehicles = vehiclesResponse.content || [];
-
         const vehicleMap = {};
         allVehicles.forEach((vehicle) => {
           vehicleMap[vehicle.vehicleId] = vehicle;
         });
-
         setVehicles(vehicleMap);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -90,7 +119,6 @@ const pageSize = 10;
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [userId, filters, currentPage]);
 
@@ -116,7 +144,6 @@ const pageSize = 10;
       const imageName = vehicle.imageUrl.split("/").pop();
       loadedImgs[vehicle.vehicleId] = images[imageName];
     });
-
     setLoadedImages(loadedImgs);
   }, [vehicles]);
 
@@ -125,7 +152,7 @@ const pageSize = 10;
       setCurrentPage(currentPage + 1);
     }
   };
-  
+
   const handlePreviousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -137,7 +164,6 @@ const pageSize = 10;
   return (
     <div style={styles.summaryContainer}>
       <h2 style={styles.heading}>Vehicle Booking Summary</h2>
-
       <div style={styles.filterContainer}>
         <select
           name="status"
@@ -151,7 +177,6 @@ const pageSize = 10;
           <option value="CANCELLED">Cancelled</option>
           <option value="COMPLETED">Completed</option>
         </select>
-
         <div style={styles.monthYearPicker}>
           <select
             name="year"
@@ -166,7 +191,6 @@ const pageSize = 10;
               </option>
             ))}
           </select>
-
           <select
             name="month"
             value={filters.month}
@@ -181,7 +205,6 @@ const pageSize = 10;
             ))}
           </select>
         </div>
-
         <select
           name="sortDirection"
           value={filters.sortDirection}
@@ -192,30 +215,25 @@ const pageSize = 10;
           <option value="desc">Sort by Date: Newest First</option>
         </select>
       </div>
-
       {!bookings.length && !error && (
         <div style={styles.fullPageMessage}>
           No bookings found with the selected filters!!
         </div>
       )}
-
       {!Object.keys(vehicles).length && error === "No vehicles found." && (
         <div style={styles.fullPageMessage}>
           No vehicles found with the selected filters!!
         </div>
       )}
-
       {bookings.length > 0 && (
         <div style={styles.bookingHistory}>
           {bookings.map((booking) => {
             const vehicle = vehicles[booking.vehicleId];
             if (!vehicle) return null;
-
             const pickUpDateTime = new Date(booking.pickUpDate);
             const dropOffDateTime = new Date(
               pickUpDateTime.getTime() + booking.duration * 24 * 60 * 60 * 1000
             );
-
             return (
               <div key={booking.id} style={styles.bookingCard}>
                 <div style={styles.bookingContent}>
@@ -284,14 +302,33 @@ const pageSize = 10;
                     </p>
                   </div>
                   <div style={styles.buttonContainer}>
-                  <button onClick={() => handleViewBooking(booking)} style={styles.viewBookingButton}>
-                 View Booking
+                    {booking.status === "CONFIRMED" && (
+                      <button
+                        onClick={() => handleModify(booking)}
+                       style={styles.modifyBookingButton}
+                      >
+                        Modify
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleViewBooking(booking)}
+                      style={styles.viewBookingButton}
+                    >
+                      View Booking
                     </button>
                     <button
-                      onClick={() => handleDeleteBooking(booking.id)}
-                      style={styles.deleteButton}
+                      onClick={() => handleCancelBooking(booking.id)}
+                      style={{
+                        ...styles.deleteButton,
+                        opacity: booking.status === "CANCELLED" ? 0.5 : 1,
+                        cursor:
+                          booking.status === "CANCELLED"
+                            ? "not-allowed"
+                            : "pointer",
+                      }}
+                      disabled={booking.status === "CANCELLED"}
                     >
-                      Delete Booking
+                      Cancel Booking
                     </button>
                   </div>
                 </div>
@@ -300,7 +337,6 @@ const pageSize = 10;
           })}
         </div>
       )}
-
       {isModalOpen && selectedBooking && (
         <div style={styles.modalOverlay} onClick={handleCloseModal}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -319,45 +355,126 @@ const pageSize = 10;
                 <h4 style={styles.modalVehicleName}>
                   {selectedBooking.vehicle.make} {selectedBooking.vehicle.model}
                 </h4>
-                <p><span style={styles.label}>Year:</span> {selectedBooking.vehicle.year}</p>
-                <p><span style={styles.label}>Transmission:</span> {selectedBooking.vehicle.transmission}</p>
-                <p><span style={styles.label}>Fuel Type:</span> {selectedBooking.vehicle.fuelType}</p>
-                <p><span style={styles.label}>Mileage:</span> {selectedBooking.vehicle.mileage} mpg</p>
-                <p><span style={styles.label}>Booking ID:</span> {selectedBooking.id}</p>
-                <p><span style={styles.label}>Pick-up Location:</span> {selectedBooking.pickupLocation}</p>
-                <p><span style={styles.label}>Pick-up Date:</span> {formatDate(selectedBooking.pickUpDate)}</p>
-                <p><span style={styles.label}>Drop-off Location:</span> {selectedBooking.dropoffLocation}</p>
-                <p><span style={styles.label}>Drop-off Date:</span> {formatDate(new Date(new Date(selectedBooking.pickUpDate).getTime() + selectedBooking.duration * 24 * 60 * 60 * 1000))}</p>
-                <p><span style={styles.label}>Status:</span> {selectedBooking.status}</p>
-                <p><span style={styles.label}>Duration:</span> {selectedBooking.duration} day(s)</p>
-                <p><span style={styles.label}>Booking Price:</span> ${(selectedBooking.vehicle.price * selectedBooking.duration).toFixed(2)}</p>
+                <p>
+                  <span style={styles.label}>Year:</span>{" "}
+                  {selectedBooking.vehicle.year}
+                </p>
+                <p>
+                  <span style={styles.label}>Transmission:</span>{" "}
+                  {selectedBooking.vehicle.transmission}
+                </p>
+                <p>
+                  <span style={styles.label}>Fuel Type:</span>{" "}
+                  {selectedBooking.vehicle.fuelType}
+                </p>
+                <p>
+                  <span style={styles.label}>Mileage:</span>{" "}
+                  {selectedBooking.vehicle.mileage} mpg
+                </p>
+                <p>
+                  <span style={styles.label}>Booking ID:</span>{" "}
+                  {selectedBooking.id}
+                </p>
+                <p>
+                  <span style={styles.label}>Pick-up Location:</span>{" "}
+                  {selectedBooking.pickupLocation}
+                </p>
+                <p>
+                  <span style={styles.label}>Pick-up Date:</span>{" "}
+                  {formatDate(selectedBooking.pickUpDate)}
+                </p>
+                <p>
+                  <span style={styles.label}>Drop-off Location:</span>{" "}
+                  {selectedBooking.dropoffLocation}
+                </p>
+                <p>
+                  <span style={styles.label}>Drop-off Date:</span>{" "}
+                  {formatDate(
+                    new Date(
+                      new Date(selectedBooking.pickUpDate).getTime() +
+                        selectedBooking.duration * 24 * 60 * 60 * 1000
+                    )
+                  )}
+                </p>
+                <p>
+                  <span style={styles.label}>Status:</span>{" "}
+                  {selectedBooking.status}
+                </p>
+                <p>
+                  <span style={styles.label}>Duration:</span>{" "}
+                  {selectedBooking.duration} day(s)
+                </p>
+                <p>
+                  <span style={styles.label}>Booking Price:</span> $
+                  {(
+                    selectedBooking.vehicle.price * selectedBooking.duration
+                  ).toFixed(2)}
+                </p>
               </div>
             </div>
-            <button onClick={handleCloseModal} style={styles.closeButton}>Close</button>
+            <button onClick={handleCloseModal} style={styles.closeButton}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {showCancellationConfirmation && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <h3 style={styles.modalTitle}>Confirm Cancellation</h3>
+            <p style={styles.confirmMessage}>
+              Are you sure you want to cancel this booking?
+            </p>
+            <div style={styles.buttonContainer}>
+              <button
+                onClick={confirmCancellation}
+                style={styles.confirmButton}
+              >
+                Yes, Cancel Booking
+              </button>
+              <button
+                onClick={closeCancellationConfirmation}
+                style={styles.cancelButton}
+              >
+                No, Keep Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showErrorModal && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <h3 style={styles.modalTitle}>Alert</h3>
+            <p style={styles.errorMessage}>{error}</p>
+            <button onClick={closeErrorModal} style={styles.closeButton}>
+              Close
+            </button>
           </div>
         </div>
       )}
       {bookings.length > 0 && totalPages > 1 && (
-  <div style={styles.paginationContainer}>
-    <button
-      onClick={handlePreviousPage}
-      disabled={currentPage === 0}
-      style={styles.paginationButton}
-    >
-      Previous
-    </button>
-    <span style={styles.pageInfo}>
-      Page {currentPage + 1} of {totalPages}
-    </span>
-    <button
-      onClick={handleNextPage}
-      disabled={currentPage === totalPages - 1}
-      style={styles.paginationButton}
-    >
-      Next
-    </button>
-  </div>
-)}
+        <div style={styles.paginationContainer}>
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 0}
+            style={styles.paginationButton}
+          >
+            Previous
+          </button>
+          <span style={styles.pageInfo}>
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+            style={styles.paginationButton}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

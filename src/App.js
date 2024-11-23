@@ -14,6 +14,7 @@ import Signup from "./pages/Signup/Signup";
 import CustomerSupport from "./pages/CustomerSupport/CustomerSupport";
 import ModifyAccount from "./pages/ModifyAccount/ModifyAccount";
 import BookVehicle from "./pages/BookVehicle/BookVehicle";
+import ModifyBooking from "./pages/ModifyBooking/ModifyBooking";
 import Rating from "./pages/Rating/Rating";
 import NotFound from './pages/NotFound/NotFound';
 
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/ModifyAccount" element={<PrivateRoute><ModifyAccount /></PrivateRoute>} />
           <Route path="/CustomerSupport" element={<PrivateRoute><CustomerSupport /></PrivateRoute>} />
           <Route path="/BookVehicle" element={<PrivateRoute><BookVehicle /></PrivateRoute>} />
+          <Route path="/ModifyBooking" element={<PrivateRoute><ModifyBooking /></PrivateRoute>} />
           <Route path="/VehicleRating/:vehicleId" element={<PrivateRoute><Rating /></PrivateRoute>} />
         </Routes>
         <Footer />
