@@ -86,7 +86,7 @@ const ModifyBooking = () => {
     setBookingData((prevData) => ({ ...prevData, [name]: value }));
     if (name === "pickUpDate") {
       const selectedPickUpDate = new Date(value);
-      selectedPickUpDate.setDate(selectedPickUpDate.getDate() + 1);
+      selectedPickUpDate.setDate(selectedPickUpDate.getDate() + booking.duration);
       const formattedMinDropOffDate = selectedPickUpDate
         .toISOString()
         .split("T")[0];
