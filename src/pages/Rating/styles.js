@@ -56,6 +56,32 @@ export const styles = {
         color: '#7f8c8d',
         marginRight: '5px',
     },
+    paginationContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '20px',
+    },
+
+    paginationButton: {
+        backgroundColor: '#f97316',
+        color: '#ffffff',
+        padding: '10px 20px',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        borderRadius: '5px',
+        border: 'none',
+        cursor: 'pointer',
+        marginLeft: '10px',
+        transition: 'background-color 0.3s ease',
+    },
+
+    pageInfo: {
+        fontSize: '16px',
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginLeft: '10px',
+    },
 };
 
 export default styles;

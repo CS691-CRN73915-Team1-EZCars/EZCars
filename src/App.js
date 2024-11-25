@@ -16,6 +16,7 @@ import ModifyAccount from "./pages/ModifyAccount/ModifyAccount";
 import BookVehicle from "./pages/BookVehicle/BookVehicle";
 import ModifyBooking from "./pages/ModifyBooking/ModifyBooking";
 import Rating from "./pages/Rating/Rating";
+import PaymentHistory from "./pages/PaymentHistory/PaymentHistory";
 import NotFound from './pages/NotFound/NotFound';
 
 const PrivateRoute = ({ children }) => {
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/BookVehicle" element={<PrivateRoute><BookVehicle /></PrivateRoute>} />
           <Route path="/ModifyBooking" element={<PrivateRoute><ModifyBooking /></PrivateRoute>} />
           <Route path="/VehicleRating/:vehicleId" element={<PrivateRoute><Rating /></PrivateRoute>} />
+          <Route path="/PaymentHistory" element={<PrivateRoute><PaymentHistory /></PrivateRoute>} />
         </Routes>
         <Footer />
       </div>

@@ -30,13 +30,18 @@ export const getRatingById = async (id) => {
   return response.json();
 };
 
-export const getAllRatingsByVehicleId = async (vehicleId) => {
-  const response = await fetch(`${API_BASE_URL}/rating/vehicle/${vehicleId}`, {
+export const getAllRatingsByVehicleId = async (vehicleId, page = 0, size = 15, sortBy = 'ratingId', sortDirection = 'desc') => {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    sortBy,
+    sortDirection
+  });
+
+  const response = await fetch(`${API_BASE_URL}/rating/vehicle/${vehicleId}?${queryParams}`, {
     headers: getHeaders(),
   });
-  if (!response.ok) {
-    throw new Error('Failed to fetch ratings for vehicle');
-  }
+
   return response.json();
 };
 
