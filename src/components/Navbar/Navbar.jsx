@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
-import styles from './styles'; // Assuming you have an external styles object
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import styles from './styles'; 
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const token = localStorage.getItem('token'); // Fetch the token from localStorage
-  //const username = localStorage.getItem('username'); // Fetch the username from localStorage
-  const [username, setUsername] = useState(localStorage.getItem('username') || 'Guest');
-  const location = useLocation(); // Get the current location
-  const navigate = useNavigate(); // Use navigate for redirection
+  const token = localStorage.getItem('token'); 
 
-  // Function to toggle the dropdown
+  const [username, setUsername] = useState(localStorage.getItem('username') || 'Guest');
+  const location = useLocation(); 
+  const navigate = useNavigate(); 
+
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Close the dropdown when the location changes
   useEffect(() => {
     setDropdownOpen(false);
   }, [location]);
@@ -27,20 +25,17 @@ const Navbar = () => {
 
     window.addEventListener('usernameUpdated', handleUsernameUpdate);
 
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener('usernameUpdated', handleUsernameUpdate);
     };
   }, []);
 
-  // Function to handle logout
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove the authentication token
-    localStorage.removeItem('username'); // Optionally, clear the username
-    navigate('/login'); // Redirect to the login page
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('username'); 
+    navigate('/login'); 
   };
 
-  // Check if the current path is the login or signup page
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
@@ -111,6 +106,9 @@ const Navbar = () => {
                     </Link>
                     <Link to="/VehicleHistory" style={styles.dropdownLink}>
                     View Bookings
+                    </Link>
+                    <Link to="/PaymentHistory" style={styles.dropdownLink}>
+                    Payment History
                     </Link>
                     <div onClick={handleLogout} style={styles.dropdownLink}>
                       Logout
