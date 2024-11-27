@@ -91,20 +91,20 @@ export const getHeaders = () => {
     }
   };
   
-  export const getAllPayments = async () => {
+  export const getPaymentsByUserId = async (userId, page = 0, size = 10) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/payment`, {
+      const response = await fetch(`${API_BASE_URL}/payment/user/${userId}?page=${page}&size=${size}`, {
         method: 'GET',
         headers: getHeaders(),
       });
   
       if (!response.ok) {
-        throw new Error('Failed to get all payments');
+        throw new Error('Failed to get payments for the user');
       }
   
       return response.json();
     } catch (error) {
-      console.error('Error in getAllPayments:', error);
+      console.error('Error in getPaymentsByUserId:', error);
       throw error;
     }
   };

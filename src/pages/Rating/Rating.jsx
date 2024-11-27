@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { getAllRatingsByVehicleId } from "../../api/rating";
-import { useParams } from "react-router-dom"; // Import useParams to get vehicleId
+import { useParams } from "react-router-dom";
 import styles from "./styles";
 
 const Rating = () => {
-    const { vehicleId } = useParams(); // Get vehicleId from URL parameters
+    const { vehicleId } = useParams(); 
     const [ratings, setRatings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const pageSize = 10; 
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -18,11 +21,11 @@ const Rating = () => {
         const fetchRatings = async () => {
             setIsLoading(true);
             try {
-                console.log(`Fetching ratings for vehicle ID: ${vehicleId}`); // Debugging log
-                const response = await getAllRatingsByVehicleId(vehicleId);
-                console.log("Response from API:", response); // Debugging log
-                if (response && Array.isArray(response)) {
-                    setRatings(response);
+                const response = await getAllRatingsByVehicleId(vehicleId, currentPage, pageSize);
+                
+                if (response && response.content && Array.isArray(response.content)) {
+                    setRatings(response.content); 
+                    setTotalPages(response.totalPages); 
                 } else {
                     throw new Error("Invalid response format");
                 }
@@ -40,9 +43,21 @@ const Rating = () => {
             setError("No vehicle ID provided.");
             setIsLoading(false);
         }
-    }, [vehicleId]); // Fetch ratings when vehicleId changes
+    }, [vehicleId, currentPage]);
 
     if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages - 1) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
     return (
         <div style={styles.summaryContainer}>
@@ -54,7 +69,7 @@ const Rating = () => {
                 <div style={styles.bookingHistory}>
                     {ratings.map((rating) => (
                         <div key={rating.ratingId} style={styles.bookingCard}>
-                            <h4 style={styles.userName}> Name: {rating.userName}</h4>
+                            <h4 style={styles.userName}>Name: {rating.userName}</h4>
                             <p style={styles.bookingDetail}>
                                 <span style={styles.label}>Rating:</span> {rating.rating} / 5
                             </p>
@@ -66,6 +81,17 @@ const Rating = () => {
                             </p>
                         </div>
                     ))}
+                </div>
+            )}
+            {totalPages > 1 && (
+                <div style={styles.paginationContainer}>
+                    <button onClick={handlePreviousPage} disabled={currentPage === 0} style={styles.paginationButton}>
+                        Previous
+                    </button>
+                    <span style={styles.pageInfo}> Page {currentPage + 1} of {totalPages} </span>
+                    <button onClick={handleNextPage} disabled={currentPage === totalPages - 1} style={styles.paginationButton}>
+                        Next
+                    </button>
                 </div>
             )}
         </div>
