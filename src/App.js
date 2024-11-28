@@ -18,10 +18,12 @@ import ModifyBooking from "./pages/ModifyBooking/ModifyBooking";
 import Rating from "./pages/Rating/Rating";
 import PaymentHistory from "./pages/PaymentHistory/PaymentHistory";
 import NotFound from './pages/NotFound/NotFound';
+import { isTokenExpired } from './api/auth';
 
 const PrivateRoute = ({ children }) => {
-  const isAuthenticated = !!localStorage.getItem('token');
-  return isAuthenticated ? children : <Navigate to="/login" />;
+    const token = localStorage.getItem('token');
+    const isAuthenticated = token && !isTokenExpired(token);
+    return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const App = () => {
