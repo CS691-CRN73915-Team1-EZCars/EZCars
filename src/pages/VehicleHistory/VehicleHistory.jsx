@@ -415,7 +415,23 @@ const Summary = () => {
                 </p>
                 <p>
                   <span style={styles.label}>Status:</span>{" "}
-                  {selectedBooking.status}
+                  <span
+                        style={{
+                          ...styles.statusText,
+                          color:
+                            selectedBooking.status.toLowerCase() === "completed"
+                              ? "green"
+                              : selectedBooking.status.toLowerCase() === "pending"
+                              ? "red"
+                              : selectedBooking.status.toLowerCase() === "confirmed"
+                              ? "blue"
+                              : selectedBooking.status.toLowerCase() === "cancelled"
+                              ? "gray"
+                              : "black",
+                        }}
+                      >
+                        {selectedBooking.status}
+                      </span>
                 </p>
                 <p>
                   <span style={styles.label}>Duration:</span>{" "}
