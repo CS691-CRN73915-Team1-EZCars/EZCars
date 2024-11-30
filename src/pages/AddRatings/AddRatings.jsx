@@ -1,71 +1,70 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles";
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import { createRating } from '../../api/rating';
+ 
 const AddRatings = () => {
-  const [username, setUsername] = useState("");
-  const [vehicle, setVehicle] = useState("");
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
-  const [vehicles, setVehicles] = useState([]);
-
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: "", message: "" });
+ 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const token = new URLSearchParams(location.search).get('token');
+ 
   useEffect(() => {
-    // Fetch user data
-    fetch("/api/username")
-      .then((response) => response.json())
-      .then((data) => setUsername(data.username))
-      .catch((error) => console.error("Error fetching username:", error));
-
-    // Fetch vehicle data
-    fetch("/api/vehicles")
-      .then((response) => response.json())
-      .then((data) => setVehicles(data))
-      .catch((error) => console.error("Error fetching vehicles:", error));
+    const storedUsername = localStorage.getItem('username');
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUsername) setUsername(storedUsername);
+    if (storedUserId) setUserId(storedUserId);
   }, []);
-
-  const handleSubmit = (e) => {
+ 
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const reviewData = { username, vehicle, rating, review };
+    const ratingData = { rating, review, userId };
     
-    // API call to submit review
-    fetch("/api/addReview", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reviewData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert("Review submitted successfully!");
-        setVehicle("");
-        setRating(0);
-        setReview("");
-      })
-      .catch((error) => console.error("Error submitting review:", error));
+    try {
+      await createRating(ratingData, token);
+      setModalContent({ title: "Success", message: "Review submitted successfully!" });
+      setShowModal(true);
+      setRating(0);
+      setReview("");
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      setModalContent({ title: "Error", message: `Failed to submit review. Error: ${error.message}` });
+      setShowModal(true);
+    }
   };
-
+ 
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (modalContent.title === "Success") {
+      navigate('/');
+    }
+  };
+ 
+  const Modal = ({ isOpen, onClose, title, content }) => {
+    if (!isOpen) return null;
+ 
+    return (
+      <div style={styles.overlay}>
+        <div style={styles.content}>
+          <h2>{title}</h2>
+          <p>{content}</p>
+          <button onClick={onClose} style={styles.button}>Close</button>
+        </div>
+      </div>
+    );
+  };
+ 
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>Add Review & Ratings</h2>
+      {username && <p style={styles.username}>Welcome, {username}!</p>}
       <form style={styles.form} onSubmit={handleSubmit}>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>User:</label>
-          <input type="text" value={username} readOnly style={styles.input} />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Vehicle:</label>
-          <select
-            value={vehicle}
-            onChange={(e) => setVehicle(e.target.value)}
-            style={styles.input}
-            required
-          >
-            <option value="" disabled>Select Vehicle</option>
-            {vehicles.map((v) => (
-              <option key={v.id} value={v.name}>
-                {v.name}
-              </option>
-            ))}
-          </select>
-        </div>
         <div style={styles.inputGroup}>
           <label style={styles.label}>Rating:</label>
           <div style={styles.stars}>
@@ -93,8 +92,15 @@ const AddRatings = () => {
           Submit Review
         </button>
       </form>
+ 
+      <Modal
+        isOpen={showModal}
+        onClose={handleModalClose}
+        title={modalContent.title}
+        content={modalContent.message}
+      />
     </div>
   );
 };
-
+ 
 export default AddRatings;

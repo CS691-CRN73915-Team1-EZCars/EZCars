@@ -69,7 +69,7 @@ const PaymentHistory = () => {
           {payments.map((payment) => (
             <div key={payment.paymentId} style={styles.bookingCard}>
               <p style={styles.bookingDetail}>
-                <span style={styles.label}>Payment ID:</span>{" "}
+                <span style={styles.label}>Transaction ID:</span>{" "}
                 {payment.paymentId}
               </p>
               <p style={styles.bookingDetail}>
