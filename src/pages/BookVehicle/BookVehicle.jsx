@@ -247,7 +247,7 @@ const BookVehicle = () => {
         ) : (
           <div style={styles.paymentContainer}>
             <h2>Payment Details</h2>
-            <p>Total Amount: ${totalAmount.toFixed(2)}</p>
+            <p>Total Booking Amount: ${totalAmount.toFixed(2)}</p>
             <Elements stripe={stripePromise}>
               <StripePayment
                 amount={totalAmount}
