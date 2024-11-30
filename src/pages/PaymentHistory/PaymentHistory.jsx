@@ -56,6 +56,10 @@ const PaymentHistory = () => {
     }
   };
 
+  // function encodeToBase64(id) {
+  //   return btoa(id);
+  // }
+
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
 
   return (
@@ -69,12 +73,13 @@ const PaymentHistory = () => {
           {payments.map((payment) => (
             <div key={payment.paymentId} style={styles.bookingCard}>
               <p style={styles.bookingDetail}>
-                <span style={styles.label}>Transaction ID:</span>{" "}
+                <span style={styles.label}>Payment ID:</span>{" "}
                 {payment.paymentId}
               </p>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Booking ID:</span>{" "}
                 {payment.bookingId}
+                
               </p>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Booking Amount:</span>
@@ -85,7 +90,18 @@ const PaymentHistory = () => {
                 {formatDate(payment.timeStamp)}
               </p>
               <p style={styles.bookingDetail}>
-                <span style={styles.label}>Status:</span> {payment.status}
+                <span style={styles.label}>Status:</span>{" "}
+                <span
+                  style={{
+                    ...styles.statusText,
+                    color:
+                      payment.status.toLowerCase() === "completed"
+                        ? "green"
+                        : "red",
+                  }}
+                >
+                  {payment.status}
+                </span>
               </p>
             </div>
           ))}

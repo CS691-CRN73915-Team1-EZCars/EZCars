@@ -321,7 +321,11 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     margin: '30px',
-  }
+  },
+
+  statusText: {
+    fontWeight: 'bold',
+  },
   
 };
 

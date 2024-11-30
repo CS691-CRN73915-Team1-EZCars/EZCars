@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import {
   getAllBookingsByUserId,
   updateBookingStatus,
@@ -294,7 +294,24 @@ const Summary = () => {
                   </div>
                   <div style={styles.bookingStatusRow}>
                     <p style={styles.bookingStatus}>
-                      <span style={styles.label}>Status:</span> {booking.status}
+                      <span style={styles.label}>Status:</span>{" "}
+                      <span
+                        style={{
+                          ...styles.statusText,
+                          color:
+                            booking.status.toLowerCase() === "completed"
+                              ? "green"
+                              : booking.status.toLowerCase() === "pending"
+                              ? "red"
+                              : booking.status.toLowerCase() === "confirmed"
+                              ? "blue"
+                              : booking.status.toLowerCase() === "cancelled"
+                              ? "gray"
+                              : "black",
+                        }}
+                      >
+                        {booking.status}
+                      </span>
                     </p>
                     <p style={styles.bookingDuration}>
                       <span style={styles.label}>Duration:</span>{" "}
@@ -305,7 +322,7 @@ const Summary = () => {
                     {booking.status === "CONFIRMED" && (
                       <button
                         onClick={() => handleModify(booking)}
-                       style={styles.modifyBookingButton}
+                        style={styles.modifyBookingButton}
                       >
                         Modify
                       </button>
