@@ -89,6 +89,22 @@ const Summary = () => {
     setIsModalOpen(false);
   };
 
+  // Improved encoding function
+const encodeId = (id, prefix) => {
+  const paddedId = id.toString().padStart(8, '0');
+  
+  const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const substitutedId = paddedId.split('').map(char => 
+    substitutionMap[parseInt(char, 10) % substitutionMap.length]
+  ).join('');
+  
+  const randomChars = Array.from({length: 4}, () => substitutionMap[Math.floor(Math.random() * substitutionMap.length)]).join('');
+  const combinedString = `${randomChars}${substitutedId}`;
+  const encodedString = btoa(combinedString);
+  
+  return `${prefix}-${encodedString}`;
+};
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -390,7 +406,7 @@ const Summary = () => {
                 </p>
                 <p>
                   <span style={styles.label}>Booking ID:</span>{" "}
-                  {selectedBooking.id}
+                {encodeId(selectedBooking.id, 'EZ')}
                 </p>
                 <p>
                   <span style={styles.label}>Pick-up Location:</span>{" "}
