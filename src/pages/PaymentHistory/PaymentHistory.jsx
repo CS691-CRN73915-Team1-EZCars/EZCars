@@ -10,12 +10,30 @@ const PaymentHistory = () => {
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 10;
   const userId = localStorage.getItem("userId");
+  const generateBookingId = () => generateId("EZ"); // EZ for bookings
+  const generatePaymentId = () => generateId("PY"); // PY for payments
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     return date.toLocaleString();
   };
+
+  const generateId = (prefix) => {
+    const randomLetters = () => {
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let result = "";
+      for (let i = 0; i < 6; i++) { // Generate 6 random letters
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    };
+  
+    const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD format
+    return `${prefix}${datePart}${randomLetters()}`;
+  };
+  
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -74,11 +92,12 @@ const PaymentHistory = () => {
             <div key={payment.paymentId} style={styles.bookingCard}>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Payment ID:</span>{" "}
-                {payment.paymentId}
+                {generatePaymentId()}
               </p>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Booking ID:</span>{" "}
-                {payment.bookingId}
+                {generateBookingId()}
+
                 
               </p>
               <p style={styles.bookingDetail}>
