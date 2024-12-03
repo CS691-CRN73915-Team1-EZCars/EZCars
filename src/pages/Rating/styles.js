@@ -31,22 +31,6 @@ export const styles = {
         marginTop: '20px',
     },
 
-    bookingCard: {
-        backgroundColor: '#ffffff',
-        padding: '20px',
-        borderRadius: '8px',
-        marginBottom: '20px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-    },
-
-    userName: {
-        color: '#f97316',
-        fontWeight: 'bold',
-        fontSize: '22px',
-        marginTop: '0',
-        marginBottom: '10px',
-    },
-
     bookingDetail: {
         marginBottom: '5px',
     },
@@ -82,6 +66,51 @@ export const styles = {
         color: '#2c3e50',
         marginLeft: '10px',
     },
+    starRating: {
+        color: '#FFD700',
+        fontSize: '20px',
+        marginRight: '5px',
+    },
+    bookingCard: {
+        backgroundColor: '#ffffff',
+        padding: '20px',
+        borderRadius: '8px',
+        marginBottom: '20px',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+      },
+    
+      cardHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '10px',
+      },
+    
+      userName: {
+        color: '#f97316',
+        fontWeight: 'bold',
+        fontSize: '22px',
+        margin: '0',
+      },
+    
+      createdDate: {
+        color: '#7f8c8d',
+        fontSize: '16px',
+        margin: '0',
+      },
+      filterContainer: {
+        marginBottom: '20px',
+        textAlign: 'right',
+      },
+    
+      sortSelect: {
+        padding: '5px 10px',
+        fontSize: '16px',
+        borderRadius: '5px',
+        border: '1px solid #ccc',
+        backgroundColor: '#fff',
+        cursor: 'pointer',
+      },
 };
 
 export default styles;
