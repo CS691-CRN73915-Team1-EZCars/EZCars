@@ -18,10 +18,13 @@ import ModifyBooking from "./pages/ModifyBooking/ModifyBooking";
 import Rating from "./pages/Rating/Rating";
 import PaymentHistory from "./pages/PaymentHistory/PaymentHistory";
 import NotFound from './pages/NotFound/NotFound';
+import AddRatings from "./pages/AddRatings/AddRatings";
+import { isTokenExpired } from './api/auth';
 
 const PrivateRoute = ({ children }) => {
-  const isAuthenticated = !!localStorage.getItem('token');
-  return isAuthenticated ? children : <Navigate to="/login" />;
+    const token = localStorage.getItem('token');
+    const isAuthenticated = token && !isTokenExpired(token);
+    return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const App = () => {
@@ -51,6 +54,7 @@ const App = () => {
           <Route path="/ModifyBooking" element={<PrivateRoute><ModifyBooking /></PrivateRoute>} />
           <Route path="/VehicleRating/:vehicleId" element={<PrivateRoute><Rating /></PrivateRoute>} />
           <Route path="/PaymentHistory" element={<PrivateRoute><PaymentHistory /></PrivateRoute>} />
+          <Route path="/AddRating" element={<PrivateRoute><AddRatings /></PrivateRoute>} />
         </Routes>
         <Footer />
       </div>

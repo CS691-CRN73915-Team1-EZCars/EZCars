@@ -2,6 +2,40 @@ import React, { useState, useEffect } from "react";
 import { getPaymentsByUserId } from "../../api/payment";
 import styles from "./styles";
 
+// Improved encoding function
+const encodeId = (id, prefix) => {
+  // Pad the ID to ensure minimum length
+  const paddedId = id.toString().padStart(8, '0');
+  
+  // Simple substitution cipher
+  const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const substitutedId = paddedId.split('').map(char => 
+    substitutionMap[parseInt(char, 10) % substitutionMap.length]
+  ).join('');
+  
+  // Combine with random chars and encode
+  const randomChars = Array.from({length: 4}, () => substitutionMap[Math.floor(Math.random() * substitutionMap.length)]).join('');
+  const combinedString = `${randomChars}${substitutedId}`;
+  const encodedString = btoa(combinedString);
+  
+  return `${prefix}-${encodedString}`;
+};
+
+// Improved decoding function
+// const decodeId = (encodedId) => {
+//   const [prefix, encodedPart] = encodedId.split('-');
+//   const decodedString = atob(encodedPart);
+//   const substitutedId = decodedString.slice(4); // Remove random chars
+  
+//   // Reverse substitution
+//   const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+//   const originalId = substitutedId.split('').map(char => 
+//     substitutionMap.indexOf(char).toString().padStart(2, '0')
+//   ).join('');
+  
+//   return parseInt(originalId, 10).toString();
+// };
+
 const PaymentHistory = () => {
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,14 +104,14 @@ const PaymentHistory = () => {
             <div key={payment.paymentId} style={styles.bookingCard}>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Payment ID:</span>{" "}
-                {payment.paymentId}
+                {encodeId(payment.paymentId, 'PY')}
               </p>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Booking ID:</span>{" "}
-                {payment.bookingId}
+                {encodeId(payment.bookingId, 'EZ')}
               </p>
               <p style={styles.bookingDetail}>
-                <span style={styles.label}>Booking Amount:</span>
+                <span style={styles.label}>Booking Amount:</span>{" "}
                 {payment.amount ? payment.amount.toFixed(2) : "N/A"}
               </p>
               <p style={styles.bookingDetail}>
@@ -85,7 +119,18 @@ const PaymentHistory = () => {
                 {formatDate(payment.timeStamp)}
               </p>
               <p style={styles.bookingDetail}>
-                <span style={styles.label}>Status:</span> {payment.status}
+                <span style={styles.label}>Status:</span>{" "}
+                <span
+                  style={{
+                    ...styles.statusText,
+                    color:
+                      payment.status.toLowerCase() === "completed"
+                        ? "green"
+                        : "red",
+                  }}
+                >
+                  {payment.status}
+                </span>
               </p>
             </div>
           ))}

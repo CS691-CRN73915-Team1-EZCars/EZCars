@@ -77,7 +77,7 @@ const Rating = () => {
                                 <span style={styles.label}>Review:</span> {rating.review}
                             </p>
                             <p style={styles.bookingDetail}>
-                                <span style={styles.label}>Created At:</span> {formatDate(rating.createdAt)}
+                                <span style={styles.label}>Created Date:</span> {formatDate(rating.createdAt)}
                             </p>
                         </div>
                     ))}
