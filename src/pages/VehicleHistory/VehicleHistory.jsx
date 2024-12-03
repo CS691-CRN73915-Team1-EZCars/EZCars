@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import {
   getAllBookingsByUserId,
   updateBookingStatus,
@@ -88,6 +88,22 @@ const Summary = () => {
     setSelectedBooking(null);
     setIsModalOpen(false);
   };
+
+  // Improved encoding function
+const encodeId = (id, prefix) => {
+  const paddedId = id.toString().padStart(8, '0');
+  
+  const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const substitutedId = paddedId.split('').map(char => 
+    substitutionMap[parseInt(char, 10) % substitutionMap.length]
+  ).join('');
+  
+  const randomChars = Array.from({length: 4}, () => substitutionMap[Math.floor(Math.random() * substitutionMap.length)]).join('');
+  const combinedString = `${randomChars}${substitutedId}`;
+  const encodedString = btoa(combinedString);
+  
+  return `${prefix}-${encodedString}`;
+};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -294,7 +310,24 @@ const Summary = () => {
                   </div>
                   <div style={styles.bookingStatusRow}>
                     <p style={styles.bookingStatus}>
-                      <span style={styles.label}>Status:</span> {booking.status}
+                      <span style={styles.label}>Status:</span>{" "}
+                      <span
+                        style={{
+                          ...styles.statusText,
+                          color:
+                            booking.status.toLowerCase() === "completed"
+                              ? "green"
+                              : booking.status.toLowerCase() === "pending"
+                              ? "red"
+                              : booking.status.toLowerCase() === "confirmed"
+                              ? "blue"
+                              : booking.status.toLowerCase() === "cancelled"
+                              ? "gray"
+                              : "black",
+                        }}
+                      >
+                        {booking.status}
+                      </span>
                     </p>
                     <p style={styles.bookingDuration}>
                       <span style={styles.label}>Duration:</span>{" "}
@@ -305,7 +338,7 @@ const Summary = () => {
                     {booking.status === "CONFIRMED" && (
                       <button
                         onClick={() => handleModify(booking)}
-                       style={styles.modifyBookingButton}
+                        style={styles.modifyBookingButton}
                       >
                         Modify
                       </button>
@@ -373,7 +406,7 @@ const Summary = () => {
                 </p>
                 <p>
                   <span style={styles.label}>Booking ID:</span>{" "}
-                  {selectedBooking.id}
+                {encodeId(selectedBooking.id, 'EZ')}
                 </p>
                 <p>
                   <span style={styles.label}>Pick-up Location:</span>{" "}
@@ -398,7 +431,23 @@ const Summary = () => {
                 </p>
                 <p>
                   <span style={styles.label}>Status:</span>{" "}
-                  {selectedBooking.status}
+                  <span
+                        style={{
+                          ...styles.statusText,
+                          color:
+                            selectedBooking.status.toLowerCase() === "completed"
+                              ? "green"
+                              : selectedBooking.status.toLowerCase() === "pending"
+                              ? "red"
+                              : selectedBooking.status.toLowerCase() === "confirmed"
+                              ? "blue"
+                              : selectedBooking.status.toLowerCase() === "cancelled"
+                              ? "gray"
+                              : "black",
+                        }}
+                      >
+                        {selectedBooking.status}
+                      </span>
                 </p>
                 <p>
                   <span style={styles.label}>Duration:</span>{" "}

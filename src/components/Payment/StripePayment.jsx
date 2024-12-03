@@ -83,7 +83,7 @@ const CheckoutForm = ({ amount, bookingId, onPaymentSuccess }) => {
   };
 
   if (paymentSuccess) {
-    return <div style={styles.successMessage}>Payment successful! Thank you for your purchase.</div>;
+    return <div style={styles.successMessage}>Payment successful! Thank you for booking with EzCars.</div>;
   }
 
   return (

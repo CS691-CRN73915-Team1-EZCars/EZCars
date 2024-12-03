@@ -166,7 +166,7 @@ const styles = {
     transition: 'background-color 0.3s ease',
   },
   modifyBookingButton: {
-    backgroundColor: '#FFCC99',
+    backgroundColor: '#f97316',
     color: '#ffffff',
     padding: '7px 20px',
     fontSize: '16px',
@@ -321,7 +321,11 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     margin: '30px',
-  }
+  },
+
+  statusText: {
+    fontWeight: 'bold',
+  },
   
 };
 

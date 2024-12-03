@@ -148,7 +148,10 @@ export const styles = {
        alignItems:'center', 
        display:'flex', 
        margin:'30px'
-   }
+   },
+   statusText: {
+    fontWeight: 'bold',
+  },
 };
 
 export default styles;
