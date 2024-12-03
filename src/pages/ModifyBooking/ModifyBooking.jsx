@@ -46,6 +46,7 @@ const ModifyBooking = () => {
   const [fetchedBookingData, setFetchedBookingData] = useState(null);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [totalBookingAmount, setTotalBookingAmount] = useState(0);
 
   const userId = localStorage.getItem("userId");
   const vehicleId = booking?.vehicleId;
@@ -130,7 +131,9 @@ const ModifyBooking = () => {
         setVehicleDetails(vehicleDetailsFetched);
         if (durationInDays !== booking.duration) {
           const totalPrice = ((vehicleDetailsFetched.price * durationInDays) - (vehicleDetailsFetched.price * booking.duration));
+          const totalBookingPrice = ((vehicleDetailsFetched.price * durationInDays) );
           setTotalAmount(totalPrice);
+          setTotalBookingAmount(totalBookingPrice);
           setShowPaymentForm(true);
         } else {
             await updateBookingStatus(booking.id, 'CONFIRMED');
@@ -266,7 +269,9 @@ const ModifyBooking = () => {
         ) : (
           <div style={styles.paymentContainer}>
             <h2>Payment Details</h2>
-            <p>Total Amount: ${totalAmount.toFixed(2)}</p>
+            <p>Total Booking Amount: ${totalBookingAmount.toFixed(2)}</p>
+
+            <p> Amount to be paid extra : ${totalAmount.toFixed(2)}</p>
             <Elements stripe={stripePromise}>
               <StripePayment
                 amount={totalAmount}

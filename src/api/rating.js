@@ -8,8 +8,8 @@ export const getHeaders = () => {
   };
 };
 
-export const createRating = async (rating) => {
-  const response = await fetch(`${API_BASE_URL}/rating`, {
+export const createRating = async (rating, token) => {
+  const response = await fetch(`${API_BASE_URL}/rating?token=${encodeURIComponent(token)}`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(rating),
