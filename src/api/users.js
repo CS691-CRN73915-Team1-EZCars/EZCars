@@ -64,3 +64,16 @@ export const deleteUser = async (id) => {
     throw new Error('Failed to delete user');
   }
 };
+
+export const getUserStats = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/users/${id}/stats`, {
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('User stats not found');
+    }
+    throw new Error('Failed to fetch user stats');
+  }
+  return response.json();
+};
