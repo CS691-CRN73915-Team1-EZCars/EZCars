@@ -191,7 +191,7 @@ const ModifyBooking = () => {
   return (
     <div style={styles.container}>
       <div style={styles.content}>
-        <h1 style={styles.heading}>Modify Vehicle</h1>
+        <h1 style={styles.heading}>Modify Booking</h1>
         {username && (
           <div style={styles.usernameBox}>
             <label style={styles.label}>Username:</label>
