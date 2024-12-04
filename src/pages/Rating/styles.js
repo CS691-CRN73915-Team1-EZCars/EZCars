@@ -5,6 +5,7 @@ export const styles = {
         padding: '30px',
         backgroundColor: '#f8f9fa',
         borderRadius: '12px',
+        minHeight: "500px",
         fontFamily: 'Arial, sans-serif',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     },
@@ -110,7 +111,15 @@ export const styles = {
         border: '1px solid #ccc',
         backgroundColor: '#fff',
         cursor: 'pointer',
-      },
+      }
+      ,
+  vehicleInfo: {
+    fontSize: '25px',
+    fontWeight: '600',
+    marginBottom: '20px',
+    textAlign: 'center',
+    color: '#f97316',
+  },
 };
 
 export default styles;
