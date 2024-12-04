@@ -112,7 +112,7 @@ const PaymentHistory = () => {
               </p>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Booking Amount:</span>{" "}
-                {payment.amount ? payment.amount.toFixed(2) : "N/A"}
+                ${payment.amount ? payment.amount.toFixed(2) : "N/A"}
               </p>
               <p style={styles.bookingDetail}>
                 <span style={styles.label}>Timestamp:</span>{" "}
