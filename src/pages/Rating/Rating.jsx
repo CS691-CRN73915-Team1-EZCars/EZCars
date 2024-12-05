@@ -109,12 +109,6 @@ const Rating = () => {
       )}
 
       <div style={styles.filterContainer}>
-        <label htmlFor="sort-select">Sort by rating: </label>
-        <select id="sort-select" value={sortDirection} onChange={handleSortChange} style={styles.sortSelect}>
-          <option value="desc">High to Low</option>
-          <option value="asc">Low to High</option>
-        </select>
-
         <label htmlFor="rating-filter" style={styles.filterLabel}>Filter by rating: </label>
         <select id="rating-filter" value={ratingFilter} onChange={handleRatingFilterChange} style={styles.filterSelect}>
           <option value="all">All Ratings</option>
@@ -123,6 +117,11 @@ const Rating = () => {
           <option value="3">⭐⭐⭐ </option>
           <option value="2">⭐⭐ </option>
           <option value="1">⭐ </option>
+        </select>
+        <label htmlFor="sort-select">Sort by rating: </label>
+        <select id="sort-select" value={sortDirection} onChange={handleSortChange} style={styles.sortSelect}>
+          <option value="desc">High to Low</option>
+          <option value="asc">Low to High</option>
         </select>
       </div>
 

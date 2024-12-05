@@ -133,6 +133,7 @@ export const styles = {
       border: '1px solid #ccc',
       backgroundColor: '#fff',
       cursor: 'pointer',
+      marginRight: '20px',
   },
 };
 
