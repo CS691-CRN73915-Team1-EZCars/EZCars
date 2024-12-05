@@ -13,6 +13,7 @@ const Rating = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [sortDirection, setSortDirection] = useState('desc');
+  const [ratingFilter, setRatingFilter] = useState('all');
   const pageSize = 10;
 
   const formatDate = (dateString) => {
@@ -33,7 +34,7 @@ const Rating = () => {
         // Fetch vehicle details
         const vehicleResponse = await getVehicleById(vehicleId);
         if (vehicleResponse) {
-          setVehicle(vehicleResponse); // Set vehicle details
+          setVehicle(vehicleResponse);
         } else {
           throw new Error("Invalid vehicle response format");
         }
@@ -48,7 +49,11 @@ const Rating = () => {
         );
 
         if (ratingsResponse && ratingsResponse.content && Array.isArray(ratingsResponse.content)) {
-          setRatings(ratingsResponse.content);
+          let filteredRatings = ratingsResponse.content;
+          if (ratingFilter !== 'all') {
+            filteredRatings = filteredRatings.filter(rating => Math.floor(rating.rating) === parseInt(ratingFilter));
+          }
+          setRatings(filteredRatings);
           setTotalPages(ratingsResponse.totalPages);
         } else {
           throw new Error("Invalid ratings response format");
@@ -67,7 +72,7 @@ const Rating = () => {
       setError("No vehicle ID provided.");
       setIsLoading(false);
     }
-  }, [vehicleId, currentPage, sortDirection]);
+  }, [vehicleId, currentPage, sortDirection, ratingFilter]);
 
   if (isLoading) return <div style={styles.fullPageMessage}>Loading...</div>;
 
@@ -88,11 +93,15 @@ const Rating = () => {
     setCurrentPage(0);
   };
 
+  const handleRatingFilterChange = (event) => {
+    setRatingFilter(event.target.value);
+    setCurrentPage(0);
+  };
+
   return (
     <div style={styles.summaryContainer}>
       <h2 style={styles.heading}>Vehicle Rating And Reviews</h2>
       
-      {/* Display Vehicle Make and Model */}
       {vehicle && (
         <div style={styles.vehicleInfo}>
           <h3>{`${vehicle.make} ${vehicle.model}`}</h3>
@@ -104,6 +113,16 @@ const Rating = () => {
         <select id="sort-select" value={sortDirection} onChange={handleSortChange} style={styles.sortSelect}>
           <option value="desc">High to Low</option>
           <option value="asc">Low to High</option>
+        </select>
+
+        <label htmlFor="rating-filter" style={styles.filterLabel}>Filter by rating: </label>
+        <select id="rating-filter" value={ratingFilter} onChange={handleRatingFilterChange} style={styles.filterSelect}>
+          <option value="all">All Ratings</option>
+          <option value="5">⭐⭐⭐⭐⭐ </option>
+          <option value="4">⭐⭐⭐⭐ </option>
+          <option value="3">⭐⭐⭐ </option>
+          <option value="2">⭐⭐ </option>
+          <option value="1">⭐ </option>
         </select>
       </div>
 
