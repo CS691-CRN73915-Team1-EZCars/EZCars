@@ -89,17 +89,20 @@ const Summary = () => {
     setIsModalOpen(false);
   };
 
-  // Improved encoding function
+// Improved encoding function
 const encodeId = (id, prefix) => {
+  // Pad the ID to ensure minimum length
   const paddedId = id.toString().padStart(8, '0');
   
+  // Simple substitution cipher
   const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   const substitutedId = paddedId.split('').map(char => 
     substitutionMap[parseInt(char, 10) % substitutionMap.length]
   ).join('');
   
-  const randomChars = Array.from({length: 4}, () => substitutionMap[Math.floor(Math.random() * substitutionMap.length)]).join('');
-  const combinedString = `${randomChars}${substitutedId}`;
+  // Use a fixed set of characters instead of random ones
+  const fixedChars = 'BOOK'; // You can change this to any fixed string you prefer
+  const combinedString = `${fixedChars}${substitutedId}`;
   const encodedString = btoa(combinedString);
   
   return `${prefix}-${encodedString}`;

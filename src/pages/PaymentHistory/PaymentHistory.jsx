@@ -13,9 +13,9 @@ const encodeId = (id, prefix) => {
     substitutionMap[parseInt(char, 10) % substitutionMap.length]
   ).join('');
   
-  // Combine with random chars and encode
-  const randomChars = Array.from({length: 4}, () => substitutionMap[Math.floor(Math.random() * substitutionMap.length)]).join('');
-  const combinedString = `${randomChars}${substitutedId}`;
+  // Use a fixed set of characters instead of random ones
+  const fixedChars = 'BOOK'; // You can change this to any fixed string you prefer
+  const combinedString = `${fixedChars}${substitutedId}`;
   const encodedString = btoa(combinedString);
   
   return `${prefix}-${encodedString}`;
@@ -25,7 +25,7 @@ const encodeId = (id, prefix) => {
 // const decodeId = (encodedId) => {
 //   const [prefix, encodedPart] = encodedId.split('-');
 //   const decodedString = atob(encodedPart);
-//   const substitutedId = decodedString.slice(4); // Remove random chars
+//   const substitutedId = decodedString.slice(4); // Remove fixed chars
   
 //   // Reverse substitution
 //   const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';

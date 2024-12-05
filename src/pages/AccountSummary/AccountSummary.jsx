@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles';
 import { Link } from 'react-router-dom';
-import { getUserById } from '../../api/users'; 
+import { getUserById, getUserStats } from '../../api/users'; 
 import data from '../../data/userData.json';
-import { getAllBookingsByUserId } from "../../api/bookVehicle";
 
 const AccountSummary = () => {
   const [user, setUser] = useState(data);
-  const [bookings, setBookings] = useState({ content: [], totalElements: 0 });
+  const [userStats, setUserStats] = useState({}); 
   const [notificationPreference, setNotificationPreference] = useState('email');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,14 +25,13 @@ const AccountSummary = () => {
       }
     };
 
-    const fetchBookings = async () => {
+    const fetchUserStats = async () => {
       try {
-        const bookingsData = await getAllBookingsByUserId(userId);
-        setBookings(bookingsData); // Set the entire response object
+        const statsData = await getUserStats(userId); 
+        setUserStats(statsData); 
       } catch (error) {
-        console.error('Error fetching bookings:', error);
-        setError('Failed to load booking history');
-        setBookings({ content: [], totalElements: 0 });
+        console.error('Error fetching user stats:', error);
+        setError('Failed to load user stats');
       }
     };
 
@@ -41,7 +39,7 @@ const AccountSummary = () => {
       setIsLoading(true);
       setError(null);
       if (userId) {
-        await Promise.all([fetchUserDetails(), fetchBookings()]);
+        await Promise.all([fetchUserDetails(), fetchUserStats()]); // Call all three functions
       } else {
         setError('User ID not found');
       }
@@ -57,17 +55,6 @@ const AccountSummary = () => {
 
   const safelyGetNestedProp = (obj, path) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-  };
-
-  const totalRides = bookings.totalElements || 0;
-
-  const lastRide = bookings.content && bookings.content.length > 0 ? bookings.content[0] : null;
-
-  const formatLastRide = (ride) => {
-    if (!ride) return 'No rides yet';
-    const vehicleMake = ride.vehicle?.make || 'NA';
-    const vehicleModel = ride.vehicle?.model || '';
-    return `${vehicleMake} ${vehicleModel}`;
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -129,24 +116,25 @@ const AccountSummary = () => {
           <h3 style={styles.sectionHeading}>User Stats</h3>
           <div style={styles.infoItem}>
             <span style={styles.label}>Total Rides:</span>
-            <span style={styles.value}>{totalRides}</span>
+            <span style={styles.value}>{userStats.totalRides}</span>
           </div>
           <div style={styles.infoItem}>
-            <span style={styles.label}>Total Distance (km):</span>
-            <span style={styles.value}>{user.totalDistanceKms || 'N/A'}</span>
+            <span style={styles.label}>Completed Rides:</span>
+            <span style={styles.value}>{userStats.completedRides}</span>
+          </div>
+          <div style={styles.infoItem}>
+            <span style={styles.label}>Cancelled Rides:</span>
+            <span style={styles.value}>{userStats.cancelledRides}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Total Spending:</span>
-            <span style={styles.value}>${user.totalSpending}</span>
+            <span style={styles.value}>${userStats.totalAmountSpent}</span>
           </div>
           <div style={styles.infoItem}>
             <span style={styles.label}>Average Rating:</span>
             <span style={styles.value}>{user.averageRating || 'N/A'}</span>
           </div>
-          <div style={styles.infoItem}>
-            <span style={styles.label}>Last Ride:</span>
-            <span style={styles.value}>{formatLastRide(lastRide)}</span>
-          </div>
+         
         </div>
 
         {/* Preferences Card */}
