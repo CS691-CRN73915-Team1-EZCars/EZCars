@@ -50,6 +50,11 @@ const AddRatings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (rating === 0) {
+      setModalContent({ title: "Error", message: "Please select a rating before submitting." });
+      setShowModal(true);
+      return;
+    }
     const ratingData = { rating, review, userId };
     
     try {

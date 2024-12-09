@@ -49,8 +49,7 @@ const CheckoutForm = ({ amount, bookingId, onPaymentSuccess }) => {
         status: 'PENDING',
         timeStamp: new Date().toISOString(),
       };
-      const payment = await createPayment(paymentData);
-     
+
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
@@ -59,12 +58,12 @@ const CheckoutForm = ({ amount, bookingId, onPaymentSuccess }) => {
           },
         }
       });
-
       if (result.error) {
         throw new Error(result.error.message);
       }
 
       if (result.paymentIntent.status === 'succeeded') {
+        const payment = await createPayment(paymentData);
         console.log('Payment succeeded!');
         await updatePayment(payment.paymentId, { 
           status: 'COMPLETED',
