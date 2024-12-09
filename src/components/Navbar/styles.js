@@ -38,7 +38,7 @@ const styles = {
     buttonContainer: {
       display: 'flex',
       alignItems: 'center',
-      position: 'relative', // To position dropdown relative to this container
+      position: 'relative', 
     },
     username: {
       marginRight: '10px',
@@ -47,24 +47,24 @@ const styles = {
       color: '#ff7f00',
     },
     hamburgerMenu: {
-      fontSize: '24px', // Bigger size for the hamburger menu
+      fontSize: '24px', 
       cursor: 'pointer',
       color: '#fff',
       padding: '5px',
       transition: 'color 0.3s ease',
     },
     hamburgerMenuHover: {
-      color: '#ff7f00', // Change color on hover
+      color: '#ff7f00',
     },
     dropdownMenu: {
       position: 'absolute',
-      top: '100%', // Position the dropdown just below the hamburger menu
+      top: '100%', 
       right: '0',
       backgroundColor: '#333',
       borderRadius: '5px',
       boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
       padding: '10px 0',
-      zIndex: 1, // Ensure it stays above other elements
+      zIndex: 1,
     },
     dropdownLink: {
       display: 'block',
@@ -80,15 +80,15 @@ const styles = {
       backgroundColor: '#ff7f00',
     },
     authButton: {
-      backgroundColor: '#ff7f00', // Button background color
+      backgroundColor: '#ff7f00', 
       color: '#fff', // Text color
       padding: '10px 20px',
       border: 'none',
       borderRadius: '5px',
       cursor: 'pointer',
       fontSize: '16px',
-      transition: 'background-color 0.3s ease', // Smooth transition for hover
-      marginRight: '10px', // Add margin to the right of the Login button
+      transition: 'background-color 0.3s ease', 
+      marginRight: '10px', 
     },
   };
   
