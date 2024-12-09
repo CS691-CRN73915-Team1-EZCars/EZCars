@@ -40,7 +40,7 @@ const Navbar = () => {
 
   return (
     <nav style={styles.navbar}>
-      <Link to="/" style={styles.logoLink}>
+      <Link to="/" style={styles.link}>
     <div style={styles.logo}>EzCars</div>
   </Link>
       <div style={styles.navContainer}>
