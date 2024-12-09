@@ -19,6 +19,8 @@ import Rating from "./pages/Rating/Rating";
 import PaymentHistory from "./pages/PaymentHistory/PaymentHistory";
 import NotFound from './pages/NotFound/NotFound';
 import AddRatings from "./pages/AddRatings/AddRatings";
+import PaymentPage from "./pages/Payment/Payment";
+
 import { isTokenExpired } from './api/auth';
 
 const PrivateRoute = ({ children }) => {
@@ -55,6 +57,7 @@ const App = () => {
           <Route path="/VehicleRating/:vehicleId" element={<PrivateRoute><Rating /></PrivateRoute>} />
           <Route path="/PaymentHistory" element={<PrivateRoute><PaymentHistory /></PrivateRoute>} />
           <Route path="/AddRating" element={<PrivateRoute><AddRatings /></PrivateRoute>} />
+          <Route path="/payment" element={<PrivateRoute><PaymentPage /></PrivateRoute>} />
         </Routes>
         <Footer />
       </div>
