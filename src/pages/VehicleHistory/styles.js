@@ -326,6 +326,19 @@ const styles = {
   statusText: {
     fontWeight: 'bold',
   },
+  retryPaymentButton: {
+    backgroundColor: '#f97316',
+    color: '#ffffff',
+    padding: '7px 20px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    display: 'inline-block',
+    marginRight: '10px',
+    transition: 'background-color 0.3s ease',
+  },
   
 };
 

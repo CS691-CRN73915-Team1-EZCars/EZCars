@@ -163,7 +163,7 @@ const ModifyBooking = () => {
       const bookingDetailsFetched = await getBookingById(booking.id);
       if (bookingDetailsFetched) {
         setFetchedBookingData(bookingDetailsFetched);
-        setSuccessMessage("Booking Modified successfully!");
+        setSuccessMessage("Booking modification initiated");
         setError(null);
       } else {
         throw new Error("Failed to fetch booking details.");

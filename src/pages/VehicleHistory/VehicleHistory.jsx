@@ -89,24 +89,39 @@ const Summary = () => {
     setIsModalOpen(false);
   };
 
-// Improved encoding function
-const encodeId = (id, prefix) => {
-  // Pad the ID to ensure minimum length
-  const paddedId = id.toString().padStart(8, '0');
-  
-  // Simple substitution cipher
-  const substitutionMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  const substitutedId = paddedId.split('').map(char => 
-    substitutionMap[parseInt(char, 10) % substitutionMap.length]
-  ).join('');
-  
-  // Use a fixed set of characters instead of random ones
-  const fixedChars = 'BOOK'; // You can change this to any fixed string you prefer
-  const combinedString = `${fixedChars}${substitutedId}`;
-  const encodedString = btoa(combinedString);
-  
-  return `${prefix}-${encodedString}`;
-};
+  // Improved encoding function
+  const encodeId = (id, prefix) => {
+    // Pad the ID to ensure minimum length
+    const paddedId = id.toString().padStart(8, "0");
+
+    // Simple substitution cipher
+    const substitutionMap =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    const substitutedId = paddedId
+      .split("")
+      .map(
+        (char) => substitutionMap[parseInt(char, 10) % substitutionMap.length]
+      )
+      .join("");
+
+    // Use a fixed set of characters instead of random ones
+    const fixedChars = "BOOK"; // You can change this to any fixed string you prefer
+    const combinedString = `${fixedChars}${substitutedId}`;
+    const encodedString = btoa(combinedString);
+
+    return `${prefix}-${encodedString}`;
+  };
+
+  const handleRetryPayment = (booking, bookingAmount) => {
+    console.log(booking, bookingAmount);
+    navigate("/payment", {
+      state: {
+        amount: bookingAmount,
+
+        bookingId: booking.id,
+      },
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -346,6 +361,19 @@ const encodeId = (id, prefix) => {
                         Modify
                       </button>
                     )}
+                    {booking.status === "PENDING" && (
+                      <button
+                        onClick={() =>
+                          handleRetryPayment(
+                            booking,
+                            (vehicle.price * booking.duration)
+                          )
+                        }
+                        style={styles.retryPaymentButton}
+                      >
+                        Retry Payment
+                      </button>
+                    )}
                     <button
                       onClick={() => handleViewBooking(booking)}
                       style={styles.viewBookingButton}
@@ -409,7 +437,7 @@ const encodeId = (id, prefix) => {
                 </p>
                 <p>
                   <span style={styles.label}>Booking ID:</span>{" "}
-                {encodeId(selectedBooking.id, 'EZ')}
+                  {encodeId(selectedBooking.id, "EZ")}
                 </p>
                 <p>
                   <span style={styles.label}>Pick-up Location:</span>{" "}
@@ -435,22 +463,22 @@ const encodeId = (id, prefix) => {
                 <p>
                   <span style={styles.label}>Status:</span>{" "}
                   <span
-                        style={{
-                          ...styles.statusText,
-                          color:
-                            selectedBooking.status.toLowerCase() === "completed"
-                              ? "green"
-                              : selectedBooking.status.toLowerCase() === "pending"
-                              ? "red"
-                              : selectedBooking.status.toLowerCase() === "confirmed"
-                              ? "blue"
-                              : selectedBooking.status.toLowerCase() === "cancelled"
-                              ? "gray"
-                              : "black",
-                        }}
-                      >
-                        {selectedBooking.status}
-                      </span>
+                    style={{
+                      ...styles.statusText,
+                      color:
+                        selectedBooking.status.toLowerCase() === "completed"
+                          ? "green"
+                          : selectedBooking.status.toLowerCase() === "pending"
+                          ? "red"
+                          : selectedBooking.status.toLowerCase() === "confirmed"
+                          ? "blue"
+                          : selectedBooking.status.toLowerCase() === "cancelled"
+                          ? "gray"
+                          : "black",
+                    }}
+                  >
+                    {selectedBooking.status}
+                  </span>
                 </p>
                 <p>
                   <span style={styles.label}>Duration:</span>{" "}
