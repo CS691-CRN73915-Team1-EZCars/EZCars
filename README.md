@@ -54,6 +54,8 @@ EzCars is a web-based platform designed to revolutionize the car rental process.
 4. **Access the application:**
    Open your browser and visit [http://localhost:3000](http://localhost:3000) to view the application.
 
+
+
 ---
 
 ## Enjoy Using EZCars!
